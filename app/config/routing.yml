@@ -1,0 +1,5 @@
+hyperion_api:
+    resource: Hyperion\ApiBundle\Controller\ProjectController
+    type:     rest
+    prefix:   /api/v1/
+
