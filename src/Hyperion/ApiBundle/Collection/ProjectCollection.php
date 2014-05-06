@@ -1,7 +1,9 @@
 <?php
-namespace Hyperion\ApiBundle\Entity;
+
+namespace Hyperion\ApiBundle\Collection;
 
 use Doctrine\Common\Inflector\Inflector;
+use Hyperion\ApiBundle\Entity\Project;
 use Hyperion\ApiBundle\Exception\NotFoundException;
 use Hyperion\ApiBundle\Exception\UnexpectedValueException;
 

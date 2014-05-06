@@ -6,7 +6,7 @@ use FOS\RestBundle\Util\Codes;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\BadResponseException;
 use Hyperion\ApiBundle\Entity\Project;
-use Hyperion\ApiBundle\Entity\ProjectCollection;
+use Hyperion\ApiBundle\Collection\ProjectCollection;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ProjectControllerTest extends WebTestCase
