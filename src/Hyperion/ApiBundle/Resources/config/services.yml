@@ -1,5 +1,5 @@
 services:
     hyperion.kernel.listener.request:
-        class: Hyperion\ApiBundle\Listeners\HyperionKernelListener
+        class: Hyperion\ApiBundle\Listener\HyperionKernelListener
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

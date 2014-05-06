@@ -1,5 +1,5 @@
 <?php
-namespace Hyperion\ApiBundle\Listeners;
+namespace Hyperion\ApiBundle\Listener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
