@@ -2,6 +2,7 @@
 
 namespace Hyperion\ApiBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
@@ -10,6 +11,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
 use Hyperion\ApiBundle\Entity\Project;
 use Hyperion\ApiBundle\Form\ProjectType;
+use Hyperion\Dbal\Collection\CriteriaCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,6 +30,30 @@ class ProjectController extends FOSRestController
         $data = $this->getDoctrine()->getRepository('HyperionApiBundle:Project')->findAll();
 
         return $this->handleView($this->view($data));
+    }
+
+    /**
+     * Search projects
+     *
+     * @api
+     * @Post("/project/search")
+     * @return Response
+     */
+    public function searchProjectsAction(Request $request)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $sz = $this->get('serializer');
+
+        $criteria = new CriteriaCollection($sz->deserialize(
+            $request->request->all(),
+            'ArrayCollection<Hyperion\Dbal\Criteria\Criteria>',
+            $request->getRequestFormat('json')
+        ));
+
+        $em->createQuery("SELECT e FROM HyperionBundle:Project e WHERE blah");
+
+        return $this->handleView($this->view(null));
     }
 
     /**
@@ -52,7 +78,7 @@ class ProjectController extends FOSRestController
      * @param Request $request
      * @return Response
      */
-    public function postProjectsActions(Request $request)
+    public function createProjectAction(Request $request)
     {
         $project = new Project();
         $form    = $this->createForm(new ProjectType(), $project);
@@ -98,7 +124,7 @@ class ProjectController extends FOSRestController
      * @Put("/project/{id}")
      * @return Response
      */
-    public function putProjectAction($id, Request $request)
+    public function updateProjectAction($id, Request $request)
     {
         $project = $this->getDoctrine()->getRepository('HyperionApiBundle:Project')->find($id);
 
