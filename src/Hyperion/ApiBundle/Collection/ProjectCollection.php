@@ -84,4 +84,12 @@ class ProjectCollection implements \IteratorAggregate
     public function count() {
         return count($this->items);
     }
+
+    /**
+     * @return Project
+     */
+    public function current() {
+        return $this->getIterator()->current();
+    }
+
 }

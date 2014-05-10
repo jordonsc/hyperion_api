@@ -12,11 +12,15 @@ use FOS\RestBundle\Util\Codes;
 use Hyperion\ApiBundle\Entity\Project;
 use Hyperion\ApiBundle\Form\ProjectType;
 use Hyperion\Dbal\Collection\CriteriaCollection;
+use Hyperion\Dbal\Criteria\Criteria;
+use Hyperion\Dbal\Enum\Comparison;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProjectController extends FOSRestController
 {
+
+    protected $safe_fields = ['id', 'name'];
 
     /**
      * Get all projects
@@ -46,14 +50,33 @@ class ProjectController extends FOSRestController
         $sz = $this->get('serializer');
 
         $criteria = new CriteriaCollection($sz->deserialize(
-            $request->request->all(),
+            $request->getContent(),
             'ArrayCollection<Hyperion\Dbal\Criteria\Criteria>',
             $request->getRequestFormat('json')
         ));
 
-        $em->createQuery("SELECT e FROM HyperionBundle:Project e WHERE blah");
+        $dql    = "SELECT e FROM Hyperion\\ApiBundle\\Entity\\Project e WHERE ";
+        $where  = [];
+        $params = [];
+        $i      = 0;
 
-        return $this->handleView($this->view(null));
+        /** @var $c Criteria */
+        foreach ($criteria as $c) {
+            // Sanitise for security -
+            if (!in_array($c->getField(), $this->safe_fields) || !$c->getComparison()) {
+                return $this->handleView(
+                    $this->view("Security violation in criteria index #".$i, Codes::HTTP_FORBIDDEN)
+                );
+            }
+
+            $params[] = $c->getValue();
+            $where[]  = "(e.".$c->getField()." ".$c->getComparison()->value()." ?".($i++).")";
+        }
+
+        $query = $em->createQuery($dql.implode(" AND ", $where));
+        $out   = $query->setParameters($params)->getResult();
+
+        return $this->handleView($this->view($out));
     }
 
     /**

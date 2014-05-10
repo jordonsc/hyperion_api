@@ -5,8 +5,11 @@ namespace Hyperion\ApiBundle\Tests\Controller;
 use FOS\RestBundle\Util\Codes;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\BadResponseException;
+use Guzzle\Http\Exception\ServerErrorResponseException;
 use Hyperion\ApiBundle\Entity\Project;
 use Hyperion\ApiBundle\Collection\ProjectCollection;
+use Hyperion\Dbal\Collection\CriteriaCollection;
+use Hyperion\Dbal\Enum\Comparison;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ProjectControllerTest extends WebTestCase
@@ -176,6 +179,103 @@ class ProjectControllerTest extends WebTestCase
 
         $this->assertEquals(0, $retrieved_all->count());
 
+    }
+
+    /**
+     * @medium
+     */
+    public function testProjectSearch()
+    {
+        $this->cleanProjects();
+
+        $http_client = new Client(self::BASE_URL);
+        $http_client->post('/api/v1/project', [], ['name' => "Search Project Alpha"])->send();
+        $http_client->post('/api/v1/project', [], ['name' => "Search Project Bravo"])->send();
+
+        // LIKE
+        $criteria = CriteriaCollection::build()->add('name', '%Alpha', Comparison::LIKE());
+        $r        = $this->doSearch($criteria);
+        $this->assertEquals(1, $r->count());
+        $this->assertEquals("Search Project Alpha", $r->current()->getName());
+
+        // LIKE
+        $criteria = CriteriaCollection::build()->add('name', '%Project%', Comparison::LIKE());
+        $r        = $this->doSearch($criteria);
+        $this->assertEquals(2, $r->count());
+
+        // LIKE
+        $criteria = CriteriaCollection::build()->add('name', 'fake', Comparison::LIKE());
+        $r        = $this->doSearch($criteria);
+        $this->assertEquals(0, $r->count());
+
+        // NOT LIKE
+        $criteria = CriteriaCollection::build()->add('name', '%Bravo%', Comparison::NOT_LIKE());
+        $r        = $this->doSearch($criteria);
+        $this->assertEquals(1, $r->count());
+        $this->assertEquals("Search Project Alpha", $r->current()->getName());
+
+        // EQUALS
+        $criteria = CriteriaCollection::build()->add('name', 'Search Project Bravo', Comparison::EQUALS());
+        $r        = $this->doSearch($criteria);
+        $this->assertEquals(1, $r->count());
+        $this->assertEquals("Search Project Bravo", $r->current()->getName());
+
+        // NOT EQUALS
+        $criteria = CriteriaCollection::build()->add('name', 'Search Project Bravo', Comparison::NOT_EQUALS());
+        $r        = $this->doSearch($criteria);
+        $this->assertEquals(1, $r->count());
+        $this->assertEquals("Search Project Alpha", $r->current()->getName());
+
+        // GREATER THAN EQUALS
+        $criteria = CriteriaCollection::build()->add('id', 1, Comparison::GTE());
+        $r        = $this->doSearch($criteria);
+        $this->assertEquals(2, $r->count());
+
+        $this->cleanProjects();
+    }
+
+    protected function cleanProjects()
+    {
+        $http_client = new Client(self::BASE_URL);
+        $serializer  = static::createClient()->getContainer()->get('jms_serializer');
+
+        $response = $http_client->get('/api/v1/projects')->send();
+        $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
+
+        /** @var $retrieved ProjectCollection */
+        $retrieved_all = new ProjectCollection($serializer->deserialize(
+            $response->getBody(),
+            'ArrayCollection<Hyperion\ApiBundle\Entity\Project>',
+            'json'
+        ));
+
+        /** @var $item Project */
+        foreach ($retrieved_all as $item) {
+            $response = $http_client->delete('/api/v1/project/'.$item->getId())->send();
+            $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
+        }
+    }
+
+    protected function doSearch(CriteriaCollection $criteria, $response_code = 200)
+    {
+        $serializer  = static::createClient()->getContainer()->get('jms_serializer');
+        $http_client = new Client(self::BASE_URL);
+        $response    = null;
+        $payload     = $serializer->serialize($criteria->getItems(), 'json');
+
+        try {
+            $response = $http_client->post('/api/v1/project/search', [], $payload)->send();
+        } catch (ServerErrorResponseException $e) {
+            $this->fail("API Error: ".$e->getResponse()->getBody());
+        }
+
+        $this->assertEquals($response_code, $response->getStatusCode());
+
+        return new ProjectCollection($serializer->deserialize(
+            $response->getBody(),
+            'ArrayCollection<Hyperion\ApiBundle\Entity\Project>',
+            'json'
+        ));
     }
 
 

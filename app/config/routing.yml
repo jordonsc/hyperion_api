@@ -1,5 +1,11 @@
+# API v1
 hyperion_api:
     resource: Hyperion\ApiBundle\Controller\ProjectController
     type:     rest
     prefix:   /api/v1/
+
+# Optional - contains a welcome home page
+hyperion_api_static:
+    resource: Hyperion\ApiBundle\Controller\StaticController
+    type:     annotation
 
