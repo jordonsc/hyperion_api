@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="actions")
  */
-class Action
+class Action implements HyperionEntityInterface
 {
     /**
      * @ORM\Id

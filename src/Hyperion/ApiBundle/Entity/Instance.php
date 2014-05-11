@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="instances")
  */
-class Instance
+class Instance implements HyperionEntityInterface
 {
     /**
      * @ORM\Id

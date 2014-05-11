@@ -7,11 +7,16 @@ use Guzzle\Http\Client;
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\Exception\ServerErrorResponseException;
 use Hyperion\ApiBundle\Entity\Project;
-use Hyperion\ApiBundle\Collection\ProjectCollection;
+use Hyperion\ApiBundle\Collection\EntityCollection;
 use Hyperion\Dbal\Collection\CriteriaCollection;
 use Hyperion\Dbal\Enum\Comparison;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Does the same thing CrudControllerTest does except a little more specific and tests search functionality
+ *
+ * Only applies to the 'Project' entity
+ */
 class ProjectControllerTest extends WebTestCase
 {
 
@@ -26,7 +31,7 @@ class ProjectControllerTest extends WebTestCase
         $post_data   = ['name' => 'a'];
 
         try {
-            $http_client->post('/api/v1/project', [], $post_data)->send();
+            $http_client->post('/api/v1/project/new', [], $post_data)->send();
             $this->fail("Request succeeded when it shouldn't have");
         } catch (BadResponseException $e) {
             $this->assertEquals(400, $e->getResponse()->getStatusCode());
@@ -72,18 +77,18 @@ class ProjectControllerTest extends WebTestCase
         $http_client = new Client(self::BASE_URL);
         $response    = null;
         $test_name   = 'Project #'.rand(100, 999);
-        $post_data   = ['name' => $test_name];
+        $post_data   = ['name' => $test_name, 'bake_status' => 0, 'baked_image_id' => null];
 
         // CREATE
         try {
-            $response = $http_client->post('/api/v1/project', [], $post_data)->send();
+            $response = $http_client->post('/api/v1/project/new', [], $post_data)->send();
             $this->assertEquals(Codes::HTTP_CREATED, $response->getStatusCode());
 
         } catch (BadResponseException $e) {
             $this->fail('Server returned '.$e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody());
         }
 
-        /** @var $created \Hyperion\ApiBundle\Entity\Project */
+        /** @var $created Project */
         $created = $serializer->deserialize(
             $response->getBody(),
             'Hyperion\ApiBundle\Entity\Project',
@@ -100,7 +105,7 @@ class ProjectControllerTest extends WebTestCase
         $response = $http_client->get('/api/v1/project/'.$created->getId())->send();
         $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
-        /** @var $retrieved \Hyperion\ApiBundle\Entity\Project */
+        /** @var $retrieved Project */
         $retrieved = $serializer->deserialize(
             $response->getBody(),
             'Hyperion\ApiBundle\Entity\Project',
@@ -113,11 +118,10 @@ class ProjectControllerTest extends WebTestCase
         $this->assertEquals(0, count($retrieved->getDistributions()));
 
         // RETRIEVE ALL
-        $response = $http_client->get('/api/v1/projects')->send();
+        $response = $http_client->get('/api/v1/project/all')->send();
         $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
-        /** @var $retrieved ProjectCollection */
-        $retrieved_all = new ProjectCollection($serializer->deserialize(
+        $retrieved_all = new EntityCollection($serializer->deserialize(
             $response->getBody(),
             'ArrayCollection<Hyperion\ApiBundle\Entity\Project>',
             'json'
@@ -131,7 +135,7 @@ class ProjectControllerTest extends WebTestCase
         $this->assertEquals(0, count($item->getActions()));
         $this->assertEquals(0, count($item->getDistributions()));
 
-        $item = $retrieved_all->getByName($test_name);
+        $item = $retrieved_all->getBy($test_name, 'name');
         $this->assertEquals($created->getId(), $item->getId());
         $this->assertEquals($test_name, $item->getName());
 
@@ -148,7 +152,7 @@ class ProjectControllerTest extends WebTestCase
             $this->fail('Server returned '.$e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody());
         }
 
-        /** @var $created \Hyperion\ApiBundle\Entity\Project */
+        /** @var $created Project */
         $updated = $serializer->deserialize(
             $response->getBody(),
             'Hyperion\ApiBundle\Entity\Project',
@@ -168,10 +172,10 @@ class ProjectControllerTest extends WebTestCase
             $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
         }
 
-        $response = $http_client->get('/api/v1/projects')->send();
+        $response = $http_client->get('/api/v1/project/all')->send();
 
-        /** @var $retrieved ProjectCollection */
-        $retrieved_all = new ProjectCollection($serializer->deserialize(
+        /** @var $retrieved EntityCollection */
+        $retrieved_all = new EntityCollection($serializer->deserialize(
             $response->getBody(),
             'ArrayCollection<Hyperion\ApiBundle\Entity\Project>',
             'json'
@@ -189,8 +193,8 @@ class ProjectControllerTest extends WebTestCase
         $this->cleanProjects();
 
         $http_client = new Client(self::BASE_URL);
-        $http_client->post('/api/v1/project', [], ['name' => "Search Project Alpha"])->send();
-        $http_client->post('/api/v1/project', [], ['name' => "Search Project Bravo"])->send();
+        $http_client->post('/api/v1/project/new', [], ['name' => "Search Project Alpha", 'bake_status' => 0])->send();
+        $http_client->post('/api/v1/project/new', [], ['name' => "Search Project Bravo", 'bake_status' => 0])->send();
 
         // LIKE
         $criteria = CriteriaCollection::build()->add('name', '%Alpha', Comparison::LIKE());
@@ -239,11 +243,11 @@ class ProjectControllerTest extends WebTestCase
         $http_client = new Client(self::BASE_URL);
         $serializer  = static::createClient()->getContainer()->get('jms_serializer');
 
-        $response = $http_client->get('/api/v1/projects')->send();
+        $response = $http_client->get('/api/v1/project/all')->send();
         $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
-        /** @var $retrieved ProjectCollection */
-        $retrieved_all = new ProjectCollection($serializer->deserialize(
+        /** @var $retrieved EntityCollection */
+        $retrieved_all = new EntityCollection($serializer->deserialize(
             $response->getBody(),
             'ArrayCollection<Hyperion\ApiBundle\Entity\Project>',
             'json'
@@ -271,7 +275,7 @@ class ProjectControllerTest extends WebTestCase
 
         $this->assertEquals($response_code, $response->getStatusCode());
 
-        return new ProjectCollection($serializer->deserialize(
+        return new EntityCollection($serializer->deserialize(
             $response->getBody(),
             'ArrayCollection<Hyperion\ApiBundle\Entity\Project>',
             'json'

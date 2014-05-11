@@ -1,6 +1,6 @@
 # API v1
 hyperion_api:
-    resource: Hyperion\ApiBundle\Controller\ProjectController
+    resource: Hyperion\ApiBundle\Controller\CrudController
     type:     rest
     prefix:   /api/v1/
 

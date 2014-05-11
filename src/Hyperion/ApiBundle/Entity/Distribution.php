@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
  * @ORM\Entity
  * @ORM\Table(name="distributions")
  */
-class Distribution
+class Distribution implements HyperionEntityInterface
 {
     /**
      * @ORM\Id

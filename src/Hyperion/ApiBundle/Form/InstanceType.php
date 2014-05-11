@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ProjectType extends AbstractType
+class InstanceType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,9 +15,10 @@ class ProjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('bake_status')
-            ->add('baked_image_id');
+            ->add('instance_id')
+            ->add('instance_name')
+            ->add('state')
+            ->add('distribution');
     }
 
     /**
@@ -26,10 +27,10 @@ class ProjectType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            [
-                'data_class'      => 'Hyperion\ApiBundle\Entity\Project',
+            array(
+                'data_class'      => 'Hyperion\ApiBundle\Entity\Instance',
                 'csrf_protection' => false
-            ]
+            )
         );
     }
 
@@ -38,6 +39,6 @@ class ProjectType extends AbstractType
      */
     public function getName()
     {
-        return 'project';
+        return 'instance';
     }
 }

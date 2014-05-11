@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ProjectType extends AbstractType
+class SchemaType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,9 +15,16 @@ class ProjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('bake_status')
-            ->add('baked_image_id');
+            ->add('type')
+            ->add('image_id')
+            ->add('packager')
+            ->add('update_system_packages')
+            ->add('packages')
+            ->add('script')
+            ->add('services')
+            ->add('project')
+            ->add('prod_proxy')
+            ->add('test_proxy');
     }
 
     /**
@@ -26,10 +33,10 @@ class ProjectType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            [
-                'data_class'      => 'Hyperion\ApiBundle\Entity\Project',
+            array(
+                'data_class'      => 'Hyperion\ApiBundle\Entity\Schema',
                 'csrf_protection' => false
-            ]
+            )
         );
     }
 
@@ -38,6 +45,6 @@ class ProjectType extends AbstractType
      */
     public function getName()
     {
-        return 'project';
+        return 'schema';
     }
 }

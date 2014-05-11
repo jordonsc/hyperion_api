@@ -3,11 +3,10 @@
 namespace Hyperion\ApiBundle\Collection;
 
 use Doctrine\Common\Inflector\Inflector;
-use Hyperion\ApiBundle\Entity\Project;
 use Hyperion\ApiBundle\Exception\NotFoundException;
 use Hyperion\ApiBundle\Exception\UnexpectedValueException;
 
-class ProjectCollection implements \IteratorAggregate
+class EntityCollection implements \IteratorAggregate
 {
     protected $items;
 
@@ -28,10 +27,10 @@ class ProjectCollection implements \IteratorAggregate
 
 
     /**
-     * Get a Project by ID
+     * Get an entity by ID
      *
      * @param int $key
-     * @return Project
+     * @return object
      * @throws UnexpectedValueException
      * @throws NotFoundException
      */
@@ -39,41 +38,26 @@ class ProjectCollection implements \IteratorAggregate
         return $this->getBy($key, 'id');
     }
 
-    /**
-     * Get a Project by name
-     *
-     * @param string $key
-     * @return Project
-     * @throws UnexpectedValueException
-     * @throws NotFoundException
-     */
-    public function getByName($key) {
-        return $this->getBy($key, 'name');
-    }
 
     /**
-     * Get an item by any given field
+     * Get an entity by any given field
      *
      * @param mixed $key
      * @param string $field
-     * @return Project
+     * @return object
      * @throws UnexpectedValueException
      * @throws NotFoundException
      */
-    protected function getBy($key, $field)
+    public function getBy($key, $field)
     {
         foreach ($this->items as $item) {
-            if (!($item instanceof Project)) {
-                throw new UnexpectedValueException("Unexpected entity type: ".get_class($item));
-            }
-
             $fn = 'get'.Inflector::classify($field);
             if ($item->$fn() == $key) {
                 return $item;
             }
         }
 
-        throw new NotFoundException("Project ".$field." not found in collection: ".$key);
+        throw new NotFoundException("Entity ".$field." not found in collection: ".$key);
     }
 
     /**
@@ -86,7 +70,7 @@ class ProjectCollection implements \IteratorAggregate
     }
 
     /**
-     * @return Project
+     * @return object
      */
     public function current() {
         return $this->getIterator()->current();

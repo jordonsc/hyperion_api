@@ -2,6 +2,7 @@
 
 namespace Hyperion\ApiBundle\Controller;
 
+use Doctrine\Common\Inflector\Inflector;
 use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -9,29 +10,46 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
-use Hyperion\ApiBundle\Entity\Project;
-use Hyperion\ApiBundle\Form\ProjectType;
+use Hyperion\ApiBundle\Exception\NotFoundException;
 use Hyperion\Dbal\Collection\CriteriaCollection;
 use Hyperion\Dbal\Criteria\Criteria;
-use Hyperion\Dbal\Enum\Comparison;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ProjectController extends FOSRestController
+class CrudController extends FOSRestController
 {
+    // HyperionApiBundle entities permitted for CRUD operations, and their fields permitted for searching
+    protected $safe_fields = [
+        'account' => ['id', 'name'],
+        'project' => ['id', 'name', 'bake_status', 'baked_image_id'],
+    ];
 
-    protected $safe_fields = ['id', 'name'];
+    /**
+     * Get the full class name from a short entity name
+     *
+     * @param $entity
+     * @return string
+     * @throws NotFoundException
+     */
+    protected function getClassName($entity)
+    {
+        if (!array_key_exists($entity, $this->safe_fields)) {
+            throw new NotFoundException("Unsupported entity '".$entity."'");
+        }
+
+        return "Hyperion\\ApiBundle\\Entity\\".Inflector::classify($entity);
+    }
 
     /**
      * Get all projects
      *
      * @api
-     * @Get("/projects")
+     * @Get("/{entity}/all")
      * @return Response
      */
-    public function getProjectsAction()
+    public function getAllEntitiesAction($entity)
     {
-        $data = $this->getDoctrine()->getRepository('HyperionApiBundle:Project')->findAll();
+        $data = $this->getDoctrine()->getRepository($this->getClassName($entity))->findAll();
 
         return $this->handleView($this->view($data));
     }
@@ -40,11 +58,13 @@ class ProjectController extends FOSRestController
      * Search projects
      *
      * @api
-     * @Post("/project/search")
+     * @Post("/{entity}/search")
      * @return Response
      */
-    public function searchProjectsAction(Request $request)
+    public function searchEntityAction($entity, Request $request)
     {
+        $class_name = $this->getClassName($entity);
+
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
         $sz = $this->get('serializer');
@@ -55,15 +75,16 @@ class ProjectController extends FOSRestController
             $request->getRequestFormat('json')
         ));
 
-        $dql    = "SELECT e FROM Hyperion\\ApiBundle\\Entity\\Project e WHERE ";
-        $where  = [];
-        $params = [];
-        $i      = 0;
+        $search_fields = $this->safe_fields[$entity];
+        $dql           = "SELECT e FROM ".$class_name." e WHERE ";
+        $where         = [];
+        $params        = [];
+        $i             = 0;
 
         /** @var $c Criteria */
         foreach ($criteria as $c) {
             // Sanitise for security -
-            if (!in_array($c->getField(), $this->safe_fields) || !$c->getComparison()) {
+            if (!in_array($c->getField(), $search_fields) || !$c->getComparison()) {
                 return $this->handleView(
                     $this->view("Security violation in criteria index #".$i, Codes::HTTP_FORBIDDEN)
                 );
@@ -80,31 +101,21 @@ class ProjectController extends FOSRestController
     }
 
     /**
-     * Get project by ID
+     * Create entity
      *
      * @api
-     * @Get("/project/{id}")
-     * @return Response
-     */
-    public function getProjectAction($id)
-    {
-        $data = $this->getDoctrine()->getRepository('HyperionApiBundle:Project')->find($id);
-
-        return $this->handleView($this->view($data, $data ? Codes::HTTP_OK : Codes::HTTP_NOT_FOUND));
-    }
-
-    /**
-     * Create project
-     *
-     * @api
-     * @Post("/project")
+     * @Post("/{entity}/new")
      * @param Request $request
      * @return Response
      */
-    public function createProjectAction(Request $request)
+    public function createEntityAction($entity, Request $request)
     {
-        $project = new Project();
-        $form    = $this->createForm(new ProjectType(), $project);
+        $class_name   = $this->getClassName($entity);
+        $entity_class = "\\".$class_name;
+        $form_class   = "\\Hyperion\\ApiBundle\\Form\\".Inflector::classify($entity)."Type";
+
+        $project = new $entity_class();
+        $form    = $this->createForm(new $form_class(), $project);
         $form->submit($request->request->all());
 
         if ($form->isValid()) {
@@ -122,12 +133,12 @@ class ProjectController extends FOSRestController
      * Delete a project
      *
      * @api
-     * @Delete("/project/{id}")
+     * @Delete("/{entity}/{id}")
      * @return Response
      */
-    public function deleteProjectAction($id)
+    public function deleteEntityAction($entity, $id)
     {
-        $data = $this->getDoctrine()->getRepository('HyperionApiBundle:Project')->find($id);
+        $data = $this->getDoctrine()->getRepository($this->getClassName($entity))->find($id);
 
         if (!$data) {
             return $this->handleView($this->view(null, Codes::HTTP_NOT_FOUND));
@@ -140,30 +151,46 @@ class ProjectController extends FOSRestController
         return $this->handleView($this->view('', Codes::HTTP_OK));
     }
 
+
     /**
-     * Update a project
+     * Get entity by ID
      *
      * @api
-     * @Put("/project/{id}")
+     * @Get("/{entity}/{id}")
      * @return Response
      */
-    public function updateProjectAction($id, Request $request)
+    public function getEntityAction($entity, $id)
     {
-        $project = $this->getDoctrine()->getRepository('HyperionApiBundle:Project')->find($id);
+        $data = $this->getDoctrine()->getRepository($this->getClassName($entity))->find($id);
 
-        if (!$project) {
+        return $this->handleView($this->view($data, $data ? Codes::HTTP_OK : Codes::HTTP_NOT_FOUND));
+    }
+
+    /**
+     * Update an entity
+     *
+     * @api
+     * @Put("/{entity}/{id}")
+     * @return Response
+     */
+    public function updateProjectAction($entity, $id, Request $request)
+    {
+        $form_class = "\\Hyperion\\ApiBundle\\Form\\".Inflector::classify($entity)."Type";
+        $obj        = $this->getDoctrine()->getRepository($this->getClassName($entity))->find($id);
+
+        if (!$obj) {
             return $this->handleView($this->view(null, Codes::HTTP_NOT_FOUND));
         }
 
-        $form = $this->createForm(new ProjectType(), $project);
+        $form = $this->createForm(new $form_class(), $obj);
         $form->submit($request->request->all());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($project);
+            $em->persist($obj);
             $em->flush();
 
-            return $this->handleView($this->view($project, Codes::HTTP_OK));
+            return $this->handleView($this->view($obj, Codes::HTTP_OK));
         } else {
             return $this->handleView($this->view($form, Codes::HTTP_BAD_REQUEST));
         }
