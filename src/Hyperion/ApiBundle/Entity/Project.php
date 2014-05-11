@@ -50,11 +50,6 @@ class Project implements HyperionEntityInterface
     protected $actions;
 
     /**
-     * @ORM\OneToOne(targetEntity="Schema", inversedBy="project")
-     */
-    protected $schema;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Credential", inversedBy="prod_projects")
      * @ORM\JoinColumn(name="prod_credential_id", referencedColumnName="id")
      */
@@ -66,16 +61,51 @@ class Project implements HyperionEntityInterface
      */
     protected $test_credential;
 
-    // --
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $source_image_id;
 
     /**
-     * Constructor
+     * @ORM\Column(type="integer")
      */
-    public function __construct()
-    {
-        $this->distributions = new ArrayCollection();
-        $this->actions = new ArrayCollection();
-    }
+    protected $packager;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $update_system_packages;
+
+    /**
+     * JSON array
+     * @ORM\Column(type="text")
+     */
+    protected $packages;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $script;
+
+    /**
+     * JSON array
+     * @ORM\Column(type="text")
+     */
+    protected $services;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Proxy")
+     */
+    protected $prod_proxy;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Proxy")
+     */
+    protected $test_proxy;
+
+
+    // --
+
 
     /**
      * Get id
@@ -85,6 +115,17 @@ class Project implements HyperionEntityInterface
     public function getId()
     {
         return $this->id;
+    }
+
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->distributions = new ArrayCollection();
+        $this->actions = new ArrayCollection();
     }
 
     /**
@@ -100,15 +141,221 @@ class Project implements HyperionEntityInterface
         return $this;
     }
 
-
     /**
      * Get name
      *
-     * @return string
+     * @return string 
      */
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set bake_status
+     *
+     * @param integer $bakeStatus
+     * @return Project
+     */
+    public function setBakeStatus($bakeStatus)
+    {
+        $this->bake_status = $bakeStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get bake_status
+     *
+     * @return integer 
+     */
+    public function getBakeStatus()
+    {
+        return $this->bake_status;
+    }
+
+    /**
+     * Set baked_image_id
+     *
+     * @param string $bakedImageId
+     * @return Project
+     */
+    public function setBakedImageId($bakedImageId)
+    {
+        $this->baked_image_id = $bakedImageId;
+
+        return $this;
+    }
+
+    /**
+     * Get baked_image_id
+     *
+     * @return string 
+     */
+    public function getBakedImageId()
+    {
+        return $this->baked_image_id;
+    }
+
+    /**
+     * Set source_image_id
+     *
+     * @param string $sourceImageId
+     * @return Project
+     */
+    public function setSourceImageId($sourceImageId)
+    {
+        $this->source_image_id = $sourceImageId;
+
+        return $this;
+    }
+
+    /**
+     * Get source_image_id
+     *
+     * @return string 
+     */
+    public function getSourceImageId()
+    {
+        return $this->source_image_id;
+    }
+
+    /**
+     * Set packager
+     *
+     * @param integer $packager
+     * @return Project
+     */
+    public function setPackager($packager)
+    {
+        $this->packager = $packager;
+
+        return $this;
+    }
+
+    /**
+     * Get packager
+     *
+     * @return integer 
+     */
+    public function getPackager()
+    {
+        return $this->packager;
+    }
+
+    /**
+     * Set update_system_packages
+     *
+     * @param integer $updateSystemPackages
+     * @return Project
+     */
+    public function setUpdateSystemPackages($updateSystemPackages)
+    {
+        $this->update_system_packages = $updateSystemPackages;
+
+        return $this;
+    }
+
+    /**
+     * Get update_system_packages
+     *
+     * @return integer 
+     */
+    public function getUpdateSystemPackages()
+    {
+        return $this->update_system_packages;
+    }
+
+    /**
+     * Set packages
+     *
+     * @param string $packages
+     * @return Project
+     */
+    public function setPackages($packages)
+    {
+        $this->packages = $packages;
+
+        return $this;
+    }
+
+    /**
+     * Get packages
+     *
+     * @return string 
+     */
+    public function getPackages()
+    {
+        return $this->packages;
+    }
+
+    /**
+     * Set script
+     *
+     * @param string $script
+     * @return Project
+     */
+    public function setScript($script)
+    {
+        $this->script = $script;
+
+        return $this;
+    }
+
+    /**
+     * Get script
+     *
+     * @return string 
+     */
+    public function getScript()
+    {
+        return $this->script;
+    }
+
+    /**
+     * Set services
+     *
+     * @param string $services
+     * @return Project
+     */
+    public function setServices($services)
+    {
+        $this->services = $services;
+
+        return $this;
+    }
+
+    /**
+     * Get services
+     *
+     * @return string 
+     */
+    public function getServices()
+    {
+        return $this->services;
+    }
+
+    /**
+     * Set account
+     *
+     * @param Account $account
+     * @return Project
+     */
+    public function setAccount(Account $account = null)
+    {
+        $this->account = $account;
+
+        return $this;
+    }
+
+    /**
+     * Get account
+     *
+     * @return Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
     }
 
     /**
@@ -166,6 +413,7 @@ class Project implements HyperionEntityInterface
     {
         $this->actions->removeElement($actions);
     }
+
     /**
      * Get actions
      *
@@ -174,53 +422,6 @@ class Project implements HyperionEntityInterface
     public function getActions()
     {
         return $this->actions;
-    }
-
-
-    /**
-     * Set account
-     *
-     * @param Account $account
-     * @return Project
-     */
-    public function setAccount(Account $account = null)
-    {
-        $this->account = $account;
-
-        return $this;
-    }
-
-    /**
-     * Get account
-     *
-     * @return Account
-     */
-    public function getAccount()
-    {
-        return $this->account;
-    }
-
-    /**
-     * Set schema
-     *
-     * @param Schema $schema
-     * @return Project
-     */
-    public function setSchema(Schema $schema = null)
-    {
-        $this->schema = $schema;
-
-        return $this;
-    }
-
-    /**
-     * Get schema
-     *
-     * @return Schema
-     */
-    public function getSchema()
-    {
-        return $this->schema;
     }
 
     /**
@@ -270,48 +471,48 @@ class Project implements HyperionEntityInterface
     }
 
     /**
-     * Set bake_status
+     * Set prod_proxy
      *
-     * @param integer $bakeStatus
+     * @param Proxy $prodProxy
      * @return Project
      */
-    public function setBakeStatus($bakeStatus)
+    public function setProdProxy(Proxy $prodProxy = null)
     {
-        $this->bake_status = $bakeStatus;
+        $this->prod_proxy = $prodProxy;
 
         return $this;
     }
 
     /**
-     * Get bake_status
+     * Get prod_proxy
      *
-     * @return integer 
+     * @return Proxy
      */
-    public function getBakeStatus()
+    public function getProdProxy()
     {
-        return $this->bake_status;
+        return $this->prod_proxy;
     }
 
     /**
-     * Set baked_image_id
+     * Set test_proxy
      *
-     * @param string $bakedImageId
+     * @param Proxy $testProxy
      * @return Project
      */
-    public function setBakedImageId($bakedImageId)
+    public function setTestProxy(Proxy $testProxy = null)
     {
-        $this->baked_image_id = $bakedImageId;
+        $this->test_proxy = $testProxy;
 
         return $this;
     }
 
     /**
-     * Get baked_image_id
+     * Get test_proxy
      *
-     * @return string 
+     * @return Proxy
      */
-    public function getBakedImageId()
+    public function getTestProxy()
     {
-        return $this->baked_image_id;
+        return $this->test_proxy;
     }
 }

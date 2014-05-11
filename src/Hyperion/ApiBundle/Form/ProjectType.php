@@ -17,7 +17,18 @@ class ProjectType extends AbstractType
         $builder
             ->add('name')
             ->add('bake_status')
-            ->add('baked_image_id');
+            ->add('baked_image_id')
+            ->add('source_image_id')
+            ->add('packager')
+            ->add('update_system_packages')
+            ->add('packages')
+            ->add('script')
+            ->add('services')
+            ->add('account')
+            ->add('prod_credential')
+            ->add('test_credential')
+            ->add('prod_proxy')
+            ->add('test_proxy');
     }
 
     /**
@@ -26,10 +37,10 @@ class ProjectType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            [
+            array(
                 'data_class'      => 'Hyperion\ApiBundle\Entity\Project',
                 'csrf_protection' => false
-            ]
+            )
         );
     }
 

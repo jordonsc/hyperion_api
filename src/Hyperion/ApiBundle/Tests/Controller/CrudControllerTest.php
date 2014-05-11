@@ -181,7 +181,7 @@ class CrudControllerTest extends WebTestCase
      */
     protected function cleanEntity($entity)
     {
-        $class_name  = "Hyperion\\ApiBundle\\Entity\\".Inflector::getDefault()->camel($entity);
+        $class_name  = "Hyperion\\Dbal\\Entity\\".Inflector::getDefault()->camel($entity);
         $http_client = new Client(self::BASE_URL);
         $serializer  = static::createClient()->getContainer()->get('jms_serializer');
 
