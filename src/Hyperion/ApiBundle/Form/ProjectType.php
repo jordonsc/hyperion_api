@@ -25,10 +25,10 @@ class ProjectType extends AbstractType
             ->add('script')
             ->add('services')
             ->add('account_id')
-            ->add('prod_credential')
-            ->add('test_credential')
-            ->add('prod_proxy')
-            ->add('test_proxy');
+            ->add('prod_credential_id')
+            ->add('test_credential_id')
+            ->add('prod_proxy_id')
+            ->add('test_proxy_id');
     }
 
     /**
