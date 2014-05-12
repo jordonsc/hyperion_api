@@ -24,7 +24,7 @@ class ProjectType extends AbstractType
             ->add('packages')
             ->add('script')
             ->add('services')
-            ->add('account')
+            ->add('account_id')
             ->add('prod_credential')
             ->add('test_credential')
             ->add('prod_proxy')

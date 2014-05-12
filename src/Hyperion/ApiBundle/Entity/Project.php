@@ -40,6 +40,11 @@ class Project implements HyperionEntityInterface
     protected $account;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $account_id;
+
+    /**
      * @ORM\OneToMany(targetEntity="Distribution", mappedBy="project")
      */
     protected $distributions;
@@ -514,5 +519,28 @@ class Project implements HyperionEntityInterface
     public function getTestProxy()
     {
         return $this->test_proxy;
+    }
+
+    /**
+     * Set account_id
+     *
+     * @param integer $accountId
+     * @return Project
+     */
+    public function setAccountId($accountId)
+    {
+        $this->account_id = $accountId;
+
+        return $this;
+    }
+
+    /**
+     * Get account_id
+     *
+     * @return integer 
+     */
+    public function getAccountId()
+    {
+        return $this->account_id;
     }
 }

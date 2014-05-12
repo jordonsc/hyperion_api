@@ -9,6 +9,8 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
 use Guzzle\Inflection\Inflector;
 use Hyperion\ApiBundle\Collection\EntityCollection;
 use Hyperion\ApiBundle\Entity\HyperionEntityInterface;
+use Hyperion\Dbal\Enum\BakeStatus;
+use Hyperion\Dbal\Enum\Packager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class CrudControllerTest extends WebTestCase
@@ -56,7 +58,7 @@ class CrudControllerTest extends WebTestCase
      */
     public function testEntityCrud($entity, $payload)
     {
-        $class_name  = "Hyperion\\ApiBundle\\Entity\\".Inflector::getDefault()->camel($entity);
+        $class_name  = "Hyperion\\Dbal\\Entity\\".Inflector::getDefault()->camel($entity);
         $serializer  = static::createClient()->getContainer()->get('jms_serializer');
         $http_client = new Client(self::BASE_URL);
         $response    = null;
@@ -77,7 +79,7 @@ class CrudControllerTest extends WebTestCase
             $this->assertEquals(Codes::HTTP_CREATED, $response->getStatusCode());
 
         } catch (BadResponseException $e) {
-            $this->fail('Server returned '.$e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody());
+            $this->fail('Server returned '.$e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody()."\n\nPayload: ".print_r($post_data, true));
         }
 
         $created = $serializer->deserialize(
@@ -205,7 +207,25 @@ class CrudControllerTest extends WebTestCase
     {
         $rand_id = rand(1000, 9999);
         return [
-            ['account', ['name' => 'Test Account #'.$rand_id]],
+            [
+                'account',
+                [
+                    'name' => 'Test Account #'.$rand_id,
+                ]
+            ],
+            [
+                'project',
+                [
+                    'name'                   => 'Test Project #'.$rand_id,
+                    'account_id'             => '@account',
+                    'bake_status'            => BakeStatus::UNBAKED,
+                    'source_image_id'        => 'i-fake',
+                    'packager'               => Packager::YUM,
+                    'update_system_packages' => 0,
+                    'packages'               => '[]',
+                    'services'               => '[]',
+                ]
+            ],
         ];
     }
 

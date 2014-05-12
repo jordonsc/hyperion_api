@@ -10,6 +10,7 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
+use Hyperion\ApiBundle\Entity\HyperionEntityInterface;
 use Hyperion\ApiBundle\Exception\NotFoundException;
 use Hyperion\Dbal\Collection\CriteriaCollection;
 use Hyperion\Dbal\Criteria\Criteria;
@@ -18,11 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CrudController extends FOSRestController
 {
-    // HyperionApiBundle entities permitted for CRUD operations, and their fields permitted for searching
-    protected $safe_fields = [
-        'account' => ['id', 'name'],
-        'project' => ['id', 'name', 'bake_status', 'baked_image_id'],
-    ];
 
     /**
      * Get the full class name from a short entity name
@@ -33,7 +29,7 @@ class CrudController extends FOSRestController
      */
     protected function getClassName($entity)
     {
-        if (!array_key_exists($entity, $this->safe_fields)) {
+        if (!$this->get('hyperion.entity_validator')->isValid($entity)) {
             throw new NotFoundException("Unsupported entity '".$entity."'");
         }
 
@@ -75,7 +71,7 @@ class CrudController extends FOSRestController
             $request->getRequestFormat('json')
         ));
 
-        $search_fields = $this->safe_fields[$entity];
+        $search_fields = $this->get('hyperion.entity_validator')->getSearchableFields($entity);
         $dql           = "SELECT e FROM ".$class_name." e WHERE ";
         $where         = [];
         $params        = [];
@@ -114,18 +110,51 @@ class CrudController extends FOSRestController
         $entity_class = "\\".$class_name;
         $form_class   = "\\Hyperion\\ApiBundle\\Form\\".Inflector::classify($entity)."Type";
 
-        $project = new $entity_class();
-        $form    = $this->createForm(new $form_class(), $project);
+        $obj  = new $entity_class();
+        $form = $this->createForm(new $form_class(), $obj);
         $form->submit($request->request->all());
+
+        $this->hydrateRelationships($entity, $obj);
+
+        file_put_contents("/tmp/entity.".$entity, print_r($obj, true));
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($project);
+            $em->persist($obj);
             $em->flush();
 
-            return $this->handleView($this->view($project, Codes::HTTP_CREATED));
+            return $this->handleView($this->view($obj, Codes::HTTP_CREATED));
         } else {
             return $this->handleView($this->view($form, Codes::HTTP_BAD_REQUEST));
+        }
+    }
+
+    /**
+     * Hydrate relationships from their 'ID' fields
+     *
+     * @param string                  $entity Name of the entity (lowercase)
+     * @param HyperionEntityInterface $obj    Actual entity object
+     */
+    protected function hydrateRelationships($entity, HyperionEntityInterface &$obj)
+    {
+        $pks = $this->get('hyperion.entity_validator')->getForeignKeys($entity);
+
+        foreach ($pks as $field => $rel_entity) {
+            $getter = 'get'.Inflector::classify($field);
+            $setter = 'set'.Inflector::classify(substr($field, 0, -3)); // less the _id suffix (see Entity_Rules.md)
+            $id = $obj->$getter();
+
+            if ($id === null) {
+                continue;
+            }
+
+            $rel = $this->getDoctrine()->getRepository($this->getClassName($rel_entity))->find($id);
+
+            if (!$rel) {
+                throw new NotFoundException("Related entity `".$rel_entity."` not found with ID '".$id."'");
+            }
+
+            $obj->$setter($rel);
         }
     }
 

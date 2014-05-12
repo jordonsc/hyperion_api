@@ -1,0 +1,74 @@
+# CRUD entity mappings
+#   fk: array of foreign key field -> entity mappings
+#   searchable: array of fields that can be searched
+
+parameters:
+    hyperion.entities:
+        account:
+            fk: { }
+            searchable:
+                - id
+                - name
+
+        project:
+            fk: { account_id: account, prod_credential_id: credential, test_credential_id: credential }
+            searchable:
+                - id
+                - name
+                - account_id
+                - bake_status
+                - baked_image_id
+                - source_image_id
+                - packager
+                - update_system_packages
+
+        credential:
+            fk: { account_id: account }
+            searchable:
+                - id
+                - provider
+                - key
+                - region
+
+        action:
+            fk: { project_id: project }
+            searchable:
+                - id
+                - name
+                - state
+
+        proxy:
+            fk: { account_id: account }
+            searchable:
+                - id
+                - type
+                - hostname
+                - port
+                - username
+                - password
+
+        repository:
+            fk: { account_id: account, proxy_id: proxy }
+            searchable:
+                - id
+                - type
+                - url
+                - username
+                - password
+                - private_key
+                - tag
+
+        distribution:
+            fk: { project_id: project }
+            searchable:
+                - id
+                - name
+                - status
+
+        instance:
+            fk: { distribution_id: distribution }
+            searchable:
+                - id
+                - instance_id
+                - name
+                - state

@@ -20,9 +20,9 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode    = $treeBuilder->root('hyperion_api');
 
-        $rootNode->children()
-            ->scalarNode('my_type')->defaultValue('bar')
-            ->end();
+//        $rootNode->children()
+//            ->scalarNode('my_type')->defaultValue('bar')
+//            ->end();
 
         return $treeBuilder;
     }

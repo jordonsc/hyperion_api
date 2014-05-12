@@ -9,23 +9,27 @@ use Guzzle\Http\Exception\ServerErrorResponseException;
 use Hyperion\ApiBundle\Entity\Project;
 use Hyperion\ApiBundle\Collection\EntityCollection;
 use Hyperion\Dbal\Collection\CriteriaCollection;
+use Hyperion\Dbal\Entity\Account;
 use Hyperion\Dbal\Enum\Comparison;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Does the same thing CrudControllerTest does except a little more specific and tests search functionality
  *
- * Only applies to the 'Project' entity
+ * @group skip
  */
 class ProjectControllerTest extends WebTestCase
 {
 
     const BASE_URL = 'http://api.hyperion.dev';
 
+    protected $account_id = 0;
+
     protected function getSamplePayload()
     {
         return [
             'name'                   => 'Sample Project',
+            'account_id'             => $this->account_id,
             'bake_status'            => 0,
             'baked_image_id'         => null,
             'source_image_id'        => 'i-fake',
@@ -89,10 +93,28 @@ class ProjectControllerTest extends WebTestCase
      */
     public function testProjectCrud()
     {
-        $serializer        = static::createClient()->getContainer()->get('jms_serializer');
-        $http_client       = new Client(self::BASE_URL);
-        $response          = null;
-        $test_name         = 'Project #'.rand(100, 999);
+        $serializer  = static::createClient()->getContainer()->get('jms_serializer');
+        $http_client = new Client(self::BASE_URL);
+        $response    = null;
+        $test_name   = 'Project #'.rand(100, 999);
+
+        // Create an account first
+        try {
+            $response = $http_client->post('/api/v1/account/new', [], ['name' => 'Sample Account'])->send();
+            $this->assertEquals(Codes::HTTP_CREATED, $response->getStatusCode());
+
+        } catch (BadResponseException $e) {
+            $this->fail('Server returned '.$e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody());
+        }
+
+        /** @var $account Account */
+        $account = $serializer->deserialize(
+            $response->getBody(),
+            'Hyperion\Dbal\Entity\Account',
+            'json'
+        );
+
+        $this->account_id  = $account->getId();
         $post_data         = $this->getSamplePayload();
         $post_data['name'] = $test_name;
 
