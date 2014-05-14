@@ -1,6 +1,7 @@
 <?php
 namespace Hyperion\ApiBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -61,8 +62,8 @@ class Credential implements HyperionEntityInterface
      */
     public function __construct()
     {
-        $this->prod_projects = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->test_projects = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->prod_projects = new ArrayCollection();
+        $this->test_projects = new ArrayCollection();
     }
 
     /**

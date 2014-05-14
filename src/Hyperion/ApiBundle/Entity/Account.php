@@ -47,22 +47,21 @@ class Account implements HyperionEntityInterface
     // --
 
 
-
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->projects = new ArrayCollection();
-        $this->repos = new ArrayCollection();
-        $this->proxies = new ArrayCollection();
+        $this->projects    = new ArrayCollection();
+        $this->repos       = new ArrayCollection();
+        $this->proxies     = new ArrayCollection();
         $this->credentials = new ArrayCollection();
     }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -85,7 +84,7 @@ class Account implements HyperionEntityInterface
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -222,5 +221,11 @@ class Account implements HyperionEntityInterface
     public function getCredentials()
     {
         return $this->credentials;
+    }
+
+
+    public function __toString()
+    {
+        return '['.$this->getId().'] '.$this->getName();
     }
 }

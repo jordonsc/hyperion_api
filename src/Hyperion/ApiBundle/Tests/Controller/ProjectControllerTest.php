@@ -5,18 +5,19 @@ namespace Hyperion\ApiBundle\Tests\Controller;
 use FOS\RestBundle\Util\Codes;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\BadResponseException;
+use Guzzle\Http\Exception\ClientErrorResponseException;
 use Guzzle\Http\Exception\ServerErrorResponseException;
+use Guzzle\Inflection\Inflector;
 use Hyperion\ApiBundle\Entity\Project;
 use Hyperion\ApiBundle\Collection\EntityCollection;
 use Hyperion\Dbal\Collection\CriteriaCollection;
 use Hyperion\Dbal\Entity\Account;
+use Hyperion\Dbal\Entity\HyperionEntity;
 use Hyperion\Dbal\Enum\Comparison;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Does the same thing CrudControllerTest does except a little more specific and tests search functionality
- *
- * @group skip
  */
 class ProjectControllerTest extends WebTestCase
 {
@@ -29,7 +30,7 @@ class ProjectControllerTest extends WebTestCase
     {
         return [
             'name'                   => 'Sample Project',
-            'account_id'             => $this->account_id,
+            'account'                => $this->account_id,
             'bake_status'            => 0,
             'baked_image_id'         => null,
             'source_image_id'        => 'i-fake',
@@ -68,7 +69,7 @@ class ProjectControllerTest extends WebTestCase
         try {
             $http_client->get('/api/v1/project/1234567')->send();
             $this->fail("Request succeeded when it shouldn't have");
-        } catch (\Guzzle\Http\Exception\ClientErrorResponseException $e) {
+        } catch (ClientErrorResponseException $e) {
             $this->assertEquals(404, $e->getResponse()->getStatusCode());
         }
     }
@@ -83,8 +84,27 @@ class ProjectControllerTest extends WebTestCase
         try {
             $http_client->delete('/api/v1/project/1234567')->send();
             $this->fail("Request succeeded when it shouldn't have");
-        } catch (\Guzzle\Http\Exception\ClientErrorResponseException $e) {
+        } catch (ClientErrorResponseException $e) {
             $this->assertEquals(404, $e->getResponse()->getStatusCode());
+        }
+    }
+
+    /**
+     * @small
+     */
+    public function testProjectNoAccount()
+    {
+        $http_client = new Client(self::BASE_URL);
+
+        $post_data = $this->getSamplePayload();
+        unset($post_data['account']);
+        $post_data['name'] = "Invalid Project";
+
+        try {
+            $http_client->post('/api/v1/project/new', [], $post_data)->send();
+            $this->fail("Request succeeded when it shouldn't have");
+        } catch (ClientErrorResponseException $e) {
+            $this->assertEquals(Codes::HTTP_BAD_REQUEST, $e->getResponse()->getStatusCode());
         }
     }
 
@@ -173,12 +193,10 @@ class ProjectControllerTest extends WebTestCase
         $this->assertEquals($test_name, $item->getName());
 
         // UPDATE
-        $update_data = [
-            'name' => 'Updated name #'.rand(100, 999),
-        ];
+        $post_data['name'] = 'Updated name #'.rand(100, 999);
 
         try {
-            $response = $http_client->put('/api/v1/project/'.$created->getId(), [], $update_data)->send();
+            $response = $http_client->put('/api/v1/project/'.$created->getId(), [], $post_data)->send();
             $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
         } catch (BadResponseException $e) {
@@ -193,7 +211,7 @@ class ProjectControllerTest extends WebTestCase
         );
 
         $this->assertGreaterThan(0, $updated->getId());
-        $this->assertEquals($update_data['name'], $updated->getName());
+        $this->assertEquals($post_data['name'], $updated->getName());
 
 
         // DELETE
@@ -221,7 +239,30 @@ class ProjectControllerTest extends WebTestCase
      */
     public function testProjectSearch()
     {
-        $this->cleanProjects();
+        $this->cleanTable('project');
+        $this->cleanTable('account');
+
+        $http_client = new Client(self::BASE_URL);
+        $response    = null;
+        $serializer  = static::createClient()->getContainer()->get('jms_serializer');
+
+        // Create an account first
+        try {
+            $response = $http_client->post('/api/v1/account/new', [], ['name' => 'Sample Account'])->send();
+            $this->assertEquals(Codes::HTTP_CREATED, $response->getStatusCode());
+
+        } catch (BadResponseException $e) {
+            $this->fail('Server returned '.$e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody());
+        }
+
+        /** @var $account Account */
+        $account = $serializer->deserialize(
+            $response->getBody(),
+            'Hyperion\Dbal\Entity\Account',
+            'json'
+        );
+
+        $this->account_id = $account->getId();
 
         $post_data_a         = $this->getSamplePayload();
         $post_data_a['name'] = "Search Project Alpha";
@@ -229,7 +270,6 @@ class ProjectControllerTest extends WebTestCase
         $post_data_b         = $this->getSamplePayload();
         $post_data_b['name'] = "Search Project Bravo";
 
-        $http_client = new Client(self::BASE_URL);
         $http_client->post('/api/v1/project/new', [], $post_data_a)->send();
         $http_client->post('/api/v1/project/new', [], $post_data_b)->send();
 
@@ -272,27 +312,28 @@ class ProjectControllerTest extends WebTestCase
         $r        = $this->doSearch($criteria);
         $this->assertEquals(2, $r->count());
 
-        $this->cleanProjects();
+        $this->cleanTable('project');
+        $this->cleanTable('account');
     }
 
-    protected function cleanProjects()
+    protected function cleanTable($table)
     {
         $http_client = new Client(self::BASE_URL);
         $serializer  = static::createClient()->getContainer()->get('jms_serializer');
 
-        $response = $http_client->get('/api/v1/project/all')->send();
+        $response = $http_client->get('/api/v1/'.$table.'/all')->send();
         $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
         /** @var $retrieved EntityCollection */
         $retrieved_all = new EntityCollection($serializer->deserialize(
             $response->getBody(),
-            'ArrayCollection<Hyperion\Dbal\Entity\Project>',
+            'ArrayCollection<Hyperion\Dbal\Entity\\'.Inflector::getDefault()->camel($table).'>',
             'json'
         ));
 
-        /** @var $item Project */
+        /** @var $item HyperionEntity */
         foreach ($retrieved_all as $item) {
-            $response = $http_client->delete('/api/v1/project/'.$item->getId())->send();
+            $response = $http_client->delete('/api/v1/'.$table.'/'.$item->getId())->send();
             $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
         }
     }

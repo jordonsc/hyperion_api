@@ -114,10 +114,6 @@ class CrudController extends FOSRestController
         $form = $this->createForm(new $form_class(), $obj);
         $form->submit($request->request->all());
 
-        $this->hydrateRelationships($entity, $obj);
-
-        file_put_contents("/tmp/entity.".$entity, print_r($obj, true));
-
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($obj);
@@ -142,7 +138,7 @@ class CrudController extends FOSRestController
         foreach ($pks as $field => $rel_entity) {
             $getter = 'get'.Inflector::classify($field);
             $setter = 'set'.Inflector::classify(substr($field, 0, -3)); // less the _id suffix (see Entity_Rules.md)
-            $id = $obj->$getter();
+            $id     = $obj->$getter();
 
             if ($id === null) {
                 continue;

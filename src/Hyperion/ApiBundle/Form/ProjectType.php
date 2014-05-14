@@ -2,6 +2,7 @@
 
 namespace Hyperion\ApiBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -14,6 +15,7 @@ class ProjectType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('name')
             ->add('bake_status')
@@ -24,11 +26,20 @@ class ProjectType extends AbstractType
             ->add('packages')
             ->add('script')
             ->add('services')
-            ->add('account_id')
-            ->add('prod_credential_id')
-            ->add('test_credential_id')
-            ->add('prod_proxy_id')
-            ->add('test_proxy_id');
+            ->add(
+                'account',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Account',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                ]
+            )
+            ->add('prod_credential')
+            ->add('test_credential')
+            ->add('prod_proxy')
+            ->add('test_proxy');
     }
 
     /**

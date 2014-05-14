@@ -4,6 +4,7 @@ namespace Hyperion\ApiBundle\Entity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity
@@ -36,13 +37,11 @@ class Project implements HyperionEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="Account", inversedBy="projects")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getAccountId")
      */
     protected $account;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    protected $account_id;
 
     /**
      * @ORM\OneToMany(targetEntity="Distribution", mappedBy="project")
@@ -57,24 +56,20 @@ class Project implements HyperionEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="Credential", inversedBy="prod_projects")
      * @ORM\JoinColumn(name="prod_credential_id", referencedColumnName="id")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getProdCredentialId")
      */
     protected $prod_credential;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected $prod_credential_id;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Credential", inversedBy="test_projects")
      * @ORM\JoinColumn(name="test_credential_id", referencedColumnName="id")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getTestCredentialId")
      */
     protected $test_credential;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected $test_credential_id;
 
     /**
      * @ORM\Column(type="string")
@@ -111,24 +106,20 @@ class Project implements HyperionEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="Proxy")
      * @ORM\JoinColumn(name="prod_proxy_id", referencedColumnName="id")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getProdProxyId")
      */
     protected $prod_proxy;
 
     /**
      * @ORM\ManyToOne(targetEntity="Proxy")
      * @ORM\JoinColumn(name="test_proxy_id", referencedColumnName="id")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getTestProxyId")
      */
     protected $test_proxy;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected $prod_proxy_id;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected $test_proxy_id;
 
     // --
 
@@ -542,118 +533,27 @@ class Project implements HyperionEntityInterface
         return $this->test_proxy;
     }
 
-    /**
-     * Set account_id
-     *
-     * @param integer $accountId
-     * @return Project
-     */
-    public function setAccountId($accountId)
-    {
-        $this->account_id = $accountId;
+    // Serialisers --
 
-        return $this;
+    public function getAccountId() {
+        return $this->getAccount() ? $this->getAccount()->getId() : null;
     }
 
-    /**
-     * Get account_id
-     *
-     * @return integer 
-     */
-    public function getAccountId()
-    {
-        return $this->account_id;
+    public function getTestProxyId() {
+        return $this->getTestProxy() ? $this->getTestProxy()->getId() : null;
     }
 
-    /**
-     * Set prod_credential_id
-     *
-     * @param integer $prodCredentialId
-     * @return Project
-     */
-    public function setProdCredentialId($prodCredentialId)
-    {
-        $this->prod_credential_id = $prodCredentialId;
-
-        return $this;
+    public function getProdProxyId() {
+        return $this->getProdProxy() ? $this->getProdProxy()->getId() : null;
     }
 
-    /**
-     * Get prod_credential_id
-     *
-     * @return integer 
-     */
-    public function getProdCredentialId()
-    {
-        return $this->prod_credential_id;
+    public function getTestCredentialId() {
+        return $this->getTestCredential() ? $this->getTestCredential()->getId() : null;
     }
 
-    /**
-     * Set test_credential_id
-     *
-     * @param integer $testCredentialId
-     * @return Project
-     */
-    public function setTestCredentialId($testCredentialId)
-    {
-        $this->test_credential_id = $testCredentialId;
-
-        return $this;
+    public function getProdCredentialId() {
+        return $this->getProdCredential() ? $this->getProdCredential()->getId() : null;
     }
 
-    /**
-     * Get test_credential_id
-     *
-     * @return integer 
-     */
-    public function getTestCredentialId()
-    {
-        return $this->test_credential_id;
-    }
 
-    /**
-     * Set prod_proxy_id
-     *
-     * @param integer $prodProxyId
-     * @return Project
-     */
-    public function setProdProxyId($prodProxyId)
-    {
-        $this->prod_proxy_id = $prodProxyId;
-
-        return $this;
-    }
-
-    /**
-     * Get prod_proxy_id
-     *
-     * @return integer 
-     */
-    public function getProdProxyId()
-    {
-        return $this->prod_proxy_id;
-    }
-
-    /**
-     * Set test_proxy_id
-     *
-     * @param integer $testProxyId
-     * @return Project
-     */
-    public function setTestProxyId($testProxyId)
-    {
-        $this->test_proxy_id = $testProxyId;
-
-        return $this;
-    }
-
-    /**
-     * Get test_proxy_id
-     *
-     * @return integer 
-     */
-    public function getTestProxyId()
-    {
-        return $this->test_proxy_id;
-    }
 }

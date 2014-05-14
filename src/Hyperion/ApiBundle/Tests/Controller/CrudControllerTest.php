@@ -2,6 +2,7 @@
 
 namespace Hyperion\ApiBundle\Tests\Controller;
 
+use Eloquent\Enumeration\AbstractEnumeration;
 use FOS\RestBundle\Util\Codes;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\BadResponseException;
@@ -70,6 +71,10 @@ class CrudControllerTest extends WebTestCase
                 $value = self::$created[substr($value, 1)];
             }
 
+            if (is_object($value)) {
+                $value = $serializer->serialize($value, 'json');
+            }
+
             $post_data[$key] = $value;
         }
 
@@ -79,7 +84,7 @@ class CrudControllerTest extends WebTestCase
             $this->assertEquals(Codes::HTTP_CREATED, $response->getStatusCode());
 
         } catch (BadResponseException $e) {
-            $this->fail('Server returned '.$e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody()."\n\nPayload: ".print_r($post_data, true));
+            $this->fail('Server returned '.$e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody()."\nPayload:\n".print_r($post_data, true)."\n");
         }
 
         $created = $serializer->deserialize(
@@ -88,6 +93,7 @@ class CrudControllerTest extends WebTestCase
             'json'
         );
 
+        $this->assertTrue(is_int($created->getId()));
         $this->assertGreaterThan(0, $created->getId());
         self::$created[$entity] = $created->getId();
 
@@ -103,13 +109,18 @@ class CrudControllerTest extends WebTestCase
 
         $this->assertEquals($created->getId(), $retrieved->getId());
 
-        foreach ($payload as $key => $value) {
-            if ($value{0} == '@') {
-                $value = self::$created[substr($value, 1)];
+        foreach ($post_data as $key => $value) {
+            $getFn = 'get'.Inflector::getDefault()->camel($key);
+            $retrieved_val = $retrieved->$getFn();
+
+            // Some smarts are applied to the entities, convert them back to their raw values for testing
+            if ($retrieved_val instanceof AbstractEnumeration) {
+                $retrieved_val = $retrieved_val->value();
+            } elseif (is_array($retrieved_val)) {
+                $retrieved_val = json_encode($retrieved_val);
             }
 
-            $getFn = 'get'.Inflector::getDefault()->camel($key);
-            $this->assertEquals($retrieved->$getFn(), $value);
+            $this->assertEquals($value, $retrieved_val, 'Property match for `'.$key.'`');
         }
 
         // RETRIEVE ALL
@@ -129,9 +140,8 @@ class CrudControllerTest extends WebTestCase
         $this->assertEquals($created->getId(), $item->getId());
 
         // UPDATE
-        $update_data = [
-            'name' => 'Updated name #'.rand(100, 999),
-        ];
+        $update_data = $post_data;
+        $update_data['name'] = 'Updated name #'.rand(100, 999);
 
         try {
             $response = $http_client->put('/api/v1/'.$entity.'/'.$created->getId(), [], $update_data)->send();
@@ -217,7 +227,7 @@ class CrudControllerTest extends WebTestCase
                 'project',
                 [
                     'name'                   => 'Test Project #'.$rand_id,
-                    'account_id'             => '@account',
+                    'account'                => '@account',
                     'bake_status'            => BakeStatus::UNBAKED,
                     'source_image_id'        => 'i-fake',
                     'packager'               => Packager::YUM,

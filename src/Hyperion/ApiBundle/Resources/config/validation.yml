@@ -1,5 +1,7 @@
 Hyperion\ApiBundle\Entity\Project:
     properties:
+        account:
+            - NotNull: ~
         name:
             - NotBlank: ~
             - Length:
