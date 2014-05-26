@@ -4,6 +4,8 @@ namespace Hyperion\ApiBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Hyperion\Dbal\Enum\Provider;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity
@@ -21,6 +23,9 @@ class Credential implements HyperionEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="Account", inversedBy="credentials")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getAccountId")
      */
     protected $account;
 
@@ -255,5 +260,16 @@ class Credential implements HyperionEntityInterface
     public function getTestProjects()
     {
         return $this->test_projects;
+    }
+
+    // Serialisers --
+
+    public function getAccountId() {
+        return $this->getAccount() ? $this->getAccount()->getId() : null;
+    }
+
+    public function __toString()
+    {
+        return '['.$this->getId().'] '.Provider::memberByValue($this->getProvider())->key().' - '.$this->getRegion();
     }
 }

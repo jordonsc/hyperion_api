@@ -4,6 +4,7 @@ namespace Hyperion\ApiBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity
@@ -26,6 +27,9 @@ class Distribution implements HyperionEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="distrubutions")
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getProjectId")
      */
     protected $project;
 
@@ -159,5 +163,17 @@ class Distribution implements HyperionEntityInterface
     public function getInstances()
     {
         return $this->instances;
+    }
+
+
+    // Serialisers --
+
+    public function getProjectId() {
+        return $this->getProject() ? $this->getProject()->getId() : null;
+    }
+
+    public function __toString()
+    {
+        return '['.$this->getId().'] '.$this->getName();
     }
 }

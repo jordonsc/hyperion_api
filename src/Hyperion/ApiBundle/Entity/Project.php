@@ -1,9 +1,9 @@
 <?php
 namespace Hyperion\ApiBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -555,5 +555,8 @@ class Project implements HyperionEntityInterface
         return $this->getProdCredential() ? $this->getProdCredential()->getId() : null;
     }
 
-
+    public function __toString()
+    {
+        return '['.$this->getId().'] '.$this->getName();
+    }
 }

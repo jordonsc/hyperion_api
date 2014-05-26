@@ -2,6 +2,7 @@
 
 namespace Hyperion\ApiBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -21,7 +22,16 @@ class RepositoryType extends AbstractType
             ->add('password')
             ->add('private_key')
             ->add('tag')
-            ->add('account')
+            ->add(
+                'account',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Account',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                ]
+            )
             ->add('proxy');
     }
 

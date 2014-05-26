@@ -36,10 +36,46 @@ class ProjectType extends AbstractType
                         },
                 ]
             )
-            ->add('prod_credential')
-            ->add('test_credential')
-            ->add('prod_proxy')
-            ->add('test_proxy');
+            ->add(
+                'prod_credential',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Credential',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                ]
+            )
+            ->add(
+                'test_credential',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Credential',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                ]
+            )
+            ->add(
+                'prod_proxy',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Credential',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                ]
+            )
+            ->add(
+                'test_proxy',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Credential',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                ]
+            );
     }
 
     /**

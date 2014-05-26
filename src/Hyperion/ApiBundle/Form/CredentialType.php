@@ -2,6 +2,7 @@
 
 namespace Hyperion\ApiBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -19,7 +20,16 @@ class CredentialType extends AbstractType
             ->add('access_key')
             ->add('secret')
             ->add('region')
-            ->add('account');
+            ->add(
+                'account',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Account',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                ]
+            );
     }
 
     /**

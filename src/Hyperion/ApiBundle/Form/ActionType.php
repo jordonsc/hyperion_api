@@ -2,6 +2,7 @@
 
 namespace Hyperion\ApiBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -17,8 +18,26 @@ class ActionType extends AbstractType
         $builder
             ->add('action_type')
             ->add('state')
-            ->add('project')
-            ->add('distribution');
+            ->add(
+                'project',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Project',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                ]
+            )
+            ->add(
+                'distribution',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Distribution',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                ]
+            );
     }
 
     /**

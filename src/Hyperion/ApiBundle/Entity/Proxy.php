@@ -2,6 +2,7 @@
 namespace Hyperion\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity
@@ -19,6 +20,9 @@ class Proxy implements HyperionEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="Account", inversedBy="projects")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getAccountId")
      */
     protected $account;
 
@@ -198,5 +202,16 @@ class Proxy implements HyperionEntityInterface
     public function getAccount()
     {
         return $this->account;
+    }
+
+    // Serialisers --
+
+    public function getAccountId() {
+        return $this->getAccount() ? $this->getAccount()->getId() : null;
+    }
+
+    public function __toString()
+    {
+        return '['.$this->getId().'] '.$this->getHostname().':'.$this->getPort();
     }
 }

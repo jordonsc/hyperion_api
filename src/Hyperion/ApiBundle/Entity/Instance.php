@@ -2,6 +2,7 @@
 namespace Hyperion\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity
@@ -29,6 +30,9 @@ class Instance implements HyperionEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="Distribution", inversedBy="instances")
      * @ORM\JoinColumn(name="distribution_id", referencedColumnName="id")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getDistributionId")
      */
     protected $distribution;
 
@@ -139,5 +143,16 @@ class Instance implements HyperionEntityInterface
     public function getDistribution()
     {
         return $this->distribution;
+    }
+
+    // Serialisers --
+
+    public function getDistributionId() {
+        return $this->getDistribution() ? $this->getDistribution()->getId() : null;
+    }
+
+    public function __toString()
+    {
+        return '['.$this->getId().'] '.$this->getInstanceId().' ('.$this->getInstanceName().')';
     }
 }

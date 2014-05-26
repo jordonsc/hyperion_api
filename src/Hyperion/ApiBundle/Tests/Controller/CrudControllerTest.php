@@ -178,6 +178,12 @@ class CrudControllerTest extends WebTestCase
     {
         $entities = [
             'project',
+            'distribution',
+            'instance',
+            'action',
+            'repository',
+            'proxy',
+            'credential',
             'account',
         ];
 
