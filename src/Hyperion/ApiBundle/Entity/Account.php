@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="account")
+ * @ORM\Table(name="accounts")
  */
 class Account implements HyperionEntityInterface
 {

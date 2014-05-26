@@ -1,5 +1,5 @@
 # CRUD entity mappings
-#   fk: array of foreign key field -> entity mappings
+#   fk: array of foreign access_key field -> entity mappings
 #   searchable: array of fields that can be searched
 
 parameters:
@@ -27,7 +27,7 @@ parameters:
             searchable:
                 - id
                 - provider
-                - key
+                - access_key
                 - region
 
         action:

@@ -32,7 +32,7 @@ class Credential implements HyperionEntityInterface
     /**
      * @ORM\Column(type="string")
      */
-    protected $key;
+    protected $access_key;
 
     /**
      * @ORM\Column(type="string")
@@ -100,26 +100,26 @@ class Credential implements HyperionEntityInterface
     }
 
     /**
-     * Set key
+     * Set access_key
      *
      * @param string $key
      * @return Credential
      */
-    public function setKey($key)
+    public function setAccessKey($key)
     {
-        $this->key = $key;
+        $this->access_key = $key;
 
         return $this;
     }
 
     /**
-     * Get key
+     * Get access_key
      *
      * @return string
      */
-    public function getKey()
+    public function getAccessKey()
     {
-        return $this->key;
+        return $this->access_key;
     }
 
     /**

@@ -16,7 +16,7 @@ class CredentialType extends AbstractType
     {
         $builder
             ->add('provider')
-            ->add('key')
+            ->add('access_key')
             ->add('secret')
             ->add('region')
             ->add('account');

@@ -25,7 +25,7 @@ class EntityValidator
     }
 
     /**
-     * Get foreign key relationships for this entity
+     * Get foreign access_key relationships for this entity
      *
      * @param string $entity
      * @return array
