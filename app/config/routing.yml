@@ -1,6 +1,11 @@
 # API v1
-hyperion_api:
+hyperion_api_crud:
     resource: Hyperion\ApiBundle\Controller\CrudController
+    type:     rest
+    prefix:   /api/v1/
+
+hyperion_api_stack:
+    resource: Hyperion\ApiBundle\Controller\StackController
     type:     rest
     prefix:   /api/v1/
 

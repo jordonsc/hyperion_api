@@ -28,6 +28,7 @@
         "jms/serializer-bundle": "~0.13",
         "eloquent/enumeration": "~5.1",
         "hyperion/dbal": "*@dev",
+        "aws/aws-sdk-php": "~2.6",
         "psr/log": "~1.0"
     },
     "require-dev": {
@@ -52,7 +53,8 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "preferred-install": "dist"
     },
     "extra": {
         "symfony-app-dir": "app",

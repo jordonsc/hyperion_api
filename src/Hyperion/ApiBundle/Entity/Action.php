@@ -46,6 +46,11 @@ class Action implements HyperionEntityInterface
      */
     protected $state;
 
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $workflow_data;
+
     // --
 
 
@@ -151,6 +156,30 @@ class Action implements HyperionEntityInterface
     {
         return $this->distribution;
     }
+
+    /**
+     * Set Workflow Data
+     *
+     * @param string $workflow_data
+     * @return $this
+     */
+    public function setWorkflowData($workflow_data)
+    {
+        $this->workflow_data = $workflow_data;
+        return $this;
+    }
+
+    /**
+     * Get Workflow Data
+     *
+     * @return string
+     */
+    public function getWorkflowData()
+    {
+        return $this->workflow_data;
+    }
+
+
 
     // Serialisers --
 

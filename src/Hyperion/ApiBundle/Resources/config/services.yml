@@ -7,3 +7,7 @@ services:
     hyperion.entity_validator:
         class: Hyperion\ApiBundle\Service\EntityValidator
         arguments: [ '%hyperion.entities%' ]
+
+    hyperion.workflow_manager:
+        class: Hyperion\ApiBundle\Service\WorkflowManager
+        arguments: [ '@doctrine.orm.entity_manager', '%hyperion.workflow%' ]

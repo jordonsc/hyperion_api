@@ -130,8 +130,9 @@ class CrudController extends FOSRestController
      *
      * @param string                  $entity Name of the entity (lowercase)
      * @param HyperionEntityInterface $obj    Actual entity object
+     * @deprecated
      */
-    protected function hydrateRelationships($entity, HyperionEntityInterface &$obj)
+    protected function hydrateRelationshipsX($entity, HyperionEntityInterface &$obj)
     {
         $pks = $this->get('hyperion.entity_validator')->getForeignKeys($entity);
 

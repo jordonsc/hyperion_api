@@ -37,7 +37,8 @@ class ActionType extends AbstractType
                             return $er->createQueryBuilder('u');
                         },
                 ]
-            );
+            )
+            ->add('workflow_data');
     }
 
     /**

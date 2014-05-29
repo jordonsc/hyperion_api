@@ -177,10 +177,10 @@ class CrudControllerTest extends WebTestCase
     protected function cleanAllEntities()
     {
         $entities = [
+            'action',
             'project',
             'distribution',
             'instance',
-            'action',
             'repository',
             'proxy',
             'credential',

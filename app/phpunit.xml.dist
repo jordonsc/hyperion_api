@@ -23,6 +23,7 @@
     <groups>
         <exclude>
             <group>skip</group>
+            <group>integration</group>
         </exclude>
     </groups>
 

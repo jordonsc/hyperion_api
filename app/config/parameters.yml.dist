@@ -13,3 +13,14 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    hyperion.workflow:
+        key:
+        secret:
+        region: ap-southeast-2
+        domain: hyperion_dev
+    hyperion.workflow.test:
+        provider: AWS
+        access_key:
+        secret:
+        region: us-east1

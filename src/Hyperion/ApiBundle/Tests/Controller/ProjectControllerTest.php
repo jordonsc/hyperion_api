@@ -239,7 +239,10 @@ class ProjectControllerTest extends WebTestCase
      */
     public function testProjectSearch()
     {
+        $this->cleanTable('action');
         $this->cleanTable('project');
+        $this->cleanTable('credential');
+        $this->cleanTable('proxy');
         $this->cleanTable('account');
 
         $http_client = new Client(self::BASE_URL);
@@ -312,7 +315,10 @@ class ProjectControllerTest extends WebTestCase
         $r        = $this->doSearch($criteria);
         $this->assertEquals(2, $r->count());
 
+        $this->cleanTable('action');
         $this->cleanTable('project');
+        $this->cleanTable('credential');
+        $this->cleanTable('proxy');
         $this->cleanTable('account');
     }
 
@@ -333,7 +339,11 @@ class ProjectControllerTest extends WebTestCase
 
         /** @var $item HyperionEntity */
         foreach ($retrieved_all as $item) {
-            $response = $http_client->delete('/api/v1/'.$table.'/'.$item->getId())->send();
+            try {
+                $response = $http_client->delete('/api/v1/'.$table.'/'.$item->getId())->send();
+            } catch (ServerErrorResponseException $e) {
+                $this->fail("API Error: ".$e->getResponse()->getBody());
+            }
             $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
         }
     }
