@@ -1,7 +1,8 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
     "hash": "ac47454cba59b643d54773c4b58ba4cf",
     "packages": [
@@ -961,12 +962,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:jordonsc/hyperion_dbal.git",
-                "reference": "5ed7330710a442593680c5aad54afc6c48d12c3d"
+                "reference": "ef4456a7a6dbee8ff9ecd21ebc1204e524269f94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jordonsc/hyperion_dbal/zipball/5ed7330710a442593680c5aad54afc6c48d12c3d",
-                "reference": "5ed7330710a442593680c5aad54afc6c48d12c3d",
+                "url": "https://api.github.com/repos/jordonsc/hyperion_dbal/zipball/ef4456a7a6dbee8ff9ecd21ebc1204e524269f94",
+                "reference": "ef4456a7a6dbee8ff9ecd21ebc1204e524269f94",
                 "shasum": ""
             },
             "require": {
@@ -1007,7 +1008,7 @@
                 "source": "https://github.com/jordonsc/hyperion_dbal/tree/master",
                 "issues": "https://github.com/jordonsc/hyperion_dbal/issues"
             },
-            "time": "2014-06-09 01:52:45"
+            "time": "2014-06-09 09:46:04"
         },
         {
             "name": "incenteev/composer-parameter-handler",

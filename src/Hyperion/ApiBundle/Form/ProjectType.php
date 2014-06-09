@@ -24,6 +24,9 @@ class ProjectType extends AbstractType
             ->add('packager')
             ->add('update_system_packages')
             ->add('packages')
+            ->add('zones')
+            ->add('instance_size_prod')
+            ->add('instance_size_test')
             ->add('script')
             ->add('services')
             ->add(

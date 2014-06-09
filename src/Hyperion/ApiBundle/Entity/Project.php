@@ -93,9 +93,25 @@ class Project implements HyperionEntityInterface
     protected $packages;
 
     /**
+     * JSON array
+     * @ORM\Column(type="text")
+     */
+    protected $zones;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     protected $script;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $instance_size_prod;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $instance_size_test;
 
     /**
      * JSON array
@@ -143,6 +159,7 @@ class Project implements HyperionEntityInterface
     {
         $this->distributions = new ArrayCollection();
         $this->actions = new ArrayCollection();
+        $this->zones = '[]';
     }
 
     /**
@@ -533,6 +550,76 @@ class Project implements HyperionEntityInterface
         return $this->test_proxy;
     }
 
+    /**
+     * Set zones
+     *
+     * @param string $zones
+     * @return Project
+     */
+    public function setZones($zones)
+    {
+        $this->zones = $zones;
+
+        return $this;
+    }
+
+    /**
+     * Get zones
+     *
+     * @return string 
+     */
+    public function getZones()
+    {
+        return $this->zones;
+    }
+
+    /**
+     * Set instance_size_prod
+     *
+     * @param string $instanceSizeProd
+     * @return Project
+     */
+    public function setInstanceSizeProd($instanceSizeProd)
+    {
+        $this->instance_size_prod = $instanceSizeProd;
+
+        return $this;
+    }
+
+    /**
+     * Get instance_size_prod
+     *
+     * @return string 
+     */
+    public function getInstanceSizeProd()
+    {
+        return $this->instance_size_prod;
+    }
+
+    /**
+     * Set instance_size_test
+     *
+     * @param string $instanceSizeTest
+     * @return Project
+     */
+    public function setInstanceSizeTest($instanceSizeTest)
+    {
+        $this->instance_size_test = $instanceSizeTest;
+
+        return $this;
+    }
+
+    /**
+     * Get instance_size_test
+     *
+     * @return string 
+     */
+    public function getInstanceSizeTest()
+    {
+        return $this->instance_size_test;
+    }
+
+
     // Serialisers --
 
     public function getAccountId() {
@@ -559,4 +646,5 @@ class Project implements HyperionEntityInterface
     {
         return '['.$this->getId().'] '.$this->getName();
     }
+
 }
