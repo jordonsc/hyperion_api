@@ -27,8 +27,18 @@ class ProjectType extends AbstractType
             ->add('zones')
             ->add('instance_size_prod')
             ->add('instance_size_test')
+            ->add('keys_prod')
+            ->add('keys_test')
+            ->add('tags_prod')
+            ->add('tags_test')
+            ->add('firewalls_prod')
+            ->add('firewalls_test')
+            ->add('network_prod')
+            ->add('network_test')
+            ->add('instance_size_test')
             ->add('script')
             ->add('services')
+            ->add('tenancy')
             ->add(
                 'account',
                 'entity',

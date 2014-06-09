@@ -84,7 +84,10 @@ class CrudControllerTest extends WebTestCase
             $this->assertEquals(Codes::HTTP_CREATED, $response->getStatusCode());
 
         } catch (BadResponseException $e) {
-            $this->fail('Server returned '.$e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody()."\nPayload:\n".print_r($post_data, true)."\n");
+            $this->fail(
+                'Server returned '.$e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody()."\nPayload:\n".
+                print_r($post_data, true)."\n"
+            );
         }
 
         $created = $serializer->deserialize(
@@ -110,7 +113,7 @@ class CrudControllerTest extends WebTestCase
         $this->assertEquals($created->getId(), $retrieved->getId());
 
         foreach ($post_data as $key => $value) {
-            $getFn = 'get'.Inflector::getDefault()->camel($key);
+            $getFn         = 'get'.Inflector::getDefault()->camel($key);
             $retrieved_val = $retrieved->$getFn();
 
             // Some smarts are applied to the entities, convert them back to their raw values for testing
@@ -140,7 +143,7 @@ class CrudControllerTest extends WebTestCase
         $this->assertEquals($created->getId(), $item->getId());
 
         // UPDATE
-        $update_data = $post_data;
+        $update_data         = $post_data;
         $update_data['name'] = 'Updated name #'.rand(100, 999);
 
         try {
@@ -240,6 +243,13 @@ class CrudControllerTest extends WebTestCase
                     'update_system_packages' => 0,
                     'packages'               => '[]',
                     'services'               => '[]',
+                    'zones'                  => '[]',
+                    'keys_prod'              => '[]',
+                    'keys_test'              => '[]',
+                    'tags_prod'              => '[]',
+                    'tags_test'              => '[]',
+                    'firewalls_prod'         => '[]',
+                    'firewalls_test'         => '[]',
                 ]
             ],
         ];

@@ -106,6 +106,21 @@ class Project implements HyperionEntityInterface
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    protected $tenancy;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $network_prod;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $network_test;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     protected $instance_size_prod;
 
     /**
@@ -118,6 +133,42 @@ class Project implements HyperionEntityInterface
      * @ORM\Column(type="text")
      */
     protected $services;
+
+    /**
+     * JSON array
+     * @ORM\Column(type="text")
+     */
+    protected $tags_prod;
+
+    /**
+     * JSON array
+     * @ORM\Column(type="text")
+     */
+    protected $tags_test;
+
+    /**
+     * JSON array
+     * @ORM\Column(type="text")
+     */
+    protected $keys_prod;
+
+    /**
+     * JSON array
+     * @ORM\Column(type="text")
+     */
+    protected $keys_test;
+
+    /**
+     * JSON array
+     * @ORM\Column(type="text")
+     */
+    protected $firewalls_prod;
+
+    /**
+     * JSON array
+     * @ORM\Column(type="text")
+     */
+    protected $firewalls_test;
 
     /**
      * @ORM\ManyToOne(targetEntity="Proxy")
@@ -150,8 +201,6 @@ class Project implements HyperionEntityInterface
         return $this->id;
     }
 
-
-
     /**
      * Constructor
      */
@@ -160,6 +209,10 @@ class Project implements HyperionEntityInterface
         $this->distributions = new ArrayCollection();
         $this->actions = new ArrayCollection();
         $this->zones = '[]';
+        $this->tags_prod = '[]';
+        $this->tags_test = '[]';
+        $this->firewalls_prod = '[]';
+        $this->firewalls_test = '[]';
     }
 
     /**
@@ -618,6 +671,214 @@ class Project implements HyperionEntityInterface
     {
         return $this->instance_size_test;
     }
+
+    /**
+     * Set tenancy
+     *
+     * @param string $tenancy
+     * @return Project
+     */
+    public function setTenancy($tenancy)
+    {
+        $this->tenancy = $tenancy;
+
+        return $this;
+    }
+
+    /**
+     * Get tenancy
+     *
+     * @return string 
+     */
+    public function getTenancy()
+    {
+        return $this->tenancy;
+    }
+
+    /**
+     * Set network_prod
+     *
+     * @param string $networkProd
+     * @return Project
+     */
+    public function setNetworkProd($networkProd)
+    {
+        $this->network_prod = $networkProd;
+
+        return $this;
+    }
+
+    /**
+     * Get network_prod
+     *
+     * @return string 
+     */
+    public function getNetworkProd()
+    {
+        return $this->network_prod;
+    }
+
+    /**
+     * Set network_test
+     *
+     * @param string $networkTest
+     * @return Project
+     */
+    public function setNetworkTest($networkTest)
+    {
+        $this->network_test = $networkTest;
+
+        return $this;
+    }
+
+    /**
+     * Get network_test
+     *
+     * @return string 
+     */
+    public function getNetworkTest()
+    {
+        return $this->network_test;
+    }
+
+    /**
+     * Set tags_prod
+     *
+     * @param string $tagsProd
+     * @return Project
+     */
+    public function setTagsProd($tagsProd)
+    {
+        $this->tags_prod = $tagsProd;
+
+        return $this;
+    }
+
+    /**
+     * Get tags_prod
+     *
+     * @return string 
+     */
+    public function getTagsProd()
+    {
+        return $this->tags_prod;
+    }
+
+    /**
+     * Set tags_test
+     *
+     * @param string $tagsTest
+     * @return Project
+     */
+    public function setTagsTest($tagsTest)
+    {
+        $this->tags_test = $tagsTest;
+
+        return $this;
+    }
+
+    /**
+     * Get tags_test
+     *
+     * @return string 
+     */
+    public function getTagsTest()
+    {
+        return $this->tags_test;
+    }
+
+    /**
+     * Set keys_prod
+     *
+     * @param string $keysProd
+     * @return Project
+     */
+    public function setKeysProd($keysProd)
+    {
+        $this->keys_prod = $keysProd;
+
+        return $this;
+    }
+
+    /**
+     * Get keys_prod
+     *
+     * @return string 
+     */
+    public function getKeysProd()
+    {
+        return $this->keys_prod;
+    }
+
+    /**
+     * Set keys_test
+     *
+     * @param string $keysTest
+     * @return Project
+     */
+    public function setKeysTest($keysTest)
+    {
+        $this->keys_test = $keysTest;
+
+        return $this;
+    }
+
+    /**
+     * Get keys_test
+     *
+     * @return string 
+     */
+    public function getKeysTest()
+    {
+        return $this->keys_test;
+    }
+
+    /**
+     * Set firewalls_prod
+     *
+     * @param string $firewallsProd
+     * @return Project
+     */
+    public function setFirewallsProd($firewallsProd)
+    {
+        $this->firewalls_prod = $firewallsProd;
+
+        return $this;
+    }
+
+    /**
+     * Get firewalls_prod
+     *
+     * @return string 
+     */
+    public function getFirewallsProd()
+    {
+        return $this->firewalls_prod;
+    }
+
+    /**
+     * Set firewalls_test
+     *
+     * @param string $firewallsTest
+     * @return Project
+     */
+    public function setFirewallsTest($firewallsTest)
+    {
+        $this->firewalls_test = $firewallsTest;
+
+        return $this;
+    }
+
+    /**
+     * Get firewalls_test
+     *
+     * @return string 
+     */
+    public function getFirewallsTest()
+    {
+        return $this->firewalls_test;
+    }
+
 
 
     // Serialisers --
