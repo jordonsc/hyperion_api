@@ -46,6 +46,13 @@ class WorkflowManagerTest extends WebTestCase
         $project->setScript('touch /tmp/baked');
         $project->setUpdateSystemPackages(1);
         $project->setSourceImageId('ami-fb8e9292');
+        $project->setZones(['ap-southeast-2a', 'ap-southeast-2b']);
+        $project->setKeysProd([]);
+        $project->setKeysTest(['test-sydney']); // TODO: move to params
+        $project->setFirewallsProd('[]');
+        $project->setFirewallsTest("['test']"); // TODO: move to params
+        $project->setTagsProd('[]');
+        $project->setTagsTest("['env' => 'test']");
         $em->persist($project);
 
         $em->flush();
