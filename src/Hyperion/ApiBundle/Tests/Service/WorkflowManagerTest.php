@@ -45,14 +45,14 @@ class WorkflowManagerTest extends WebTestCase
         $project->setProdCredential($credential);
         $project->setScript('touch /tmp/baked');
         $project->setUpdateSystemPackages(1);
-        $project->setSourceImageId('ami-fb8e9292');
-        $project->setZones(['ap-southeast-2a', 'ap-southeast-2b']);
-        $project->setKeysProd([]);
-        $project->setKeysTest(['test-sydney']); // TODO: move to params
-        $project->setFirewallsProd('[]');
-        $project->setFirewallsTest("['test']"); // TODO: move to params
-        $project->setTagsProd('[]');
-        $project->setTagsTest("['env' => 'test']");
+        $project->setSourceImageId('ami-3b4bd301');
+        $project->setZones(json_encode(['ap-southeast-2a', 'ap-southeast-2b']));
+        $project->setKeysProd(json_encode([]));
+        $project->setKeysTest(json_encode(['test-sydney'])); // TODO: move to params
+        $project->setFirewallsProd(json_encode([]));
+        $project->setFirewallsTest(json_encode(['test'])); // TODO: move to params
+        $project->setTagsProd(json_encode([]));
+        $project->setTagsTest(json_encode(['env' => 'test']));
         $em->persist($project);
 
         $em->flush();
