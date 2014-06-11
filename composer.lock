@@ -153,7 +153,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -172,9 +172,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -663,16 +663,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.4.2",
+            "version": "v2.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "0363a5548d9263f979f9ca149decb9cfc66419ab"
+                "reference": "8a13376d42b5ea467727ffe730aa0e14ca3c5e29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/0363a5548d9263f979f9ca149decb9cfc66419ab",
-                "reference": "0363a5548d9263f979f9ca149decb9cfc66419ab",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/8a13376d42b5ea467727ffe730aa0e14ca3c5e29",
+                "reference": "8a13376d42b5ea467727ffe730aa0e14ca3c5e29",
                 "shasum": ""
             },
             "require": {
@@ -735,7 +735,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-02-08 16:35:09"
+            "time": "2014-06-10 11:49:08"
         },
         {
             "name": "eloquent/enumeration",
@@ -962,12 +962,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:jordonsc/hyperion_dbal.git",
-                "reference": "4f228c75693adfa4bf9138549a69c63158dfcf0a"
+                "reference": "99b1a8b6e71ef22e8de9670a25318146cc8c8aad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jordonsc/hyperion_dbal/zipball/4f228c75693adfa4bf9138549a69c63158dfcf0a",
-                "reference": "4f228c75693adfa4bf9138549a69c63158dfcf0a",
+                "url": "https://api.github.com/repos/jordonsc/hyperion_dbal/zipball/99b1a8b6e71ef22e8de9670a25318146cc8c8aad",
+                "reference": "99b1a8b6e71ef22e8de9670a25318146cc8c8aad",
                 "shasum": ""
             },
             "require": {
@@ -1008,7 +1008,7 @@
                 "source": "https://github.com/jordonsc/hyperion_dbal/tree/master",
                 "issues": "https://github.com/jordonsc/hyperion_dbal/issues"
             },
-            "time": "2014-06-09 10:35:31"
+            "time": "2014-06-11 03:36:28"
         },
         {
             "name": "incenteev/composer-parameter-handler",

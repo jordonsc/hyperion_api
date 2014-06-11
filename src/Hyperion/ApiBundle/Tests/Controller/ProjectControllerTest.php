@@ -40,12 +40,6 @@ class ProjectControllerTest extends WebTestCase
             'script'                 => null,
             'services'               => '[]',
             'zones'                  => '[]',
-            'tags_prod'              => '[]',
-            'tags_test'              => '[]',
-            'keys_prod'              => '[]',
-            'keys_test'              => '[]',
-            'firewalls_prod'         => '[]',
-            'firewalls_test'         => '[]',
         ];
     }
 

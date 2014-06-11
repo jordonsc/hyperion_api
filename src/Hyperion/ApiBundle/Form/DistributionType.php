@@ -19,10 +19,10 @@ class DistributionType extends AbstractType
             ->add('name')
             ->add('status')
             ->add(
-                'project',
+                'environment',
                 'entity',
                 [
-                    'class'         => 'HyperionApiBundle:Project',
+                    'class'         => 'HyperionApiBundle:Environment',
                     'query_builder' => function (EntityRepository $er) {
                             return $er->createQueryBuilder('u');
                         },

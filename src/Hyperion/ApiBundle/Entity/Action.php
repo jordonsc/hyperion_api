@@ -27,6 +27,15 @@ class Action implements HyperionEntityInterface
     protected $project;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Environment", inversedBy="actions")
+     * @ORM\JoinColumn(name="environment_id", referencedColumnName="id")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getEnvironmentId")
+     */
+    protected $environment;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Distribution", inversedBy="instances")
      * @ORM\JoinColumn(name="distribution_id", referencedColumnName="id")
      *
@@ -179,8 +188,30 @@ class Action implements HyperionEntityInterface
         return $this->workflow_data;
     }
 
+    /**
+     * Set environment
+     *
+     * @param Environment $environment
+     * @return Action
+     */
+    public function setEnvironment(Environment $environment = null)
+    {
+        $this->environment = $environment;
 
+        return $this;
+    }
 
+    /**
+     * Get environment
+     *
+     * @return Environment
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+    
     // Serialisers --
 
     public function getDistributionId() {
@@ -191,8 +222,13 @@ class Action implements HyperionEntityInterface
         return $this->getProject() ? $this->getProject()->getId() : null;
     }
 
+    public function getEnvironmentId() {
+        return $this->getEnvironment() ? $this->getEnvironment()->getId() : null;
+    }
+
     public function __toString()
     {
         return (string)$this->getId();
     }
+
 }

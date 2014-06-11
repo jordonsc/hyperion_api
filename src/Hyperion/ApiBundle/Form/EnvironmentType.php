@@ -7,17 +7,23 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ActionType extends AbstractType
+class EnvironmentType extends AbstractType
 {
-    /**
+        /**
      * @param FormBuilderInterface $builder
-     * @param array                $options
+     * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('action_type')
-            ->add('state')
+            ->add('name')
+            ->add('environment_type')
+            ->add('tenancy')
+            ->add('network')
+            ->add('instance_size')
+            ->add('tags')
+            ->add('key_pairs')
+            ->add('firewalls')
             ->add(
                 'project',
                 'entity',
@@ -29,39 +35,28 @@ class ActionType extends AbstractType
                 ]
             )
             ->add(
-                'environment',
+                'credential',
                 'entity',
                 [
-                    'class'         => 'HyperionApiBundle:Environment',
+                    'class'         => 'HyperionApiBundle:Credential',
                     'query_builder' => function (EntityRepository $er) {
                             return $er->createQueryBuilder('u');
                         },
                 ]
             )
-            ->add(
-                'distribution',
-                'entity',
-                [
-                    'class'         => 'HyperionApiBundle:Distribution',
-                    'query_builder' => function (EntityRepository $er) {
-                            return $er->createQueryBuilder('u');
-                        },
-                ]
-            )
-            ->add('workflow_data');
+            ->add('proxy')
+        ;
     }
-
+    
     /**
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'data_class'      => 'Hyperion\ApiBundle\Entity\Action',
-                'csrf_protection' => false
-            )
-        );
+        $resolver->setDefaults(array(
+            'data_class' => 'Hyperion\ApiBundle\Entity\Environment',
+            'csrf_protection' => false
+        ));
     }
 
     /**
@@ -69,6 +64,6 @@ class ActionType extends AbstractType
      */
     public function getName()
     {
-        return 'action';
+        return 'environment';
     }
 }

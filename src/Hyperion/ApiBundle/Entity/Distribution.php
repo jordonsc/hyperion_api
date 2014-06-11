@@ -1,9 +1,9 @@
 <?php
 namespace Hyperion\ApiBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -25,13 +25,13 @@ class Distribution implements HyperionEntityInterface
     protected $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="distrubutions")
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Environment", inversedBy="distributions")
+     * @ORM\JoinColumn(name="environment_id", referencedColumnName="id")
      *
      * @Serializer\Type("integer")
-     * @Serializer\Accessor(getter="getProjectId")
+     * @Serializer\Accessor(getter="getEnvironmentId")
      */
-    protected $project;
+    protected $environment;
 
     /**
      * @ORM\Column(type="integer")
@@ -110,29 +110,6 @@ class Distribution implements HyperionEntityInterface
     }
 
     /**
-     * Set project
-     *
-     * @param Project $project
-     * @return Distribution
-     */
-    public function setProject(Project $project = null)
-    {
-        $this->project = $project;
-
-        return $this;
-    }
-
-    /**
-     * Get project
-     *
-     * @return Project
-     */
-    public function getProject()
-    {
-        return $this->project;
-    }
-
-    /**
      * Add instances
      *
      * @param Instance $instances
@@ -165,15 +142,41 @@ class Distribution implements HyperionEntityInterface
         return $this->instances;
     }
 
+    /**
+     * Set environment
+     *
+     * @param Environment $environment
+     * @return Distribution
+     */
+    public function setEnvironment(Environment $environment = null)
+    {
+        $this->environment = $environment;
+
+        return $this;
+    }
+
+    /**
+     * Get environment
+     *
+     * @return Environment
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+
 
     // Serialisers --
 
-    public function getProjectId() {
-        return $this->getProject() ? $this->getProject()->getId() : null;
+    public function getEnvironmentId() {
+        return $this->getEnvironment() ? $this->getEnvironment()->getId() : null;
     }
 
     public function __toString()
     {
         return '['.$this->getId().'] '.$this->getName();
     }
+
+
 }

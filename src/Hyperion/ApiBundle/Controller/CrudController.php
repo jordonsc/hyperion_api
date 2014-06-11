@@ -118,7 +118,6 @@ class CrudController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($obj);
             $em->flush();
-
             return $this->handleView($this->view($obj, Codes::HTTP_CREATED));
         } else {
             return $this->handleView($this->view($form, Codes::HTTP_BAD_REQUEST));

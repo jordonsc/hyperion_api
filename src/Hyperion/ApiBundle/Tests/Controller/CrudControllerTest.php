@@ -11,7 +11,9 @@ use Guzzle\Inflection\Inflector;
 use Hyperion\ApiBundle\Collection\EntityCollection;
 use Hyperion\ApiBundle\Entity\HyperionEntityInterface;
 use Hyperion\Dbal\Enum\BakeStatus;
+use Hyperion\Dbal\Enum\EnvironmentType;
 use Hyperion\Dbal\Enum\Packager;
+use Hyperion\Dbal\Enum\Tenancy;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class CrudControllerTest extends WebTestCase
@@ -67,12 +69,12 @@ class CrudControllerTest extends WebTestCase
 
         // We may have referenced previously created entities -
         foreach ($payload as $key => $value) {
-            if ($value{0} == '@') {
-                $value = self::$created[substr($value, 1)];
-            }
-
-            if (is_object($value)) {
+            if (is_array($value)) {
+                $value = json_encode($value);
+            } elseif (is_object($value)) {
                 $value = $serializer->serialize($value, 'json');
+            } elseif ($value{0} == '@') {
+                $value = self::$created[substr($value, 1)];
             }
 
             $post_data[$key] = $value;
@@ -180,10 +182,11 @@ class CrudControllerTest extends WebTestCase
     protected function cleanAllEntities()
     {
         $entities = [
-            'action',
-            'project',
-            'distribution',
             'instance',
+            'action',
+            'environment',
+            'distribution',
+            'project',
             'repository',
             'proxy',
             'credential',
@@ -244,12 +247,19 @@ class CrudControllerTest extends WebTestCase
                     'packages'               => '[]',
                     'services'               => '[]',
                     'zones'                  => '[]',
-                    'keys_prod'              => '[]',
-                    'keys_test'              => '[]',
-                    'tags_prod'              => '[]',
-                    'tags_test'              => '[]',
-                    'firewalls_prod'         => '[]',
-                    'firewalls_test'         => '[]',
+                ]
+            ],
+            [
+                'environment',
+                [
+                    'name'             => 'CI',
+                    'project'          => '@project',
+                    'environment_type' => EnvironmentType::TEST,
+                    'tenancy'          => Tenancy::VPC,
+                    'instance_size'    => 'm1.medium',
+                    'tags'             => ['env' => 'test'],
+                    'key_pairs'        => ['test'],
+                    'firewalls'        => ['ci'],
                 ]
             ],
         ];

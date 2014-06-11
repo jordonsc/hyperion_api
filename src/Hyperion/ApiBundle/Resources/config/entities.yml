@@ -11,7 +11,7 @@ parameters:
                 - name
 
         project:
-            fk: { account_id: account, prod_credential_id: credential, test_credential_id: credential }
+            fk: { account_id: account, credential_id: credential }
             searchable:
                 - id
                 - name
@@ -21,6 +21,16 @@ parameters:
                 - source_image_id
                 - packager
                 - update_system_packages
+
+        environment:
+            fk: { project_id: project, credential_id: credential }
+            searchable:
+                - id
+                - name
+                - environment_type
+                - tenancy
+                - instance_size
+                - network
 
         credential:
             fk: { account_id: account }
@@ -59,7 +69,7 @@ parameters:
                 - tag
 
         distribution:
-            fk: { project_id: project }
+            fk: { environment_id: environment }
             searchable:
                 - id
                 - name

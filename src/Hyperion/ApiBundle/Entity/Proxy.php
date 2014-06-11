@@ -54,8 +54,6 @@ class Proxy implements HyperionEntityInterface
 
     // --
 
-
-
     /**
      * Get id
      *

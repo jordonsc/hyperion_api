@@ -50,14 +50,9 @@ class Credential implements HyperionEntityInterface
     protected $region;
 
     /**
-     * @ORM\OneToMany(targetEntity="Project", mappedBy="prod_credential")
+     * @ORM\OneToMany(targetEntity="Environment", mappedBy="credential")
      */
-    protected $prod_projects;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Project", mappedBy="test_credential")
-     */
-    protected $test_projects;
+    protected $environments;
 
     // --
 
@@ -67,8 +62,7 @@ class Credential implements HyperionEntityInterface
      */
     public function __construct()
     {
-        $this->prod_projects = new ArrayCollection();
-        $this->test_projects = new ArrayCollection();
+        $this->environments = new ArrayCollection();
     }
 
     /**
@@ -197,70 +191,38 @@ class Credential implements HyperionEntityInterface
     }
 
     /**
-     * Add prod_projects
+     * Add environments
      *
-     * @param Project $prodProjects
+     * @param Environment $environments
      * @return Credential
      */
-    public function addProdProject(Project $prodProjects)
+    public function addEnvironment(Environment $environments)
     {
-        $this->prod_projects[] = $prodProjects;
+        $this->environments[] = $environments;
 
         return $this;
     }
 
     /**
-     * Remove prod_projects
+     * Remove environments
      *
-     * @param Project $prodProjects
+     * @param Environment $environments
      */
-    public function removeProdProject(Project $prodProjects)
+    public function removeEnvironment(Environment $environments)
     {
-        $this->prod_projects->removeElement($prodProjects);
+        $this->environments->removeElement($environments);
     }
 
     /**
-     * Get prod_projects
+     * Get environments
      *
      * @return Collection
      */
-    public function getProdProjects()
+    public function getEnvironments()
     {
-        return $this->prod_projects;
+        return $this->environments;
     }
 
-    /**
-     * Add test_projects
-     *
-     * @param Project $testProjects
-     * @return Credential
-     */
-    public function addTestProject(Project $testProjects)
-    {
-        $this->test_projects[] = $testProjects;
-
-        return $this;
-    }
-
-    /**
-     * Remove test_projects
-     *
-     * @param Project $testProjects
-     */
-    public function removeTestProject(Project $testProjects)
-    {
-        $this->test_projects->removeElement($testProjects);
-    }
-
-    /**
-     * Get test_projects
-     *
-     * @return Collection
-     */
-    public function getTestProjects()
-    {
-        return $this->test_projects;
-    }
 
     // Serialisers --
 
@@ -272,4 +234,5 @@ class Credential implements HyperionEntityInterface
     {
         return '['.$this->getId().'] '.Provider::memberByValue($this->getProvider())->key().' - '.$this->getRegion();
     }
+
 }
