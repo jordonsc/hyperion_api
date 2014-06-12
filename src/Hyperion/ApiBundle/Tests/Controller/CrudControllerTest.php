@@ -82,7 +82,7 @@ class CrudControllerTest extends WebTestCase
 
         // CREATE
         try {
-            $response = $http_client->post('/api/v1/'.$entity.'/new', [], $post_data)->send();
+            $response = $http_client->post('/api/v1/entity/'.$entity.'/new', [], $post_data)->send();
             $this->assertEquals(Codes::HTTP_CREATED, $response->getStatusCode());
 
         } catch (BadResponseException $e) {
@@ -103,7 +103,7 @@ class CrudControllerTest extends WebTestCase
         self::$created[$entity] = $created->getId();
 
         // RETRIEVE
-        $response = $http_client->get('/api/v1/'.$entity.'/'.$created->getId())->send();
+        $response = $http_client->get('/api/v1/entity/'.$entity.'/'.$created->getId())->send();
         $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
         $retrieved = $serializer->deserialize(
@@ -129,7 +129,7 @@ class CrudControllerTest extends WebTestCase
         }
 
         // RETRIEVE ALL
-        $response = $http_client->get('/api/v1/'.$entity.'/all')->send();
+        $response = $http_client->get('/api/v1/entity/'.$entity.'/all')->send();
         $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
         /** @var $retrieved EntityCollection */
@@ -149,7 +149,7 @@ class CrudControllerTest extends WebTestCase
         $update_data['name'] = 'Updated name #'.rand(100, 999);
 
         try {
-            $response = $http_client->put('/api/v1/'.$entity.'/'.$created->getId(), [], $update_data)->send();
+            $response = $http_client->put('/api/v1/entity/'.$entity.'/'.$created->getId(), [], $update_data)->send();
             $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
         } catch (BadResponseException $e) {
@@ -209,7 +209,7 @@ class CrudControllerTest extends WebTestCase
         $http_client = new Client(self::BASE_URL);
         $serializer  = static::createClient()->getContainer()->get('jms_serializer');
 
-        $response = $http_client->get('/api/v1/'.$entity.'/all')->send();
+        $response = $http_client->get('/api/v1/entity/'.$entity.'/all')->send();
         $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
         $retrieved_all = new EntityCollection($serializer->deserialize(
@@ -220,7 +220,7 @@ class CrudControllerTest extends WebTestCase
 
         /** @var $item HyperionEntityInterface */
         foreach ($retrieved_all as $item) {
-            $response = $http_client->delete('/api/v1/'.$entity.'/'.$item->getId())->send();
+            $response = $http_client->delete('/api/v1/entity/'.$entity.'/'.$item->getId())->send();
             $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
         }
     }

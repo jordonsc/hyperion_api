@@ -52,7 +52,7 @@ class ProjectControllerTest extends WebTestCase
         $post_data['name'] = 'a';
 
         try {
-            $http_client->post('/api/v1/project/new', [], $post_data)->send();
+            $http_client->post('/api/v1/entity/project/new', [], $post_data)->send();
             $this->fail("Request succeeded when it shouldn't have");
         } catch (BadResponseException $e) {
             $this->assertEquals(400, $e->getResponse()->getStatusCode());
@@ -67,7 +67,7 @@ class ProjectControllerTest extends WebTestCase
         $http_client = new Client(self::BASE_URL);
 
         try {
-            $http_client->get('/api/v1/project/1234567')->send();
+            $http_client->get('/api/v1/entity/project/1234567')->send();
             $this->fail("Request succeeded when it shouldn't have");
         } catch (ClientErrorResponseException $e) {
             $this->assertEquals(404, $e->getResponse()->getStatusCode());
@@ -82,7 +82,7 @@ class ProjectControllerTest extends WebTestCase
         $http_client = new Client(self::BASE_URL);
 
         try {
-            $http_client->delete('/api/v1/project/1234567')->send();
+            $http_client->delete('/api/v1/entity/project/1234567')->send();
             $this->fail("Request succeeded when it shouldn't have");
         } catch (ClientErrorResponseException $e) {
             $this->assertEquals(404, $e->getResponse()->getStatusCode());
@@ -101,7 +101,7 @@ class ProjectControllerTest extends WebTestCase
         $post_data['name'] = "Invalid Project";
 
         try {
-            $http_client->post('/api/v1/project/new', [], $post_data)->send();
+            $http_client->post('/api/v1/entity/project/new', [], $post_data)->send();
             $this->fail("Request succeeded when it shouldn't have");
         } catch (ClientErrorResponseException $e) {
             $this->assertEquals(Codes::HTTP_BAD_REQUEST, $e->getResponse()->getStatusCode());
@@ -120,7 +120,7 @@ class ProjectControllerTest extends WebTestCase
 
         // Create an account first
         try {
-            $response = $http_client->post('/api/v1/account/new', [], ['name' => 'Sample Account'])->send();
+            $response = $http_client->post('/api/v1/entity/account/new', [], ['name' => 'Sample Account'])->send();
             $this->assertEquals(Codes::HTTP_CREATED, $response->getStatusCode());
 
         } catch (BadResponseException $e) {
@@ -140,7 +140,7 @@ class ProjectControllerTest extends WebTestCase
 
         // CREATE
         try {
-            $response = $http_client->post('/api/v1/project/new', [], $post_data)->send();
+            $response = $http_client->post('/api/v1/entity/project/new', [], $post_data)->send();
             $this->assertEquals(Codes::HTTP_CREATED, $response->getStatusCode());
 
         } catch (BadResponseException $e) {
@@ -159,7 +159,7 @@ class ProjectControllerTest extends WebTestCase
 
 
         // RETRIEVE
-        $response = $http_client->get('/api/v1/project/'.$created->getId())->send();
+        $response = $http_client->get('/api/v1/entity/project/'.$created->getId())->send();
         $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
         /** @var $retrieved Project */
@@ -173,7 +173,7 @@ class ProjectControllerTest extends WebTestCase
         $this->assertEquals($test_name, $retrieved->getName());
 
         // RETRIEVE ALL
-        $response = $http_client->get('/api/v1/project/all')->send();
+        $response = $http_client->get('/api/v1/entity/project/all')->send();
         $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
         $retrieved_all = new EntityCollection($serializer->deserialize(
@@ -196,7 +196,7 @@ class ProjectControllerTest extends WebTestCase
         $post_data['name'] = 'Updated name #'.rand(100, 999);
 
         try {
-            $response = $http_client->put('/api/v1/project/'.$created->getId(), [], $post_data)->send();
+            $response = $http_client->put('/api/v1/entity/project/'.$created->getId(), [], $post_data)->send();
             $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
         } catch (BadResponseException $e) {
@@ -217,11 +217,11 @@ class ProjectControllerTest extends WebTestCase
         // DELETE
         /** @var $item Project */
         foreach ($retrieved_all as $item) {
-            $response = $http_client->delete('/api/v1/project/'.$item->getId())->send();
+            $response = $http_client->delete('/api/v1/entity/project/'.$item->getId())->send();
             $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
         }
 
-        $response = $http_client->get('/api/v1/project/all')->send();
+        $response = $http_client->get('/api/v1/entity/project/all')->send();
 
         /** @var $retrieved EntityCollection */
         $retrieved_all = new EntityCollection($serializer->deserialize(
@@ -251,7 +251,7 @@ class ProjectControllerTest extends WebTestCase
 
         // Create an account first
         try {
-            $response = $http_client->post('/api/v1/account/new', [], ['name' => 'Sample Account'])->send();
+            $response = $http_client->post('/api/v1/entity/account/new', [], ['name' => 'Sample Account'])->send();
             $this->assertEquals(Codes::HTTP_CREATED, $response->getStatusCode());
 
         } catch (BadResponseException $e) {
@@ -273,8 +273,8 @@ class ProjectControllerTest extends WebTestCase
         $post_data_b         = $this->getSamplePayload();
         $post_data_b['name'] = "Search Project Bravo";
 
-        $http_client->post('/api/v1/project/new', [], $post_data_a)->send();
-        $http_client->post('/api/v1/project/new', [], $post_data_b)->send();
+        $http_client->post('/api/v1/entity/project/new', [], $post_data_a)->send();
+        $http_client->post('/api/v1/entity/project/new', [], $post_data_b)->send();
 
         // LIKE
         $criteria = CriteriaCollection::build()->add('name', '%Alpha', Comparison::LIKE());
@@ -327,7 +327,7 @@ class ProjectControllerTest extends WebTestCase
         $http_client = new Client(self::BASE_URL);
         $serializer  = static::createClient()->getContainer()->get('jms_serializer');
 
-        $response = $http_client->get('/api/v1/'.$table.'/all')->send();
+        $response = $http_client->get('/api/v1/entity/'.$table.'/all')->send();
         $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
 
         /** @var $retrieved EntityCollection */
@@ -340,7 +340,7 @@ class ProjectControllerTest extends WebTestCase
         /** @var $item HyperionEntity */
         foreach ($retrieved_all as $item) {
             try {
-                $response = $http_client->delete('/api/v1/'.$table.'/'.$item->getId())->send();
+                $response = $http_client->delete('/api/v1/entity/'.$table.'/'.$item->getId())->send();
             } catch (ServerErrorResponseException $e) {
                 $this->fail("API Error: ".$e->getResponse()->getBody());
             }
@@ -356,7 +356,7 @@ class ProjectControllerTest extends WebTestCase
         $payload     = $serializer->serialize($criteria->getItems(), 'json');
 
         try {
-            $response = $http_client->post('/api/v1/project/search', [], $payload)->send();
+            $response = $http_client->post('/api/v1/entity/project/search', [], $payload)->send();
         } catch (ServerErrorResponseException $e) {
             $this->fail("API Error: ".$e->getResponse()->getBody());
         }

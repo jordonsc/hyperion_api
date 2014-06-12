@@ -10,7 +10,6 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
-use Hyperion\ApiBundle\Entity\HyperionEntityInterface;
 use Hyperion\ApiBundle\Exception\NotFoundException;
 use Hyperion\Dbal\Collection\CriteriaCollection;
 use Hyperion\Dbal\Criteria\Criteria;
@@ -19,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CrudController extends FOSRestController
 {
+    const ERR_UNKNOWN_ENTITY = "Unknown entity";
 
     /**
      * Get the full class name from a short entity name
@@ -45,7 +45,13 @@ class CrudController extends FOSRestController
      */
     public function getAllEntitiesAction($entity)
     {
-        $data = $this->getDoctrine()->getRepository($this->getClassName($entity))->findAll();
+        try {
+            $class_name = $this->getClassName($entity);
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view(self::ERR_UNKNOWN_ENTITY, Codes::HTTP_NOT_FOUND));
+        }
+
+        $data = $this->getDoctrine()->getRepository($class_name)->findAll();
 
         return $this->handleView($this->view($data));
     }
@@ -59,7 +65,11 @@ class CrudController extends FOSRestController
      */
     public function searchEntityAction($entity, Request $request)
     {
-        $class_name = $this->getClassName($entity);
+        try {
+            $class_name = $this->getClassName($entity);
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view(self::ERR_UNKNOWN_ENTITY, Codes::HTTP_NOT_FOUND));
+        }
 
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
@@ -106,7 +116,12 @@ class CrudController extends FOSRestController
      */
     public function createEntityAction($entity, Request $request)
     {
-        $class_name   = $this->getClassName($entity);
+        try {
+            $class_name = $this->getClassName($entity);
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view(self::ERR_UNKNOWN_ENTITY, Codes::HTTP_NOT_FOUND));
+        }
+
         $entity_class = "\\".$class_name;
         $form_class   = "\\Hyperion\\ApiBundle\\Form\\".Inflector::classify($entity)."Type";
 
@@ -133,7 +148,13 @@ class CrudController extends FOSRestController
      */
     public function deleteEntityAction($entity, $id)
     {
-        $data = $this->getDoctrine()->getRepository($this->getClassName($entity))->find($id);
+        try {
+            $class_name = $this->getClassName($entity);
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view(self::ERR_UNKNOWN_ENTITY, Codes::HTTP_NOT_FOUND));
+        }
+
+        $data = $this->getDoctrine()->getRepository($class_name)->find($id);
 
         if (!$data) {
             return $this->handleView($this->view(null, Codes::HTTP_NOT_FOUND));
@@ -144,6 +165,7 @@ class CrudController extends FOSRestController
         $em->flush();
 
         return $this->handleView($this->view('', Codes::HTTP_OK));
+
     }
 
     /**
@@ -155,8 +177,13 @@ class CrudController extends FOSRestController
      */
     public function getEntityAction($entity, $id)
     {
-        $data = $this->getDoctrine()->getRepository($this->getClassName($entity))->find($id);
+        try {
+            $class_name = $this->getClassName($entity);
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view(self::ERR_UNKNOWN_ENTITY, Codes::HTTP_NOT_FOUND));
+        }
 
+        $data = $this->getDoctrine()->getRepository($class_name)->find($id);
         return $this->handleView($this->view($data, $data ? Codes::HTTP_OK : Codes::HTTP_NOT_FOUND));
     }
 
@@ -169,8 +196,14 @@ class CrudController extends FOSRestController
      */
     public function updateProjectAction($entity, $id, Request $request)
     {
+        try {
+            $class_name = $this->getClassName($entity);
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view(self::ERR_UNKNOWN_ENTITY, Codes::HTTP_NOT_FOUND));
+        }
+
         $form_class = "\\Hyperion\\ApiBundle\\Form\\".Inflector::classify($entity)."Type";
-        $obj        = $this->getDoctrine()->getRepository($this->getClassName($entity))->find($id);
+        $obj        = $this->getDoctrine()->getRepository($class_name)->find($id);
 
         if (!$obj) {
             return $this->handleView($this->view(null, Codes::HTTP_NOT_FOUND));

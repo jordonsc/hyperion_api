@@ -13,10 +13,25 @@ class StackController extends FOSRestController
      * Bake a project
      *
      * @api
-     * @Get("/project/{id}/bake")
+     * @Get("/bake/{id}")
      * @return Response
      */
-    public function bakeProject($id)
+    public function bakeProjectAction($id)
+    {
+        $action_id = $this->get('hyperion.workflow_manager')->bakeById($id);
+        $out       = ['action' => $action_id];
+
+        return $this->handleView($this->view($out));
+    }
+
+    /**
+     * Build a project
+     *
+     * @api
+     * @Get("/build/{id}")
+     * @return Response
+     */
+    public function buildProjectAction($id)
     {
         return $this->handleView($this->view(null));
     }
@@ -25,10 +40,10 @@ class StackController extends FOSRestController
      * Deploy a project
      *
      * @api
-     * @Get("/project/{id}/deploy")
+     * @Get("/deploy/{id}")
      * @return Response
      */
-    public function deployProject($id)
+    public function deployProjectAction($id)
     {
         return $this->handleView($this->view(null));
     }
@@ -37,10 +52,10 @@ class StackController extends FOSRestController
      * Scale a project
      *
      * @api
-     * @Get("/project/{id}/scale/{offset}")
+     * @Get("/scale/{id}/{offset}")
      * @return Response
      */
-    public function scaleProject($id, $offset)
+    public function scaleProjectAction($id, $offset)
     {
         return $this->handleView($this->view(null));
     }
@@ -49,10 +64,10 @@ class StackController extends FOSRestController
      * Tear-down a project
      *
      * @api
-     * @Get("/project/{id}/teardown")
+     * @Get("/teardown/{id}")
      * @return Response
      */
-    public function teardownProject($id)
+    public function teardownProjectAction($id)
     {
         return $this->handleView($this->view(null));
     }

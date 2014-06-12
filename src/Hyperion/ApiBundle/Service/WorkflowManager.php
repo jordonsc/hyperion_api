@@ -5,9 +5,12 @@ use Aws\Common\Aws;
 use Aws\Swf\SwfClient;
 use Doctrine\ORM\EntityManager;
 use Hyperion\ApiBundle\Entity\Action;
-use Hyperion\ApiBundle\Entity\Project;
+use Hyperion\ApiBundle\Entity\Environment;
+use Hyperion\ApiBundle\Exception\NotFoundException;
+use Hyperion\ApiBundle\Exception\UnexpectedValueException;
 use Hyperion\Dbal\Enum\ActionState;
 use Hyperion\Dbal\Enum\ActionType;
+use Hyperion\Dbal\Enum\EnvironmentType;
 
 class WorkflowManager
 {
@@ -44,16 +47,37 @@ class WorkflowManager
     }
 
     /**
-     * Start the bakery process for a project
+     * Bake a project by environment ID
      *
-     * @param Project $project
+     * @param $id
+     * @return int
+     */
+    public function bakeById($id)
+    {
+        $env = $this->em->getRepository('HyperionApiBundle:Environment')->find($id);
+        if (!$env) {
+            throw new NotFoundException("Environment with ID ".$id." not found");
+        }
+
+        return $this->bake($env);
+    }
+
+    /**
+     * Start the bakery process for a project given a BAKERY environment
+     *
+     * @param Environment $env
      * @return int Action ID
      */
-    public function bake(Project $project)
+    public function bake(Environment $env)
     {
+        if ($env->getEnvironmentType() != EnvironmentType::BAKERY) {
+            throw new UnexpectedValueException("Cannot bake a non-bakery environment");
+        }
+
         // Create action record
         $action = new Action();
-        $action->setProject($project);
+        $action->setProject($env->getProject());
+        $action->setEnvironment($env);
         $action->setActionType(ActionType::BAKE);
         $action->setState(ActionState::ACTIVE);
         $action->setWorkflowData('[]');
