@@ -25,7 +25,8 @@ class ProjectType extends AbstractType
             ->add('update_system_packages')
             ->add('packages')
             ->add('zones')
-            ->add('script')
+            ->add('bake_script')
+            ->add('launch_script')
             ->add('services')
             ->add(
                 'account',

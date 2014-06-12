@@ -37,7 +37,6 @@ class ProjectControllerTest extends WebTestCase
             'packager'               => 0,
             'update_system_packages' => 0,
             'packages'               => '[]',
-            'script'                 => null,
             'services'               => '[]',
             'zones'                  => '[]',
         ];

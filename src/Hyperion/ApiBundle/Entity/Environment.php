@@ -68,6 +68,11 @@ class Environment implements HyperionEntityInterface
     protected $network;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $script;
+
+    /**
      * @ORM\Column(type="string")
      */
     protected $instance_size;
@@ -441,6 +446,28 @@ class Environment implements HyperionEntityInterface
     public function getProxy()
     {
         return $this->proxy;
+    }
+
+    /**
+     * Set environment script
+     *
+     * @param string $script
+     * @return $this
+     */
+    public function setScript($script)
+    {
+        $this->script = $script;
+        return $this;
+    }
+
+    /**
+     * Get environment script
+     *
+     * @return string
+     */
+    public function getScript()
+    {
+        return $this->script;
     }
 
 

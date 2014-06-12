@@ -14,8 +14,8 @@ parameters:
             fk: { account_id: account, credential_id: credential }
             searchable:
                 - id
+                - account
                 - name
-                - account_id
                 - bake_status
                 - baked_image_id
                 - source_image_id
@@ -26,6 +26,7 @@ parameters:
             fk: { project_id: project, credential_id: credential }
             searchable:
                 - id
+                - project
                 - name
                 - environment_type
                 - tenancy
@@ -36,6 +37,7 @@ parameters:
             fk: { account_id: account }
             searchable:
                 - id
+                - account
                 - provider
                 - access_key
                 - region
@@ -44,6 +46,7 @@ parameters:
             fk: { project_id: project }
             searchable:
                 - id
+                - project
                 - name
                 - state
 
@@ -51,6 +54,7 @@ parameters:
             fk: { account_id: account }
             searchable:
                 - id
+                - account
                 - type
                 - hostname
                 - port
@@ -61,6 +65,8 @@ parameters:
             fk: { account_id: account, proxy_id: proxy }
             searchable:
                 - id
+                - account
+                - proxy
                 - type
                 - url
                 - username
@@ -72,6 +78,7 @@ parameters:
             fk: { environment_id: environment }
             searchable:
                 - id
+                - environment
                 - name
                 - status
 
@@ -79,6 +86,7 @@ parameters:
             fk: { distribution_id: distribution }
             searchable:
                 - id
+                - distribution
                 - instance_id
                 - name
                 - state

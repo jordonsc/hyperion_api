@@ -83,7 +83,12 @@ class Project implements HyperionEntityInterface
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $script;
+    protected $bake_script;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $launch_script;
 
     /**
      * JSON array
@@ -299,26 +304,48 @@ class Project implements HyperionEntityInterface
     }
 
     /**
-     * Set script
+     * Set the script executed during baking only
      *
      * @param string $script
      * @return Project
      */
-    public function setScript($script)
+    public function setBakeScript($script)
     {
-        $this->script = $script;
+        $this->bake_script = $script;
 
         return $this;
     }
 
     /**
-     * Get script
+     * Get the script executed during baking only
      *
      * @return string 
      */
-    public function getScript()
+    public function getBakeScript()
     {
-        return $this->script;
+        return $this->bake_script;
+    }
+
+    /**
+     * Set the script executed during test and production launches
+     *
+     * @param mixed $launch_script
+     * @return $this
+     */
+    public function setLaunchScript($launch_script)
+    {
+        $this->launch_script = $launch_script;
+        return $this;
+    }
+
+    /**
+     * Get the script executed during test and production launches
+     *
+     * @return mixed
+     */
+    public function getLaunchScript()
+    {
+        return $this->launch_script;
     }
 
     /**

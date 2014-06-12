@@ -125,36 +125,6 @@ class CrudController extends FOSRestController
     }
 
     /**
-     * Hydrate relationships from their 'ID' fields
-     *
-     * @param string                  $entity Name of the entity (lowercase)
-     * @param HyperionEntityInterface $obj    Actual entity object
-     * @deprecated
-     */
-    protected function hydrateRelationshipsX($entity, HyperionEntityInterface &$obj)
-    {
-        $pks = $this->get('hyperion.entity_validator')->getForeignKeys($entity);
-
-        foreach ($pks as $field => $rel_entity) {
-            $getter = 'get'.Inflector::classify($field);
-            $setter = 'set'.Inflector::classify(substr($field, 0, -3)); // less the _id suffix (see Entity_Rules.md)
-            $id     = $obj->$getter();
-
-            if ($id === null) {
-                continue;
-            }
-
-            $rel = $this->getDoctrine()->getRepository($this->getClassName($rel_entity))->find($id);
-
-            if (!$rel) {
-                throw new NotFoundException("Related entity `".$rel_entity."` not found with ID '".$id."'");
-            }
-
-            $obj->$setter($rel);
-        }
-    }
-
-    /**
      * Delete a project
      *
      * @api
@@ -175,7 +145,6 @@ class CrudController extends FOSRestController
 
         return $this->handleView($this->view('', Codes::HTTP_OK));
     }
-
 
     /**
      * Get entity by ID

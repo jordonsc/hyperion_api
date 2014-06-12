@@ -24,6 +24,7 @@ class EnvironmentType extends AbstractType
             ->add('tags')
             ->add('key_pairs')
             ->add('firewalls')
+            ->add('script')
             ->add(
                 'project',
                 'entity',
