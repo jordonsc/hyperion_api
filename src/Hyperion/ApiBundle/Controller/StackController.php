@@ -4,6 +4,8 @@ namespace Hyperion\ApiBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Util\Codes;
+use Hyperion\ApiBundle\Exception\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
 class StackController extends FOSRestController
@@ -18,10 +20,13 @@ class StackController extends FOSRestController
      */
     public function bakeProjectAction($id)
     {
-        $action_id = $this->get('hyperion.workflow_manager')->bakeById($id);
-        $out       = ['action' => $action_id];
-
-        return $this->handleView($this->view($out));
+        try {
+            $action_id = $this->get('hyperion.workflow_manager')->bakeById($id);
+            $out       = ['action' => $action_id];
+            return $this->handleView($this->view($out));
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view("Invalid environment ID", Codes::HTTP_NOT_FOUND));
+        }
     }
 
     /**
