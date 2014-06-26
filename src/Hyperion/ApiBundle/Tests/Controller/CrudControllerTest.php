@@ -260,6 +260,8 @@ class CrudControllerTest extends WebTestCase
                     'tags'             => ['env' => 'test'],
                     'key_pairs'        => ['test'],
                     'firewalls'        => ['ci'],
+                    'ssh_port'         => 22,
+                    'ssh_user'         => 'ec2-user',
                 ]
             ],
         ];

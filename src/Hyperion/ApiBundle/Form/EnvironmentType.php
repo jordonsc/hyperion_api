@@ -46,6 +46,10 @@ class EnvironmentType extends AbstractType
                 ]
             )
             ->add('proxy')
+            ->add('ssh_port')
+            ->add('ssh_user')
+            ->add('ssh_password')
+            ->add('ssh_pkey')
         ;
     }
     

@@ -19,7 +19,7 @@ class Repository implements HyperionEntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Account", inversedBy="projects")
-     * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="account_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @Serializer\Type("integer")
      * @Serializer\Accessor(getter="getAccountId")

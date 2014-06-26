@@ -22,7 +22,7 @@ class Credential implements HyperionEntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Account", inversedBy="credentials")
-     * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="account_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @Serializer\Type("integer")
      * @Serializer\Accessor(getter="getAccountId")

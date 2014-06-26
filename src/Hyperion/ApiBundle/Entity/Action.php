@@ -19,7 +19,7 @@ class Action implements HyperionEntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="actions")
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @Serializer\Type("integer")
      * @Serializer\Accessor(getter="getProjectId")
@@ -28,7 +28,7 @@ class Action implements HyperionEntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Environment", inversedBy="actions")
-     * @ORM\JoinColumn(name="environment_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="environment_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @Serializer\Type("integer")
      * @Serializer\Accessor(getter="getEnvironmentId")
@@ -37,7 +37,7 @@ class Action implements HyperionEntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Distribution", inversedBy="instances")
-     * @ORM\JoinColumn(name="distribution_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="distribution_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @Serializer\Type("integer")
      * @Serializer\Accessor(getter="getDistributionId")

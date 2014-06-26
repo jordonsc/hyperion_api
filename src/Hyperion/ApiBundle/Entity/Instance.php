@@ -29,7 +29,7 @@ class Instance implements HyperionEntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Distribution", inversedBy="instances")
-     * @ORM\JoinColumn(name="distribution_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="distribution_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @Serializer\Type("integer")
      * @Serializer\Accessor(getter="getDistributionId")

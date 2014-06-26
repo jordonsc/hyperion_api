@@ -31,7 +31,7 @@ class Environment implements HyperionEntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="environments")
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @Serializer\Type("integer")
      * @Serializer\Accessor(getter="getProjectId")
@@ -104,6 +104,27 @@ class Environment implements HyperionEntityInterface
      */
     protected $proxy;
 
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $ssh_port;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $ssh_user;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $ssh_password;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $ssh_pkey;
+
     // --
 
 
@@ -126,6 +147,7 @@ class Environment implements HyperionEntityInterface
         $this->actions = new ArrayCollection();
         $this->tags = '[]';
         $this->firewalls = '[]';
+        $this->ssh_port = 22;
     }
 
 
@@ -470,9 +492,96 @@ class Environment implements HyperionEntityInterface
         return $this->script;
     }
 
+    /**
+     * Set ssh password
+     *
+     * @param string $ssh_password
+     * @return $this
+     */
+    public function setSshPassword($ssh_password)
+    {
+        $this->ssh_password = $ssh_password;
+        return $this;
+    }
+
+    /**
+     * Get ssh password
+     *
+     * @return string
+     */
+    public function getSshPassword()
+    {
+        return $this->ssh_password;
+    }
+
+    /**
+     * Set ssh private key as a string
+     *
+     * @param string $ssh_pkey
+     * @return $this
+     */
+    public function setSshPkey($ssh_pkey)
+    {
+        $this->ssh_pkey = $ssh_pkey;
+        return $this;
+    }
+
+    /**
+     * Get ssh private key as a string
+     *
+     * @return string
+     */
+    public function getSshPkey()
+    {
+        return $this->ssh_pkey;
+    }
+
+    /**
+     * Set the port SSH listens on
+     *
+     * @param int $ssh_port
+     * @return $this
+     */
+    public function setSshPort($ssh_port)
+    {
+        $this->ssh_port = $ssh_port;
+        return $this;
+    }
+
+    /**
+     * Get the port SSH listens on
+     *
+     * @return int
+     */
+    public function getSshPort()
+    {
+        return $this->ssh_port;
+    }
+
+    /**
+     * Set the ssh username
+     *
+     * @param string $ssh_user
+     * @return $this
+     */
+    public function setSshUser($ssh_user)
+    {
+        $this->ssh_user = $ssh_user;
+        return $this;
+    }
+
+    /**
+     * Get the ssh username
+     *
+     * @return string
+     */
+    public function getSshUser()
+    {
+        return $this->ssh_user;
+    }
+
 
     // Serialisers --
-
 
     public function __toString()
     {
@@ -491,7 +600,5 @@ class Environment implements HyperionEntityInterface
     public function getCredentialId() {
         return $this->getCredential() ? $this->getCredential()->getId() : null;
     }
-
-
 
 }

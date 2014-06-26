@@ -26,7 +26,7 @@ class Distribution implements HyperionEntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Environment", inversedBy="distributions")
-     * @ORM\JoinColumn(name="environment_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="environment_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @Serializer\Type("integer")
      * @Serializer\Accessor(getter="getEnvironmentId")
