@@ -56,13 +56,21 @@ class Action implements HyperionEntityInterface
     protected $state;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
-    protected $workflow_data;
+    protected $output;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $error_message;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $phase;
 
     // --
-
-
 
     /**
      * Get id
@@ -167,28 +175,6 @@ class Action implements HyperionEntityInterface
     }
 
     /**
-     * Set Workflow Data
-     *
-     * @param string $workflow_data
-     * @return $this
-     */
-    public function setWorkflowData($workflow_data)
-    {
-        $this->workflow_data = $workflow_data;
-        return $this;
-    }
-
-    /**
-     * Get Workflow Data
-     *
-     * @return string
-     */
-    public function getWorkflowData()
-    {
-        return $this->workflow_data;
-    }
-
-    /**
      * Set environment
      *
      * @param Environment $environment
@@ -209,6 +195,72 @@ class Action implements HyperionEntityInterface
     public function getEnvironment()
     {
         return $this->environment;
+    }
+
+    /**
+     * Set ErrorMessage
+     *
+     * @param string $error_message
+     * @return $this
+     */
+    public function setErrorMessage($error_message)
+    {
+        $this->error_message = $error_message;
+        return $this;
+    }
+
+    /**
+     * Get ErrorMessage
+     *
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+        return $this->error_message;
+    }
+
+    /**
+     * Set Output
+     *
+     * @param string $output
+     * @return $this
+     */
+    public function setOutput($output)
+    {
+        $this->output = $output;
+        return $this;
+    }
+
+    /**
+     * Get Output
+     *
+     * @return string
+     */
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    /**
+     * Set Phase
+     *
+     * @param string $phase
+     * @return $this
+     */
+    public function setPhase($phase)
+    {
+        $this->phase = $phase;
+        return $this;
+    }
+
+    /**
+     * Get Phase
+     *
+     * @return string
+     */
+    public function getPhase()
+    {
+        return $this->phase;
     }
 
     

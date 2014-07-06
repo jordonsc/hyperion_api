@@ -27,6 +27,15 @@ class Repository implements HyperionEntityInterface
     protected $account;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="repositories")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getProjectId")
+     */
+    protected $project;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $type;
@@ -47,7 +56,7 @@ class Repository implements HyperionEntityInterface
     protected $password;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $private_key;
 
@@ -61,8 +70,17 @@ class Repository implements HyperionEntityInterface
      */
     protected $proxy;
 
-    // --
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $host_fingerprint;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $checkout_directory;
+
+    // --
 
 
     /**
@@ -237,6 +255,29 @@ class Repository implements HyperionEntityInterface
     }
 
     /**
+     * Set project
+     *
+     * @param Project $account
+     * @return Repository
+     */
+    public function setProject(Project $project = null)
+    {
+        $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * Get project
+     *
+     * @return Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
      * Set proxy
      *
      * @param Proxy $proxy
@@ -259,10 +300,58 @@ class Repository implements HyperionEntityInterface
         return $this->proxy;
     }
 
+    /**
+     * Set CheckoutDirectory
+     *
+     * @param string $checkout_directory
+     * @return $this
+     */
+    public function setCheckoutDirectory($checkout_directory)
+    {
+        $this->checkout_directory = $checkout_directory;
+        return $this;
+    }
+
+    /**
+     * Get CheckoutDirectory
+     *
+     * @return string
+     */
+    public function getCheckoutDirectory()
+    {
+        return $this->checkout_directory;
+    }
+
+    /**
+     * Set HostFingerprint
+     *
+     * @param string $host_fingerprint
+     * @return $this
+     */
+    public function setHostFingerprint($host_fingerprint)
+    {
+        $this->host_fingerprint = $host_fingerprint;
+        return $this;
+    }
+
+    /**
+     * Get HostFingerprint
+     *
+     * @return string
+     */
+    public function getHostFingerprint()
+    {
+        return $this->host_fingerprint;
+    }
+
     // Serialisers --
 
     public function getAccountId() {
         return $this->getAccount() ? $this->getAccount()->getId() : null;
+    }
+
+    public function getProjectId() {
+        return $this->getProject() ? $this->getProject()->getId() : null;
     }
 
     public function __toString()

@@ -48,7 +48,9 @@ class ActionType extends AbstractType
                         },
                 ]
             )
-            ->add('workflow_data');
+            ->add('output')
+            ->add('error_message')
+            ->add('phase');
     }
 
     /**

@@ -32,7 +32,19 @@ class RepositoryType extends AbstractType
                         },
                 ]
             )
-            ->add('proxy');
+            ->add(
+                'project',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Project',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                ]
+            )
+            ->add('proxy')
+            ->add('host_fingerprint')
+            ->add('checkout_directory');
     }
 
     /**

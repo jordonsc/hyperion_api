@@ -80,7 +80,9 @@ class WorkflowManager
         $action->setEnvironment($env);
         $action->setActionType(ActionType::BAKE);
         $action->setState(ActionState::ACTIVE);
-        $action->setWorkflowData('[]');
+        $action->setOutput('');
+        $action->setErrorMessage(null);
+        $action->setPhase('PENDING');
         $this->em->persist($action);
         $this->em->flush();
 

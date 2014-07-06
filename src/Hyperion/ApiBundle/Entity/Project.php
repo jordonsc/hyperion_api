@@ -49,6 +49,11 @@ class Project implements HyperionEntityInterface
     protected $environments;
 
     /**
+     * @ORM\OneToMany(targetEntity="Repository", mappedBy="project")
+     */
+    protected $repositories;
+
+    /**
      * @ORM\OneToMany(targetEntity="Action", mappedBy="project")
      */
     protected $actions;
