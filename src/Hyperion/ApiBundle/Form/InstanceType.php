@@ -17,8 +17,6 @@ class InstanceType extends AbstractType
     {
         $builder
             ->add('instance_id')
-            ->add('instance_name')
-            ->add('state')
             ->add(
                 'distribution',
                 'entity',

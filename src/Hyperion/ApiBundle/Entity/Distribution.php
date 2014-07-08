@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="distributions")
+ * @ORM\Table(name="distributions",indexes={@ORM\Index(name="distro_name", columns={"name"})})
  */
 class Distribution implements HyperionEntityInterface
 {
@@ -25,6 +25,11 @@ class Distribution implements HyperionEntityInterface
     protected $name;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $version;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Environment", inversedBy="distributions")
      * @ORM\JoinColumn(name="environment_id", referencedColumnName="id", onDelete="CASCADE")
      *
@@ -37,6 +42,11 @@ class Distribution implements HyperionEntityInterface
      * @ORM\Column(type="integer")
      */
     protected $status;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $tag_string;
 
     /**
      * @ORM\OneToMany(targetEntity="Instance", mappedBy="distribution")
@@ -165,7 +175,49 @@ class Distribution implements HyperionEntityInterface
         return $this->environment;
     }
 
+    /**
+     * Set Version
+     *
+     * @param mixed $version
+     * @return $this
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+        return $this;
+    }
 
+    /**
+     * Get Version
+     *
+     * @return mixed
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set TagString
+     *
+     * @param mixed $tag_string
+     * @return $this
+     */
+    public function setTagString($tag_string)
+    {
+        $this->tag_string = $tag_string;
+        return $this;
+    }
+
+    /**
+     * Get TagString
+     *
+     * @return mixed
+     */
+    public function getTagString()
+    {
+        return $this->tag_string;
+    }
 
     // Serialisers --
 

@@ -23,11 +23,6 @@ class Instance implements HyperionEntityInterface
     protected $instance_id;
 
     /**
-     * @ORM\Column(type="string")
-     */
-    protected $instance_name;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Distribution", inversedBy="instances")
      * @ORM\JoinColumn(name="distribution_id", referencedColumnName="id", onDelete="CASCADE")
      *
@@ -35,11 +30,6 @@ class Instance implements HyperionEntityInterface
      * @Serializer\Accessor(getter="getDistributionId")
      */
     protected $distribution;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    protected $state;
 
     // --
 
@@ -77,52 +67,6 @@ class Instance implements HyperionEntityInterface
     }
 
     /**
-     * Set instance_name
-     *
-     * @param string $instanceName
-     * @return Instance
-     */
-    public function setInstanceName($instanceName)
-    {
-        $this->instance_name = $instanceName;
-
-        return $this;
-    }
-
-    /**
-     * Get instance_name
-     *
-     * @return string
-     */
-    public function getInstanceName()
-    {
-        return $this->instance_name;
-    }
-
-    /**
-     * Set state
-     *
-     * @param integer $state
-     * @return Instance
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    /**
-     * Get state
-     *
-     * @return integer
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
      * Set distribution
      *
      * @param Distribution $distribution
@@ -153,6 +97,6 @@ class Instance implements HyperionEntityInterface
 
     public function __toString()
     {
-        return '['.$this->getId().'] '.$this->getInstanceId().' ('.$this->getInstanceName().')';
+        return '['.$this->getId().'] '.$this->getInstanceId();
     }
 }

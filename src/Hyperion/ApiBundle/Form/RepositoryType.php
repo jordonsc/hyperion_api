@@ -16,6 +16,7 @@ class RepositoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('name')
             ->add('type')
             ->add('url')
             ->add('username')

@@ -27,14 +27,14 @@
         "friendsofsymfony/rest-bundle": "1.3.*",
         "jms/serializer-bundle": "~0.13",
         "eloquent/enumeration": "~5.1",
-        "hyperion/dbal": "~0.0.2@beta",
+        //"hyperion/dbal": "~0.0.3@beta",
+        "hyperion/dbal": "*@dev",
         "aws/aws-sdk-php": "~2.6",
         "psr/log": "~1.0"
     },
     "require-dev": {
         "phpunit/phpunit": ">=4.0.0",
-        "guzzle/guzzle": "~3.9",
-        "phpdocumentor/phpdocumentor": "~2.4"
+        "guzzle/guzzle": "~3.9"
     },
     "scripts": {
         "post-install-cmd": [

@@ -49,7 +49,6 @@ class Action implements HyperionEntityInterface
      */
     protected $action_type;
 
-
     /**
      * @ORM\Column(type="integer")
      */

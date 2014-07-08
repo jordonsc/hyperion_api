@@ -3,9 +3,12 @@
 namespace Hyperion\ApiBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
 use Hyperion\ApiBundle\Exception\NotFoundException;
+use Hyperion\ApiBundle\Exception\UnexpectedValueException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class StackController extends FOSRestController
@@ -24,6 +27,8 @@ class StackController extends FOSRestController
             $action_id = $this->get('hyperion.workflow_manager')->bakeById($id);
             $out       = ['action' => $action_id];
             return $this->handleView($this->view($out));
+        } catch (UnexpectedValueException $e) {
+            return $this->handleView($this->view($e->getMessage(), Codes::HTTP_BAD_REQUEST));
         } catch (NotFoundException $e) {
             return $this->handleView($this->view("Invalid environment ID", Codes::HTTP_NOT_FOUND));
         }
@@ -33,12 +38,27 @@ class StackController extends FOSRestController
      * Build a project
      *
      * @api
-     * @Get("/build/{id}")
+     * @Post("/build/{id}")
      * @return Response
      */
-    public function buildProjectAction($id)
+    public function buildProjectAction($id, Request $request)
     {
-        return $this->handleView($this->view(null));
+        $name       = $request->get('name', null);
+        $tag_string = $request->get('tags', '');
+
+        if (!$name) {
+            return $this->handleView($this->view("Build name is required", Codes::HTTP_BAD_REQUEST));
+        }
+
+        try {
+            $action_id = $this->get('hyperion.workflow_manager')->buildById($id, $name, $tag_string);
+            $out       = ['action' => $action_id];
+            return $this->handleView($this->view($out));
+        } catch (UnexpectedValueException $e) {
+            return $this->handleView($this->view($e->getMessage(), Codes::HTTP_BAD_REQUEST));
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view("Invalid environment ID", Codes::HTTP_NOT_FOUND));
+        }
     }
 
     /**

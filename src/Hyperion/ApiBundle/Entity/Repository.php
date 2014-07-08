@@ -18,6 +18,11 @@ class Repository implements HyperionEntityInterface
     protected $id;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $name;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Account", inversedBy="projects")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id", onDelete="CASCADE")
      *
@@ -342,6 +347,28 @@ class Repository implements HyperionEntityInterface
     public function getHostFingerprint()
     {
         return $this->host_fingerprint;
+    }
+
+    /**
+     * Set Name
+     *
+     * @param mixed $name
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Get Name
+     *
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     // Serialisers --

@@ -12,3 +12,7 @@ Quirks
 ------
 See [Quirks](docs/Quirks.md) for some common causes of unexpected issues.
 
+Setup
+-----
+A sample vhost file for Apache is available in the docs folder. See the Hyperion Workflow documentation for more
+details.

@@ -17,7 +17,9 @@ class DistributionType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('version')
             ->add('status')
+            ->add('tag_string')
             ->add(
                 'environment',
                 'entity',
