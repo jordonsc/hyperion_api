@@ -23,7 +23,7 @@ class Repository implements HyperionEntityInterface
     protected $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Account", inversedBy="projects")
+     * @ORM\ManyToOne(targetEntity="Account", inversedBy="repos")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @Serializer\Type("integer")

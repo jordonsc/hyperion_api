@@ -9,7 +9,7 @@ class StaticController extends Controller
 {
 
     /**
-     * @Route("/")
+     * @Route("/", name="home")
      * @Template
      */
     public function homeAction()

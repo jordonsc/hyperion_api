@@ -18,7 +18,7 @@ class Proxy implements HyperionEntityInterface
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Account", inversedBy="projects")
+     * @ORM\ManyToOne(targetEntity="Account", inversedBy="proxies")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @Serializer\Type("integer")

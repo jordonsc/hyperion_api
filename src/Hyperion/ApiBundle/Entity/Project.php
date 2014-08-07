@@ -465,6 +465,39 @@ class Project implements HyperionEntityInterface
         return $this->actions;
     }
 
+    /**
+     * Add a repositories
+     *
+     * @param Repository $repository
+     * @return Project
+     */
+    public function addRepository(Repository $repository)
+    {
+        $this->repositories[] = $repository;
+
+        return $this;
+    }
+
+    /**
+     * Remove a repository
+     *
+     * @param Repository $repository
+     */
+    public function removeRepository(Repository $repository)
+    {
+        $this->repositories->removeElement($repository);
+    }
+
+    /**
+     * Get repositories
+     *
+     * @return Collection
+     */
+    public function getRepositories()
+    {
+        return $this->repositories;
+    }
+
 
 
     // Serialisers --
@@ -478,7 +511,5 @@ class Project implements HyperionEntityInterface
     {
         return '['.$this->getId().'] '.$this->getName();
     }
-
-
 
 }

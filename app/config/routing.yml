@@ -9,6 +9,15 @@ hyperion_api_crud:
     type:     rest
     prefix:   /api/v1/entity/
 
+# Web editor
+hyperion_api_admin:
+    resource: Hyperion\ApiBundle\Controller\AdminController
+    type:     annotation
+    prefix:   /admin/
+
+# Web dashboard
+# ..
+
 # Optional - contains a welcome home page
 hyperion_api_static:
     resource: Hyperion\ApiBundle\Controller\StaticController

@@ -1,0 +1,112 @@
+{% macro breadcrumb(title, account) %}
+    <ol class="breadcrumb">
+        <li><a href="{{ path('admin_index') }}">Admin</a></li>
+        {% if account %}
+            <li><a href="{{ path('admin_account', {'id': account.id}) }}">{{ account.name }}</a></li>
+        {% endif %}
+        <li>{{ title }}</li>
+    </ol>
+{% endmacro %}
+
+
+{# -- ACCOUNTS -- #}
+{% macro listAccounts(accounts) %}
+    {% for account in accounts %}
+        {{ _self.accountBlock(account) }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro accountBlock(account) %}
+    <div class="col-lg-4">
+        <h3>{{ account.name }}</h3>
+
+        <p>Account #<b>{{ account.id }}</b>, contains <b>{{ account.projects|length }}</b>
+            project{% if account.projects|length != 1 %}s{% endif %}</p>
+
+        <p><a href="{{ path('admin_account', {'id': account.id}) }}" class="btn btn-default btn-sm">Details &raquo;</a>
+        </p>
+    </div>
+{% endmacro %}
+
+{% macro accountDetail(account) %}
+    <h1>{{ account.name }}</h1>
+{% endmacro %}
+
+{# -- PROJECTS -- #}
+{% macro listProjects(projects) %}
+    {% for project in projects %}
+        {{ _self.projectBlock(project) }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro projectBlock(project) %}
+    <div class="col-lg-4">
+        <h3>{{ project.name }}</h3>
+
+        <p>{{ _self.bakeStatusLabel(project.bakeStatus) }}</p>
+
+        <p>Contains <b>{{ project.environments|length }}</b>
+            environment{% if project.environments|length != 1 %}s{% endif %}, <b>{{ project.repositories|length }}</b>
+            linked {% if project.repositories|length == 1 %}repository{% else %}repositories{% endif %}</p>
+
+        <p><a href="{{ path('admin_project', {'id': project.id}) }}" class="btn btn-default btn-sm">Details &raquo;</a>
+        </p>
+    </div>
+{% endmacro %}
+
+{% macro bakeStatusLabel(bake_status) %}
+    {% if bake_status == 0 %}
+        <span class="label label-danger">Unbaked</span>
+    {% elseif bake_status == 1 %}
+        <span class="label label-warning">Baking</span>
+    {% elseif bake_status == 2 %}
+        <span class="label label-success">Baked</span>
+    {% endif %}
+{% endmacro %}
+
+{# -- REPOSITORIES -- #}
+{% macro listRepositories(repositories) %}
+    {% for repo in repositories %}
+        {{ _self.repoBlock(repo) }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro repoBlock(repo) %}
+    <div class="col-lg-4">
+        <h3>{{ repo.name }}</h3>
+
+        <p>{{ repo.url }}</p>
+
+        <p><a href="#" class="btn btn-default btn-sm">Details &raquo;</a></p>
+    </div>
+{% endmacro %}
+
+{# -- CREDENTIALS -- #}
+{% macro listCredentials(credentials) %}
+    {% for credential in credentials %}
+        {{ _self.credentialBlock(credential) }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro credentialBlock(credential) %}
+    <div class="col-lg-4">
+        <h3>Credential #{{ credential.id }}</h3>
+
+        <p><a href="#" class="btn btn-default btn-sm">Details &raquo;</a></p>
+    </div>
+{% endmacro %}
+
+{# -- PROXIES -- #}
+{% macro listProxies(proxies) %}
+    {% for proxy in proxies %}
+        {{ _self.proxyBlock(proxy) }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro proxyBlock(proxy) %}
+    <div class="col-lg-4">
+        <h3>{{ proxy.hostname }}:{{ proxy.port }}</h3>
+
+        <p><a href="#" class="btn btn-default btn-sm">Details &raquo;</a></p>
+    </div>
+{% endmacro %}

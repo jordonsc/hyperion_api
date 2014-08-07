@@ -16,6 +16,9 @@ use Hyperion\Dbal\Criteria\Criteria;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * API entity CRUD controller
+ */
 class CrudController extends FOSRestController
 {
     const ERR_UNKNOWN_ENTITY = "Unknown entity";

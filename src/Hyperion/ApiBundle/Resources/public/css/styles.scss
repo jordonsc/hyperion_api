@@ -1,0 +1,19 @@
+@import "imports/variables";
+
+html, body {
+  padding: $header_height 0 0 0;
+  margin: 0;
+  background: $bg-colour;
+  color: $fg-colour;
+  font: 10px $font-stack;
+  height: 100%;
+}
+
+h1 {
+  font-size: 4rem;
+  text-align: center;
+}
+
+form textarea.form-control {
+  height: $text-area-height;
+}

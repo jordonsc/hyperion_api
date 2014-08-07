@@ -1,0 +1,7 @@
+{% extends '::admin.html.twig' %}
+{% import '::macros/admin.html.twig' as admin %}
+{% block body %}
+    <div class="container">
+        {{ admin.listAccounts(accounts) }}
+    </div>
+{% endblock %}
