@@ -15,19 +15,8 @@ class ProjectType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder
             ->add('name')
-            ->add('bake_status')
-            ->add('baked_image_id')
-            ->add('source_image_id')
-            ->add('packager')
-            ->add('update_system_packages')
-            ->add('packages')
-            ->add('zones')
-            ->add('bake_script')
-            ->add('launch_script')
-            ->add('services')
             ->add(
                 'account',
                 'entity',
@@ -37,7 +26,31 @@ class ProjectType extends AbstractType
                             return $er->createQueryBuilder('u');
                         },
                 ]
-            );
+            )
+            ->add('name', 'text', ['required' => true])
+            ->add('source_image_id', 'text', ['label' => 'Source Image ID', 'required' => false])
+            ->add('baked_image_id', 'text', ['label' => 'Baked Image ID', 'read_only' => true, 'required' => false])
+            ->add('packager', 'choice', ['choices' => [0 => 'YUM', 1 => 'APT'], 'required' => true])
+            ->add(
+                'update_system_packages',
+                'choice',
+                [
+                    'label'    => 'Update all system packages when baking',
+                    'choices'  => [0 => 'No', 1 => 'Yes'],
+                    'required' => true
+                ]
+            )
+            ->add('packages', 'textarea', ['required' => false])
+            ->add('zones', 'textarea', ['label' => 'Distribution Zones', 'required' => false])
+            ->add('bake_script', 'textarea', ['label' => 'Bakery Script', 'required' => false])
+            ->add('launch_script', 'textarea', ['label' => 'Launch Script', 'required' => false])
+            ->add('services', 'textarea', ['label' => 'System Services', 'required' => false])
+            ->add(
+                'bake_status',
+                'choice',
+                ['choices' => [0 => 'Unbaked', 1 => 'Baking', 2 => 'Baked'], 'required' => true]
+            )
+            ->add('save', 'submit');
     }
 
     /**

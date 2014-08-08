@@ -24,6 +24,7 @@ trait ArraySerialiserTrait
      * @return string
      */
     protected function listToJson($txt) {
+        $txt = str_replace("\r\n", "\n", $txt);
         return json_encode(explode("\n", $txt));
     }
 

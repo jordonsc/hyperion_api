@@ -10,9 +10,8 @@ hyperion_api_crud:
     prefix:   /api/v1/entity/
 
 # Web editor
-hyperion_api_admin:
-    resource: Hyperion\ApiBundle\Controller\AdminController
-    type:     annotation
+hyperion_admin:
+    resource: @HyperionApiBundle/Resources/config/routing_admin.yml
     prefix:   /admin/
 
 # Web dashboard

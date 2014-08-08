@@ -3,8 +3,8 @@
 html, body {
   padding: $header_height 0 0 0;
   margin: 0;
-  background: $bg-colour;
-  color: $fg-colour;
+  background: $bg;
+  color: $fg;
   font: 10px $font-stack;
   height: 100%;
 }
@@ -15,5 +15,31 @@ h1 {
 }
 
 form textarea.form-control {
-  height: $text-area-height;
+  height: $textarea-height;
 }
+
+%fk {
+  padding: 0 0 20px 0;
+  margin: 0;
+}
+
+.fk-1 {
+  @extend %fk;
+  background: #FFD1A6;
+}
+
+.fk-2 {
+  @extend %fk;
+  background: #A6B4FF;
+}
+
+.fk-3 {
+  @extend %fk;
+  background: #FFA6A6;
+}
+
+.fk-4 {
+  @extend %fk;
+  background: #A6FFC6;
+}
+

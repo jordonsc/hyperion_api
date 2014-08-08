@@ -1,0 +1,7 @@
+hyperion_admin_account:
+    resource: Hyperion\ApiBundle\Controller\Admin\AccountController
+    type:     annotation
+
+hyperion_admin_project:
+    resource: Hyperion\ApiBundle\Controller\Admin\ProjectController
+    type:     annotation
