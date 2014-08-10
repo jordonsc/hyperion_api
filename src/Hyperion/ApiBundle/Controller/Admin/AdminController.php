@@ -15,18 +15,26 @@ class AdminController extends Controller
     /**
      * Generic entity save function
      *
-     * @param string  $entity
-     * @param int     $id
-     * @param Request $request
-     * @param array   $list_fields
+     * @param string   $entity
+     * @param int|null $id
+     * @param Request  $request
+     * @param array    $list_fields
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws NotFoundHttpException
      */
     protected function saveEntity($entity, $id, Request $request, array $list_fields = [])
     {
-        $entity_lc = strtolower($entity);
+        if (substr($id, 0, 3) == 'new') {
+            $id = null;
+        }
 
-        $object = $this->getDoctrine()->getRepository('HyperionApiBundle:'.$entity)->find($id);
+        $entity_class = '\Hyperion\ApiBundle\Entity\\'.$entity;
+        $entity_lc    = strtolower($entity);
+
+        $object = $id ?
+            $this->getDoctrine()->getRepository('HyperionApiBundle:'.$entity)->find($id) :
+            new $entity_class();
+
         if (!$object) {
             throw new NotFoundHttpException("Unknown ".$entity_lc." ID");
         }
@@ -46,7 +54,7 @@ class AdminController extends Controller
             $em->persist($object);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_'.$entity_lc, ['id' => $id]));
+            return $this->redirect($this->generateUrl('admin_'.$entity_lc, ['id' => $object->getId()]), 303);
         } else {
             $out    = ['success' => false, 'errors' => []];
             $errors = $form->getErrors();

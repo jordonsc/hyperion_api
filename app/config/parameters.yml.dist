@@ -24,3 +24,7 @@ parameters:
         access_key:
         secret:
         region: us-east1
+
+    sass_path: /usr/local/bin/sass
+    uglifycss_path: /usr/local/bin/uglifycss
+    uglifyjs_path: /usr/local/bin/uglifyjs

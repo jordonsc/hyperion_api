@@ -1,6 +1,8 @@
 Hyperion API
 ============
 
+See the Hyperion Workflow documentation for more details on the general operation of the Hyperion platform.
+
 Diagrams
 --------
 
@@ -8,11 +10,48 @@ Diagrams
 * [ERD](https://www.lucidchart.com/documents/edit/365ed83b-415e-486f-a4a7-3d3a9acb21d9/0)
 * [Workflow](https://www.lucidchart.com/documents/edit/5a1a820b-7293-4fb3-b670-f9c9b4ab6e00/0)
 
+
+Setup
+=====
+Application Dependencies
+------------------------
+
+### Composer
+
+    # Linux:
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
+
+    # Windows:
+    # https://getcomposer.org/download/
+
+### Node: Minifiers
+
+    # Ubuntu:
+    apt-get -y --purge remove node nodejs nodejs-legacy
+    apt-get -y install nodejs-legacy npm
+
+    # Windows:
+    # http://nodejs.org/dist/npm/
+
+    # Once node is installed:
+    npm install -g uglifycss uglify-js
+
+### Ruby: Sass & Compass
+
+    # Ubuntu:
+    apt-get -y install ruby
+
+    # Windows:
+    # http://rubyinstaller.org/
+
+    # Once Ruby is installed:
+    gem install sass compass
+
+
+Vhost Install
+-------------
+A sample vhost file for Apache is available in the docs folder.
+
 Quirks
 ------
 See [Quirks](docs/Quirks.md) for some common causes of unexpected issues.
-
-Setup
------
-A sample vhost file for Apache is available in the docs folder. See the Hyperion Workflow documentation for more
-details.

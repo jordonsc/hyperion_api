@@ -29,7 +29,6 @@
         "twbs/bootstrap-sass": "~3.2.0",
         "braincrafted/bootstrap-bundle": "~2.0",
         "eloquent/enumeration": "~5.1",
-        //"hyperion/dbal": "~0.0.3@beta",
         "hyperion/dbal": "*@dev",
         "aws/aws-sdk-php": "~2.6",
         "psr/log": "~1.0"

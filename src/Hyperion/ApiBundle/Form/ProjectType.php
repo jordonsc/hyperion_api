@@ -28,7 +28,7 @@ class ProjectType extends AbstractType
                 ]
             )
             ->add('name', 'text', ['required' => true])
-            ->add('source_image_id', 'text', ['label' => 'Source Image ID', 'required' => false])
+            ->add('source_image_id', 'text', ['label' => 'Source Image ID', 'required' => true])
             ->add('baked_image_id', 'text', ['label' => 'Baked Image ID', 'read_only' => true, 'required' => false])
             ->add('packager', 'choice', ['choices' => [0 => 'YUM', 1 => 'APT'], 'required' => true])
             ->add(
@@ -40,11 +40,11 @@ class ProjectType extends AbstractType
                     'required' => true
                 ]
             )
-            ->add('packages', 'textarea', ['required' => false])
-            ->add('zones', 'textarea', ['label' => 'Distribution Zones', 'required' => false])
+            ->add('packages', 'textarea', ['required' => false, 'label' => 'Packages (1 per line)'])
+            ->add('zones', 'textarea', ['label' => 'Distribution Zones (1 per line)', 'required' => false])
             ->add('bake_script', 'textarea', ['label' => 'Bakery Script', 'required' => false])
             ->add('launch_script', 'textarea', ['label' => 'Launch Script', 'required' => false])
-            ->add('services', 'textarea', ['label' => 'System Services', 'required' => false])
+            ->add('services', 'textarea', ['label' => 'System Services (1 per line)', 'required' => false])
             ->add(
                 'bake_status',
                 'choice',

@@ -35,6 +35,7 @@ class ProjectController extends AdminController
         } else {
             $project = $this->getDoctrine()->getRepository('HyperionApiBundle:Project')->find($id);
         }
+
         if (!$project) {
             throw new NotFoundHttpException("Unknown project ID");
         }
@@ -47,7 +48,7 @@ class ProjectController extends AdminController
         $form = $this->createForm(
             new ProjectType(),
             $project,
-            ['method' => 'POST', 'action' => $this->generateUrl('admin_project_post', ['id' => $id])]
+            ['method' => 'POST', 'action' => $this->generateUrl('admin_project_save', ['id' => $id])]
         );
 
         return ['project' => $project, 'form' => $form->createView()];
@@ -56,12 +57,31 @@ class ProjectController extends AdminController
     /**
      * Save project
      *
-     * @Route("/project/{id}", name="admin_project_post")
+     * @Route("/project/{id}", name="admin_project_save")
      * @Method({"POST"})
      */
-    public function projectPostAction($id, Request $request)
+    public function projectSaveAction($id, Request $request)
     {
         return $this->saveEntity('Project', $id, $request, ['Packages', 'Zones', 'Services']);
     }
 
+    /**
+     * Delete project
+     *
+     * @Route("/project/delete/{id}", name="admin_project_delete")
+     */
+    public function projectDeleteAction($id, Request $request)
+    {
+        $project = $this->getDoctrine()->getRepository('HyperionApiBundle:Project')->find($id);
+
+        if (!$project) {
+            throw new NotFoundHttpException("Unknown project ID");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($project);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('admin_account', ['id' => $project->getAccount()->getId()]), 303);
+    }
 }
