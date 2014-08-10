@@ -8,7 +8,7 @@
         {{ form(form) }}
     </div>
     {% if account.id %}
-        <div class="fk-1" style="margin-top: 30px">
+        <div class="fk-1 sm">
             <div class="container">
                 <h2>Projects</h2>
 
@@ -16,9 +16,10 @@
                     {{ admin.listProjects(account.projects) }}
                 </div>
 
-                <p><a href="{{ path('admin_project', {'id': 'new:' ~ account.id}) }}"
-                      class="btn btn-sm btn-primary">
-                        <span class="glyphicon glyphicon-plus-sign"></span> New Project</a></p>
+                <p>
+                    <a href="{{ path('admin_project', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-primary">
+                        <span class="glyphicon glyphicon-plus-sign"></span> New Project</a>
+                </p>
             </div>
         </div>
         <div class="fk-2">
@@ -29,10 +30,10 @@
                     {{ admin.listRepositories(account.repos) }}
                 </div>
 
-                <div class="btn-group">
-                    <a href="#" class="btn btn-sm btn-primary">
+                <p>
+                    <a href="{{ path('admin_repository', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-primary">
                         <span class="glyphicon glyphicon-plus-sign"></span> New Repository</a>
-                </div>
+                </p>
             </div>
         </div>
         <div class="fk-3">
@@ -42,10 +43,11 @@
                 <div class="row">
                     {{ admin.listCredentials(account.credentials) }}
                 </div>
-                <div class="btn-group">
-                    <a href="#" class="btn btn-sm btn-primary">
+
+                <p>
+                    <a href="{{ path('admin_credential', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-primary">
                         <span class="glyphicon glyphicon-plus-sign"></span> New Credential</a>
-                </div>
+                </p>
             </div>
         </div>
         <div class="fk-4">
@@ -55,10 +57,10 @@
                 <div class="row">
                     {{ admin.listProxies(account.proxies) }}
                 </div>
-                <div class="btn-group">
-                    <a href="#" class="btn btn-sm btn-primary">
-                        <span class="glyphicon glyphicon-plus-sign"></span> New Proxy Config</a>
-                </div>
+                <p>
+                    <a href="{{ path('admin_proxy', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-primary">
+                        <span class="glyphicon glyphicon-plus-sign"></span> New Proxy Server</a>
+                </p>
             </div>
         </div>
         <div class="container" style="margin-top: 30px">

@@ -16,11 +16,7 @@ class ProxyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type')
-            ->add('hostname')
-            ->add('port')
-            ->add('username')
-            ->add('password')
+            ->add('name', 'text', ['required' => true])
             ->add(
                 'account',
                 'entity',
@@ -30,7 +26,21 @@ class ProxyType extends AbstractType
                             return $er->createQueryBuilder('u');
                         },
                 ]
-            );
+            )
+            ->add(
+                'type',
+                'choice',
+                [
+                    'label'    => 'Proxy Server Type',
+                    'choices'  => [0 => 'SOCKS', 1 => 'HTTP'],
+                    'required' => true
+                ]
+            )
+            ->add('hostname', 'text', ['required' => true])
+            ->add('port', 'integer', ['required' => true])
+            ->add('username', 'text', ['required' => false])
+            ->add('password', 'text', ['required' => false])
+            ->add('save', 'submit');
     }
 
     /**

@@ -1,6 +1,8 @@
 <?php
 namespace Hyperion\ApiBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -32,13 +34,9 @@ class Repository implements HyperionEntityInterface
     protected $account;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="repositories")
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")
-     *
-     * @Serializer\Type("integer")
-     * @Serializer\Accessor(getter="getProjectId")
+     * @ORM\ManyToMany(targetEntity="Project", mappedBy="repositories")
      */
-    protected $project;
+    protected $projects;
 
     /**
      * @ORM\Column(type="integer")
@@ -71,7 +69,11 @@ class Repository implements HyperionEntityInterface
     protected $tag;
 
     /**
-     * @ORM\OneToOne(targetEntity="Proxy")
+     * @ORM\ManyToOne(targetEntity="Proxy", inversedBy="repositories")
+     * @ORM\JoinColumn(name="proxy_id", referencedColumnName="id", onDelete="CASCADE")
+     *
+     * @Serializer\Type("integer")
+     * @Serializer\Accessor(getter="getProxyId")
      */
     protected $proxy;
 
@@ -87,11 +89,19 @@ class Repository implements HyperionEntityInterface
 
     // --
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->projects = new ArrayCollection();
+    }
+
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -114,7 +124,7 @@ class Repository implements HyperionEntityInterface
     /**
      * Get type
      *
-     * @return integer 
+     * @return integer
      */
     public function getType()
     {
@@ -137,7 +147,7 @@ class Repository implements HyperionEntityInterface
     /**
      * Get url
      *
-     * @return string 
+     * @return string
      */
     public function getUrl()
     {
@@ -160,7 +170,7 @@ class Repository implements HyperionEntityInterface
     /**
      * Get username
      *
-     * @return string 
+     * @return string
      */
     public function getUsername()
     {
@@ -183,7 +193,7 @@ class Repository implements HyperionEntityInterface
     /**
      * Get password
      *
-     * @return string 
+     * @return string
      */
     public function getPassword()
     {
@@ -206,7 +216,7 @@ class Repository implements HyperionEntityInterface
     /**
      * Get private_key
      *
-     * @return string 
+     * @return string
      */
     public function getPrivateKey()
     {
@@ -229,7 +239,7 @@ class Repository implements HyperionEntityInterface
     /**
      * Get tag
      *
-     * @return string 
+     * @return string
      */
     public function getTag()
     {
@@ -257,29 +267,6 @@ class Repository implements HyperionEntityInterface
     public function getAccount()
     {
         return $this->account;
-    }
-
-    /**
-     * Set project
-     *
-     * @param Project $account
-     * @return Repository
-     */
-    public function setProject(Project $project = null)
-    {
-        $this->project = $project;
-
-        return $this;
-    }
-
-    /**
-     * Get project
-     *
-     * @return Project
-     */
-    public function getProject()
-    {
-        return $this->project;
     }
 
     /**
@@ -371,18 +358,53 @@ class Repository implements HyperionEntityInterface
         return $this->name;
     }
 
+    /**
+     * Add a project
+     *
+     * @param Project $project
+     * @return Repository
+     */
+    public function addProject(Project $project)
+    {
+        $this->projects[] = $project;
+
+        return $this;
+    }
+
+    /**
+     * Remove a project
+     *
+     * @param Project $project
+     */
+    public function removeProject(Project $project)
+    {
+        $this->projects->removeElement($project);
+    }
+
+    /**
+     * Get all associated projects
+     *
+     * @return Collection
+     */
+    public function getProjects()
+    {
+        return $this->projects;
+    }
+
+
     // Serialisers --
 
     public function getAccountId() {
         return $this->getAccount() ? $this->getAccount()->getId() : null;
     }
 
-    public function getProjectId() {
-        return $this->getProject() ? $this->getProject()->getId() : null;
+    public function getProxyId() {
+        return $this->getProxy() ? $this->getProxy()->getId() : null;
     }
 
     public function __toString()
     {
-        return '['.$this->getId().'] '.$this->getUrl();
+        return $this->getName();
     }
+
 }

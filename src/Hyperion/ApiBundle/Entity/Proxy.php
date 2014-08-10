@@ -1,6 +1,8 @@
 <?php
 namespace Hyperion\ApiBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -16,6 +18,11 @@ class Proxy implements HyperionEntityInterface
      * @ORM\GeneratedValue
      */
     protected $id;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $name;
 
     /**
      * @ORM\ManyToOne(targetEntity="Account", inversedBy="proxies")
@@ -51,8 +58,21 @@ class Proxy implements HyperionEntityInterface
      */
     protected $password;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Repository", mappedBy="proxy")
+     */
+    protected $repositories;
 
     // --
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->port = '8080';
+        $this->repositories = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -62,6 +82,29 @@ class Proxy implements HyperionEntityInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Proxy
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -202,6 +245,39 @@ class Proxy implements HyperionEntityInterface
         return $this->account;
     }
 
+    /**
+     * Add repositories
+     *
+     * @param Repository $repositories
+     * @return Proxy
+     */
+    public function addRepository(Repository $repositories)
+    {
+        $this->repositories[] = $repositories;
+
+        return $this;
+    }
+
+    /**
+     * Remove repositories
+     *
+     * @param Repository $repositories
+     */
+    public function removeRepository(Repository $repositories)
+    {
+        $this->repositories->removeElement($repositories);
+    }
+
+    /**
+     * Get repositories
+     *
+     * @return Collection
+     */
+    public function getRepositories()
+    {
+        return $this->repositories;
+    }
+
     // Serialisers --
 
     public function getAccountId() {
@@ -210,6 +286,7 @@ class Proxy implements HyperionEntityInterface
 
     public function __toString()
     {
-        return '['.$this->getId().'] '.$this->getHostname().':'.$this->getPort();
+        return $this->getName();
     }
+
 }

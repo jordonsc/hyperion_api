@@ -71,9 +71,10 @@
     <div class="col-lg-4">
         <h3>{{ repo.name }}</h3>
 
-        <p>{{ repo.url }}</p>
+        <p><span class="code">{{ repo.url }}</span></p>
 
-        <p><a href="#" class="btn btn-default btn-sm">Details &raquo;</a></p>
+        <p><a href="{{ path('admin_repository', {'id': repo.id}) }}"
+              class="btn btn-default btn-sm">Details &raquo;</a></p>
     </div>
 {% endmacro %}
 
@@ -86,9 +87,20 @@
 
 {% macro credentialBlock(credential) %}
     <div class="col-lg-4">
-        <h3>Credential #{{ credential.id }}</h3>
+        <h3>{{ credential.name }}</h3>
 
-        <p><a href="#" class="btn btn-default btn-sm">Details &raquo;</a></p>
+        <p>
+            {% if credential.provider == 0 %}<img src="/images/providers/aws_50.png" alt="Amazon Web Services" style="vertical-align: text-bottom"/>
+            {% elseif credential.provider == 1 %}<img src="/images/providers/google_50.png" alt="Google Cloud"/>
+            {% elseif credential.provider == 2 %}<img src="/images/providers/azure_50.png" alt="Windows Azure"/>
+            {% endif %}
+            {% if credential.region %}
+                <span class="region">{{ credential.region }}</span>
+            {% endif %}
+        </p>
+
+        <p><a href="{{ path('admin_credential', {'id': credential.id}) }}"
+              class="btn btn-default btn-sm">Details &raquo;</a></p>
     </div>
 {% endmacro %}
 
@@ -101,8 +113,14 @@
 
 {% macro proxyBlock(proxy) %}
     <div class="col-lg-4">
-        <h3>{{ proxy.hostname }}:{{ proxy.port }}</h3>
+        <h3>{{ proxy.name }}</h3>
+        <p>
+            {% if proxy.type == 0 %}<b>SOCKS</b>
+            {% elseif proxy.type == 1 %}<b>HTTP</b>
+            {% endif %}
+            <span class="region">{{ proxy.hostname }}:{{ proxy.port }}</span>
+        </p>
 
-        <p><a href="#" class="btn btn-default btn-sm">Details &raquo;</a></p>
+        <p><a href="{{ path('admin_proxy', {'id': proxy.id}) }}" class="btn btn-default btn-sm">Details &raquo;</a></p>
     </div>
 {% endmacro %}

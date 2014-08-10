@@ -16,7 +16,7 @@ class ProjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
+            ->add('name', 'text', ['required' => true])
             ->add(
                 'account',
                 'entity',
@@ -28,6 +28,7 @@ class ProjectType extends AbstractType
                 ]
             )
             ->add('name', 'text', ['required' => true])
+            ->add('zones', 'textarea', ['label' => 'Distribution Zones (1 per line)', 'required' => false])
             ->add('source_image_id', 'text', ['label' => 'Source Image ID', 'required' => true])
             ->add('baked_image_id', 'text', ['label' => 'Baked Image ID', 'read_only' => true, 'required' => false])
             ->add('packager', 'choice', ['choices' => [0 => 'YUM', 1 => 'APT'], 'required' => true])
@@ -40,8 +41,19 @@ class ProjectType extends AbstractType
                     'required' => true
                 ]
             )
+            ->add(
+                'repositories',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Repository',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                    'multiple'      => true,
+                    'expanded'      => true
+                ]
+            )
             ->add('packages', 'textarea', ['required' => false, 'label' => 'Packages (1 per line)'])
-            ->add('zones', 'textarea', ['label' => 'Distribution Zones (1 per line)', 'required' => false])
             ->add('bake_script', 'textarea', ['label' => 'Bakery Script', 'required' => false])
             ->add('launch_script', 'textarea', ['label' => 'Launch Script', 'required' => false])
             ->add('services', 'textarea', ['label' => 'System Services (1 per line)', 'required' => false])
