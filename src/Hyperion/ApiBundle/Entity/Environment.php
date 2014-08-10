@@ -146,6 +146,7 @@ class Environment implements HyperionEntityInterface
         $this->distributions = new ArrayCollection();
         $this->actions = new ArrayCollection();
         $this->tags = '[]';
+        $this->key_pairs = '[]';
         $this->firewalls = '[]';
         $this->ssh_port = 22;
     }

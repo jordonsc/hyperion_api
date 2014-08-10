@@ -9,22 +9,14 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class EnvironmentType extends AbstractType
 {
-        /**
+    /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name')
-            ->add('environment_type')
-            ->add('tenancy')
-            ->add('network')
-            ->add('instance_size')
-            ->add('tags')
-            ->add('key_pairs')
-            ->add('firewalls')
-            ->add('script')
             ->add(
                 'project',
                 'entity',
@@ -36,6 +28,30 @@ class EnvironmentType extends AbstractType
                 ]
             )
             ->add(
+                'environment_type',
+                'choice',
+                [
+                    'label'    => 'Environment Type',
+                    'choices'  => [0 => 'Bakery', 1 => 'Test', 2 => 'Production'],
+                    'required' => true
+                ]
+            )
+            ->add(
+                'tenancy',
+                'choice',
+                [
+                    'label'    => 'Tenancy',
+                    'choices'  => [0 => 'Multi-tenant', 1 => 'Dedicated'],
+                    'required' => true
+                ]
+            )
+            ->add('network', 'text', ['required' => false])
+            ->add('instance_size', 'text', ['required' => true])
+            ->add('tags', 'textarea', ['required' => false, 'label' => 'Tags (1 per line)'])
+            ->add('key_pairs', 'textarea', ['required' => false, 'label' => 'Key-pairs (1 per line)'])
+            ->add('firewalls', 'textarea', ['required' => false, 'label' => 'Firewalls / Security groups (1 per line)'])
+            ->add('script', 'textarea', ['required' => false, 'label' => 'Environment-specific script'])
+            ->add(
                 'credential',
                 'entity',
                 [
@@ -45,23 +61,40 @@ class EnvironmentType extends AbstractType
                         },
                 ]
             )
-            ->add('proxy')
-            ->add('ssh_port')
-            ->add('ssh_user')
-            ->add('ssh_password')
-            ->add('ssh_pkey')
-        ;
+            ->add(
+                'proxy',
+                'entity',
+                [
+                    'class'         => 'HyperionApiBundle:Proxy',
+                    'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('u');
+                        },
+                    'required'      => false,
+                    'empty_value'   => 'No Proxy',
+                ]
+            )
+            ->add('ssh_port', 'integer', ['required' => true, 'label' => 'Instance SSH port'])
+            ->add('ssh_user', 'text', ['required' => true, 'label' => 'Instance SSH username'])
+            ->add(
+                'ssh_password',
+                'text',
+                ['required' => false, 'label' => 'Instance SSH password / Private-key password']
+            )
+            ->add('ssh_pkey', 'textarea', ['required' => false, 'label' => 'Instance SSH private-key'])
+            ->add('save', 'submit');
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Hyperion\ApiBundle\Entity\Environment',
-            'csrf_protection' => false
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class'      => 'Hyperion\ApiBundle\Entity\Environment',
+                'csrf_protection' => false
+            )
+        );
     }
 
     /**

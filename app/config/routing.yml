@@ -12,7 +12,7 @@ hyperion_api_crud:
 # Web editor
 hyperion_admin:
     resource: @HyperionApiBundle/Resources/config/routing_admin.yml
-    prefix:   /admin/
+    prefix:   /admin
 
 # Web dashboard
 # ..

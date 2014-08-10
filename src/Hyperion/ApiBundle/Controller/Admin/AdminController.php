@@ -45,9 +45,21 @@ class AdminController extends Controller
 
         if ($form->isValid()) {
             foreach ($list_fields as $list_field) {
+                if ($list_field{0} == '!') {
+                    $assoc      = true;
+                    $list_field = substr($list_field, 1);
+                } else {
+                    $assoc = false;
+                }
+
                 $setter = 'set'.$list_field;
                 $getter = 'get'.$list_field;
-                $object->$setter($this->listToJson($object->$getter()));
+
+                if ($assoc) {
+                    $object->$setter($this->listToJsonAssoc($object->$getter()));
+                } else {
+                    $object->$setter($this->listToJson($object->$getter()));
+                }
             }
 
             $em = $this->getDoctrine()->getManager();

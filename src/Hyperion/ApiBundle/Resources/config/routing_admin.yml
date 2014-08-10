@@ -17,3 +17,7 @@ hyperion_admin_credential:
 hyperion_admin_proxy:
     resource: Hyperion\ApiBundle\Controller\Admin\ProxyController
     type:     annotation
+
+hyperion_admin_environment:
+    resource: Hyperion\ApiBundle\Controller\Admin\EnvironmentController
+    type:     annotation

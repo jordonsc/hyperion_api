@@ -89,8 +89,8 @@
     <div class="col-lg-4">
         <h3>{{ credential.name }}</h3>
 
-        <p>
-            {% if credential.provider == 0 %}<img src="/images/providers/aws_50.png" alt="Amazon Web Services" style="vertical-align: text-bottom"/>
+        <p class="provider">
+            {% if credential.provider == 0 %}<img src="/images/providers/aws_50.png" alt="Amazon Web Services"/>
             {% elseif credential.provider == 1 %}<img src="/images/providers/google_50.png" alt="Google Cloud"/>
             {% elseif credential.provider == 2 %}<img src="/images/providers/azure_50.png" alt="Windows Azure"/>
             {% endif %}
@@ -114,6 +114,7 @@
 {% macro proxyBlock(proxy) %}
     <div class="col-lg-4">
         <h3>{{ proxy.name }}</h3>
+
         <p>
             {% if proxy.type == 0 %}<b>SOCKS</b>
             {% elseif proxy.type == 1 %}<b>HTTP</b>
@@ -123,4 +124,44 @@
 
         <p><a href="{{ path('admin_proxy', {'id': proxy.id}) }}" class="btn btn-default btn-sm">Details &raquo;</a></p>
     </div>
+{% endmacro %}
+
+{# -- ENVIRONMENTS -- #}
+{% macro listEnvironments(environments) %}
+    {% for environment in environments %}
+        {{ _self.environmentBlock(environment) }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro environmentBlock(environment) %}
+    <div class="col-lg-4">
+        <h3>{{ environment.name }}</h3>
+
+        <p>{{ _self.envTypeLabel(environment.environmentType) }}</p>
+
+        <div class="btn-group" style="margin-bottom: 15px">
+            <a href="{{ path('admin_environment', {'id': environment.id}) }}" class="btn btn-default btn-sm">
+                Details &raquo;</a>
+            {% if environment.environmentType == 0 %}
+                <a href="javascript:" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-hdd"></span> Bake</a>
+            {% elseif environment.environmentType == 1 %}
+                <a href="javascript:" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-cog"></span> Build</a>
+            {% elseif environment.environmentType == 2 %}
+                <a href="javascript:" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-globe"></span> Release</a>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro envTypeLabel(env_type) %}
+    {% if env_type == 0 %}
+        <span class="label label-default">Bakery</span>
+    {% elseif env_type == 1 %}
+        <span class="label label-warning">Test</span>
+    {% elseif env_type == 2 %}
+        <span class="label label-primary">Production</span>
+    {% endif %}
 {% endmacro %}
