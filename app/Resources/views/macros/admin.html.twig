@@ -28,6 +28,7 @@
     </div>
 {% endmacro %}
 
+
 {# -- PROJECTS -- #}
 {% macro listProjects(projects) %}
     {% for project in projects %}
@@ -60,6 +61,7 @@
     {% endif %}
 {% endmacro %}
 
+
 {# -- REPOSITORIES -- #}
 {% macro listRepositories(repositories) %}
     {% for repo in repositories %}
@@ -77,6 +79,7 @@
               class="btn btn-default btn-sm">Details &raquo;</a></p>
     </div>
 {% endmacro %}
+
 
 {# -- CREDENTIALS -- #}
 {% macro listCredentials(credentials) %}
@@ -104,6 +107,7 @@
     </div>
 {% endmacro %}
 
+
 {# -- PROXIES -- #}
 {% macro listProxies(proxies) %}
     {% for proxy in proxies %}
@@ -126,6 +130,7 @@
     </div>
 {% endmacro %}
 
+
 {# -- ENVIRONMENTS -- #}
 {% macro listEnvironments(environments) %}
     {% for environment in environments %}
@@ -139,9 +144,13 @@
 
         <p>{{ _self.envTypeLabel(environment.environmentType) }}</p>
 
+        <p class="code">{{ environment.instanceSize }} ({{ _self.envTenancy(environment.tenancy) }})</p>
+
         <div class="btn-group" style="margin-bottom: 15px">
             <a href="{{ path('admin_environment', {'id': environment.id}) }}" class="btn btn-default btn-sm">
                 Details &raquo;</a>
+            <a href="{{ path('admin_environment_duplicate', {'id': environment.id}) }}" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-share"></span> Duplicate</a>
             {% if environment.environmentType == 0 %}
                 <a href="javascript:" class="btn btn-default btn-sm">
                     <span class="glyphicon glyphicon-hdd"></span> Bake</a>
@@ -165,3 +174,7 @@
         <span class="label label-primary">Production</span>
     {% endif %}
 {% endmacro %}
+
+{%- macro envTenancy(tenancy) -%}
+    {% if tenancy == 0 %}multi-tenant{% elseif env_type == 1 %}dedicated{% endif %}
+{%- endmacro -%}

@@ -66,6 +66,29 @@ class EnvironmentController extends AdminController
     }
 
     /**
+     * Duplicate environment
+     *
+     * @Route("/environment/duplicate/{id}", name="admin_environment_duplicate")
+     * @Method({"GET"})
+     */
+    public function environmentDuplicateAction($id, Request $request)
+    {
+        $environment = $this->getDoctrine()->getRepository('HyperionApiBundle:Environment')->find($id);
+
+        if (!$environment) {
+            throw new NotFoundHttpException("Unknown environment ID");
+        }
+
+        $new = clone $environment;
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($new);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('admin_environment', ['id' => $new->getId()]), 303);
+    }
+
+    /**
      * Delete environment
      *
      * @Route("/environment/delete/{id}", name="admin_environment_delete")
