@@ -236,7 +236,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1024,12 +1024,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:jordonsc/hyperion_dbal.git",
-                "reference": "c101b263c033aa3c01a11698d58b751caef4a1d3"
+                "reference": "9273dd9f81d481162d95863f5ebf3422533f4655"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jordonsc/hyperion_dbal/zipball/c101b263c033aa3c01a11698d58b751caef4a1d3",
-                "reference": "c101b263c033aa3c01a11698d58b751caef4a1d3",
+                "url": "https://api.github.com/repos/jordonsc/hyperion_dbal/zipball/9273dd9f81d481162d95863f5ebf3422533f4655",
+                "reference": "9273dd9f81d481162d95863f5ebf3422533f4655",
                 "shasum": ""
             },
             "require": {
@@ -1067,10 +1067,10 @@
             },
             "description": "Hyperion DBAL and API client",
             "support": {
-                "source": "https://github.com/jordonsc/hyperion_dbal/tree/master",
+                "source": "https://github.com/jordonsc/hyperion_dbal/tree/0.0.3-beta",
                 "issues": "https://github.com/jordonsc/hyperion_dbal/issues"
             },
-            "time": "2014-08-07 07:47:38"
+            "time": "2014-08-11 04:45:58"
         },
         {
             "name": "incenteev/composer-parameter-handler",

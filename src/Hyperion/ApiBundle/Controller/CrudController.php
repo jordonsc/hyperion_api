@@ -21,7 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CrudController extends FOSRestController
 {
-    const ERR_UNKNOWN_ENTITY = "Unknown entity";
+    const ERR_UNKNOWN_ENTITY       = "Unknown entity";
+    const ERR_INVALID_RELATIONSHIP = "Invalid relationship";
 
     /**
      * Get the full class name from a short entity name
@@ -197,7 +198,7 @@ class CrudController extends FOSRestController
      * @Put("/{entity}/{id}")
      * @return Response
      */
-    public function updateProjectAction($entity, $id, Request $request)
+    public function updateEntityAction($entity, $id, Request $request)
     {
         try {
             $class_name = $this->getClassName($entity);
@@ -225,5 +226,137 @@ class CrudController extends FOSRestController
             return $this->handleView($this->view($form, Codes::HTTP_BAD_REQUEST));
         }
     }
+
+    /**
+     * Get related entities
+     *
+     * @api
+     * @Get("/{entity}/{id}/{relationship}")
+     * @return Response
+     */
+    public function getEntityRelationshipAction($entity, $id, $relationship)
+    {
+        try {
+            $class_name = $this->getClassName($entity);
+            $this->getClassName($relationship);
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view(self::ERR_UNKNOWN_ENTITY, Codes::HTTP_NOT_FOUND));
+        }
+
+        $data = $this->getDoctrine()->getRepository($class_name)->find($id);
+
+        if (!$data) {
+            return $this->handleView($this->view(null, Codes::HTTP_NOT_FOUND));
+        }
+
+        // We need to pluralise the getter name, there could be options here
+        // eg 'getAccounts' or 'getCategories'
+        $getter    = 'get'.Inflector::classify($relationship);
+        $getters[] = $getter.'s';
+        $getters[] = substr($getter, 0, -1).'ies';
+
+        $fn = null;
+        foreach ($getters as $getter) {
+            if (method_exists($data, $getter)) {
+                $fn = $getter;
+                break;
+            }
+        }
+
+        if (!$fn) {
+            return $this->handleView($this->view(self::ERR_INVALID_RELATIONSHIP, Codes::HTTP_BAD_REQUEST));
+        }
+
+        $result = $data->$fn();
+
+        return $this->handleView($this->view($result, Codes::HTTP_OK));
+    }
+
+    /**
+     * Add a related entity
+     *
+     * @api
+     * @Put("/{entity}/{id}/{relationship}/{add}")
+     * @return Response
+     */
+    public function addEntityRelationshipAction($entity, $id, $relationship, $add)
+    {
+        try {
+            $class_name          = $this->getClassName($entity);
+            $class_name_relative = $this->getClassName($relationship);
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view(self::ERR_UNKNOWN_ENTITY, Codes::HTTP_NOT_FOUND));
+        }
+
+        $data = $this->getDoctrine()->getRepository($class_name)->find($id);
+        if (!$data) {
+            return $this->handleView($this->view("Entity not found", Codes::HTTP_NOT_FOUND));
+        }
+
+        $relative = $this->getDoctrine()->getRepository($class_name_relative)->find($add);
+        if (!$relative) {
+            return $this->handleView($this->view("Relative not found", Codes::HTTP_NOT_FOUND));
+        }
+
+        $adder = 'add'.Inflector::classify($relationship);
+        if (!method_exists($data, $adder)) {
+            return $this->handleView($this->view(self::ERR_INVALID_RELATIONSHIP, Codes::HTTP_BAD_REQUEST));
+        }
+
+        try {
+            $data->$adder($relative);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($data);
+            $em->flush();
+        } catch (\Exception $e) {
+            return $this->handleView($this->view("Addition failed", Codes::HTTP_BAD_REQUEST));
+        }
+
+        return $this->handleView($this->view(null, Codes::HTTP_OK));
+    }
+
+    /**
+     * Remove a related entity
+     *
+     * @api
+     * @Delete("/{entity}/{id}/{relationship}/{del}")
+     * @return Response
+     */
+    public function removeEntityRelationshipAction($entity, $id, $relationship, $del)
+    {
+        try {
+            $class_name          = $this->getClassName($entity);
+            $class_name_relative = $this->getClassName($relationship);
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view(self::ERR_UNKNOWN_ENTITY, Codes::HTTP_NOT_FOUND));
+        }
+
+        $data = $this->getDoctrine()->getRepository($class_name)->find($id);
+        if (!$data) {
+            return $this->handleView($this->view(null, Codes::HTTP_NOT_FOUND));
+        }
+
+        $relative = $this->getDoctrine()->getRepository($class_name_relative)->find($del);
+        if (!$relative) {
+            return $this->handleView($this->view(null, Codes::HTTP_NOT_FOUND));
+        }
+
+        $remover = 'remove'.Inflector::classify($relationship);
+        if (!method_exists($data, $remover)) {
+            return $this->handleView($this->view(self::ERR_INVALID_RELATIONSHIP, Codes::HTTP_BAD_REQUEST));
+        }
+
+        try {
+            $data->$remover($relative);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($data);
+            $em->flush();
+        } catch (\Exception $e) {
+            return $this->handleView($this->view("Removal failed", Codes::HTTP_BAD_REQUEST));
+        }
+
+        return $this->handleView($this->view(null, Codes::HTTP_OK));
+    }
+
 
 }

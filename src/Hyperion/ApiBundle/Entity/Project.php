@@ -492,7 +492,7 @@ class Project implements HyperionEntityInterface
     /**
      * Get repositories
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Collection
      */
     public function getRepositories()
     {
