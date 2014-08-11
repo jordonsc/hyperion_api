@@ -1,0 +1,7 @@
+{% macro paintNavLink(route, text) %}
+    {% if app.request.get('_route') == route %}
+        <li class="active"><a href="{{ path(route) }}">{{ text }}</a></li>
+    {% else %}
+        <li><a href="{{ path(route) }}">{{ text }}</a></li>
+    {% endif %}
+{% endmacro %}

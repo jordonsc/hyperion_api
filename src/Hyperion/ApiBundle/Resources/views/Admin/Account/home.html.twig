@@ -1,0 +1,11 @@
+{% extends '::admin.html.twig' %}
+{% import '::macros/admin.html.twig' as admin %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+        {{ admin.listAccounts(accounts) }}
+        </div>
+        <p><a href="{{ path('admin_account', {'id': 'new'}) }}" class="btn btn-sm btn-primary">
+                <span class="glyphicon glyphicon-plus-sign"></span> New Account</a></p>
+    </div>
+{% endblock %}

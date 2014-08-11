@@ -1,5 +1,7 @@
 !.gitkeep
 /web/bundles/
+/web/assets/scripts.js
+/web/assets/styles.css
 /app/bootstrap.php.cache
 /app/cache/*
 /app/logs/*

@@ -49,7 +49,8 @@ class Project implements HyperionEntityInterface
     protected $environments;
 
     /**
-     * @ORM\OneToMany(targetEntity="Repository", mappedBy="project")
+     * @ORM\ManyToMany(targetEntity="Repository", inversedBy="projects")
+     * @ORM\JoinTable(name="project_repositories")
      */
     protected $repositories;
 
@@ -121,8 +122,8 @@ class Project implements HyperionEntityInterface
     {
         $this->actions      = new ArrayCollection();
         $this->environments = new ArrayCollection();
+        $this->repositories = new ArrayCollection();
     }
-
 
     /**
      * Set name
@@ -400,26 +401,26 @@ class Project implements HyperionEntityInterface
     }
 
     /**
-     * Add environments
+     * Add environment
      *
-     * @param Environment $environments
+     * @param Environment $environment
      * @return Project
      */
-    public function addEnvironment(Environment $environments)
+    public function addEnvironment(Environment $environment)
     {
-        $this->environments[] = $environments;
+        $this->environments[] = $environment;
 
         return $this;
     }
 
     /**
-     * Remove environments
+     * Remove environment
      *
-     * @param Environment $environments
+     * @param Environment $environment
      */
-    public function removeEnvironment(Environment $environments)
+    public function removeEnvironment(Environment $environment)
     {
-        $this->environments->removeElement($environments);
+        $this->environments->removeElement($environment);
     }
 
     /**
@@ -465,6 +466,38 @@ class Project implements HyperionEntityInterface
         return $this->actions;
     }
 
+    /**
+     * Add repositories
+     *
+     * @param Repository $repositories
+     * @return Project
+     */
+    public function addRepository(Repository $repositories)
+    {
+        $this->repositories[] = $repositories;
+
+        return $this;
+    }
+
+    /**
+     * Remove repositories
+     *
+     * @param Repository $repositories
+     */
+    public function removeRepository(Repository $repositories)
+    {
+        $this->repositories->removeElement($repositories);
+    }
+
+    /**
+     * Get repositories
+     *
+     * @return Collection
+     */
+    public function getRepositories()
+    {
+        return $this->repositories;
+    }
 
 
     // Serialisers --
@@ -476,9 +509,7 @@ class Project implements HyperionEntityInterface
 
     public function __toString()
     {
-        return '['.$this->getId().'] '.$this->getName();
+        return $this->getName();
     }
-
-
 
 }

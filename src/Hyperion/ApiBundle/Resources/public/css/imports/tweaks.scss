@@ -1,0 +1,46 @@
+.code {
+  font-family: Consolas, Lucida Console, monospace;
+  font-size: 1.2rem;
+  color: #000;
+}
+
+/* Foreign-key sections */
+%fk {
+  padding: 0 0 20px 0;
+  margin: 0;
+}
+
+.fk-1 {
+  @extend %fk;
+  background: #FFD1A6;
+}
+
+.fk-2 {
+  @extend %fk;
+  background: #A6B4FF;
+}
+
+.fk-3 {
+  @extend %fk;
+  background: #FFA6A6;
+}
+
+.fk-4 {
+  @extend %fk;
+  background: #A6FFC6;
+}
+
+/* Section Margin */
+.sm {
+  margin-top: $section-margin;
+}
+
+/* Region Marker */
+.region {
+  @extend .code;
+  padding-left: 10px;
+}
+
+.provider img {
+  vertical-align: bottom;
+}

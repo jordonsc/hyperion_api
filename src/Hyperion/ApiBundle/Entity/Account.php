@@ -226,6 +226,6 @@ class Account implements HyperionEntityInterface
 
     public function __toString()
     {
-        return '['.$this->getId().'] '.$this->getName();
+        return $this->getName();
     }
 }

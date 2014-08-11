@@ -1,0 +1,22 @@
+{% extends '::admin.html.twig' %}
+{% import '::macros/admin.html.twig' as admin %}
+{% block body %}
+    <div class="container">
+        {{ admin.breadcrumb(repository.name  ? : 'New Repository', repository.account) }}
+        <h1>{{ repository.name ? : 'New Repository' }}</h1>
+
+        {% if repository.id %}
+
+        {% endif %}
+
+        {{ form(form) }}
+    </div>
+
+    {% if repository.id %}
+        <div class="container sm">
+            <p><a href="{{ path('admin_repository_delete', {'id': repository.id}) }}" class="btn btn-xs btn-danger"
+                  onclick="return confirm('Are you sure you want to delete this repository?')">
+                    <span class="glyphicon glyphicon-fire"></span> Delete Repository</a></p>
+        </div>
+    {% endif %}
+{% endblock %}

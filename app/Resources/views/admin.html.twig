@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}Hyperion API Administration{% endblock %}</title>
+    <link href="{{ asset('assets/styles.css') }}" rel="stylesheet" media="screen"/>
+    <script src="{{ asset('assets/scripts.js') }}"></script>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }} "/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+</head>
+<body>
+{% include ':modules:header.html.twig' %}
+{% block body %}{% endblock %}
+{% block javascripts %}{% endblock %}
+</body>
+</html>

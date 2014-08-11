@@ -21,6 +21,11 @@ class Credential implements HyperionEntityInterface
     protected $id;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $name;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Account", inversedBy="credentials")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id", onDelete="CASCADE")
      *
@@ -35,17 +40,17 @@ class Credential implements HyperionEntityInterface
     protected $provider;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $access_key;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $secret;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $region;
 
@@ -56,13 +61,35 @@ class Credential implements HyperionEntityInterface
 
     // --
 
-
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->environments = new ArrayCollection();
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Credential
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -232,7 +259,7 @@ class Credential implements HyperionEntityInterface
 
     public function __toString()
     {
-        return '['.$this->getId().'] '.Provider::memberByValue($this->getProvider())->key().' - '.$this->getRegion();
+        return $this->getName();
     }
 
 }

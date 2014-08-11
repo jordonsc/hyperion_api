@@ -16,10 +16,7 @@ class CredentialType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('provider')
-            ->add('access_key')
-            ->add('secret')
-            ->add('region')
+            ->add('name', 'text', ['required' => true])
             ->add(
                 'account',
                 'entity',
@@ -29,7 +26,20 @@ class CredentialType extends AbstractType
                             return $er->createQueryBuilder('u');
                         },
                 ]
-            );
+            )
+            ->add(
+                'provider',
+                'choice',
+                [
+                    'label'    => 'Cloud Provider',
+                    'choices'  => [0 => 'AWS', 1 => 'Google Cloud', 'Windows Azure'],
+                    'required' => true
+                ]
+            )
+            ->add('access_key', 'text', ['label' => 'Access key/Username', 'required' => false])
+            ->add('secret', 'text', ['label' => 'Secret/Password', 'required' => false])
+            ->add('region', 'text', ['label' => 'Provider Region', 'required' => false])
+            ->add('save', 'submit');
     }
 
     /**

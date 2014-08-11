@@ -1,0 +1,23 @@
+hyperion_admin_account:
+    resource: Hyperion\ApiBundle\Controller\Admin\AccountController
+    type:     annotation
+
+hyperion_admin_project:
+    resource: Hyperion\ApiBundle\Controller\Admin\ProjectController
+    type:     annotation
+
+hyperion_admin_repository:
+    resource: Hyperion\ApiBundle\Controller\Admin\RepositoryController
+    type:     annotation
+
+hyperion_admin_credential:
+    resource: Hyperion\ApiBundle\Controller\Admin\CredentialController
+    type:     annotation
+
+hyperion_admin_proxy:
+    resource: Hyperion\ApiBundle\Controller\Admin\ProxyController
+    type:     annotation
+
+hyperion_admin_environment:
+    resource: Hyperion\ApiBundle\Controller\Admin\EnvironmentController
+    type:     annotation

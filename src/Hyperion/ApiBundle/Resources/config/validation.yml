@@ -1,3 +1,54 @@
+Hyperion\ApiBundle\Entity\Account:
+    properties:
+        name:
+            - NotBlank: ~
+            - Length:
+                min: 2
+                max: 50
+
+Hyperion\ApiBundle\Entity\Action:
+    properties:
+        project:
+            - NotNull: ~
+
+Hyperion\ApiBundle\Entity\Credential:
+    properties:
+        name:
+            - NotBlank: ~
+            - Length:
+                min: 2
+                max: 50
+
+Hyperion\ApiBundle\Entity\Distribution:
+    properties:
+        environment:
+            - NotNull: ~
+        name:
+            - NotBlank: ~
+            - Length:
+                min: 2
+                max: 50
+
+Hyperion\ApiBundle\Entity\Environment:
+    properties:
+        project:
+            - NotNull: ~
+        name:
+            - NotBlank: ~
+            - Length:
+                min: 2
+                max: 50
+
+Hyperion\ApiBundle\Entity\Instance:
+    properties:
+        distribution:
+            - NotNull: ~
+        instance_id:
+            - NotBlank: ~
+            - Length:
+                min: 1
+                max: 250
+
 Hyperion\ApiBundle\Entity\Project:
     properties:
         account:
@@ -7,3 +58,42 @@ Hyperion\ApiBundle\Entity\Project:
             - Length:
                 min: 2
                 max: 50
+        source_image_id:
+            - NotBlank: ~
+            - Length:
+                min: 1
+                max: 250
+        bake_status:
+            - NotBlank: ~
+        packager:
+            - NotBlank: ~
+
+Hyperion\ApiBundle\Entity\Proxy:
+    properties:
+        account:
+            - NotNull: ~
+        name:
+            - NotBlank: ~
+            - Length:
+                min: 2
+                max: 50
+
+Hyperion\ApiBundle\Entity\Repository:
+    properties:
+        name:
+            - NotBlank: ~
+            - Length:
+                min: 2
+                max: 50
+        url:
+            - NotBlank: ~
+            - Length:
+                min: 4
+                max: 250
+        checkout_directory:
+            - NotBlank: ~
+            - Length:
+                min: 2
+                max: 250
+        type:
+            - NotBlank: ~
