@@ -30,7 +30,7 @@ class ActivityController extends Controller
             ->setParameter('state', 2)->getResult();
 
         $closed = $em->createQuery('SELECT a FROM HyperionApiBundle:Action a WHERE a.state > :state ORDER BY a.id DESC')
-            ->setParameter('state', 1)->setMaxResults(10)->getResult();
+            ->setParameter('state', 1)->setMaxResults(9)->getResult();
 
         $out = new \stdClass();
         $out->active = [];
