@@ -1,0 +1,3 @@
+hyperion_dashboard_activity:
+    resource: Hyperion\ApiBundle\Controller\Dashboard\ActivityController
+    type:     annotation

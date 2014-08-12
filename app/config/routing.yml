@@ -9,13 +9,15 @@ hyperion_api_crud:
     type:     rest
     prefix:   /api/v1/entity/
 
-# Web editor
+# Admin
 hyperion_admin:
     resource: @HyperionApiBundle/Resources/config/routing_admin.yml
     prefix:   /admin
 
-# Web dashboard
-# ..
+# Dashboard
+hyperion_dashboard:
+    resource: @HyperionApiBundle/Resources/config/routing_dashboard.yml
+    prefix:   /dashboard
 
 # Optional - contains a welcome home page
 hyperion_api_static:

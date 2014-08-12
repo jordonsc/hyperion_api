@@ -1,0 +1,26 @@
+{% extends 'HyperionApiBundle::hyperion.html.twig' %}
+{% block body %}
+    <div class="container">
+        <div id="activity-alerts"></div>
+        <h1>Activity</h1>
+
+        <div class="progress" id="act-progress">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="20"
+                 aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+            </div>
+        </div>
+    </div>
+
+    <div id="activity">
+        <div class="container">
+            <h2>Active Processes</h2>
+
+            <div id="active"></div>
+        </div>
+        <div class="container">
+            <h2>Completed Processes</h2>
+
+            <div id="closed"></div>
+        </div>
+    </div>
+{% endblock %}

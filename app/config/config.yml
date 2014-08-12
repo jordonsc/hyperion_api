@@ -14,7 +14,7 @@ framework:
     validation:      { enable_annotations: true }
     templating:
         engines: ['twig']
-        #assets_version: SomeVersionScheme
+        assets_version: v=1
     default_locale:  "%locale%"
     trusted_hosts:   ~
     trusted_proxies: ~
@@ -56,7 +56,18 @@ assetic:
             inputs:
                 - %kernel.root_dir%/Resources/public/js/*
                 - @HyperionApiBundle/Resources/public/js/*
-                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/*
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/affix.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/alert.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/button.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/carousel.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/collapse.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/modal.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/popover.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/tab.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/transition.js
                 - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap.js
             output: assets/scripts.js
 
