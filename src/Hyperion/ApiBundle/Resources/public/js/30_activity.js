@@ -6,6 +6,8 @@
 function Activity(engine, el, loader)
 {
     var refresh_time = 3000;
+    var output_refresh_time = 1000;
+    var output_id = null;
 
     /**
      * Refresh the activity page
@@ -88,6 +90,7 @@ function Activity(engine, el, loader)
             out += '<tr><th>Distribution</th><td>' + obj.distribution_name + '</td></tr>';
         }
         out += '</table>';
+        out += '<a href="javascript:engine.getActivity().showOutput(' + obj.id + ')" class="btn btn-xs btn-default">Output</a>';
 
         out += '</div></div></div>';
         return out;
@@ -189,6 +192,30 @@ function Activity(engine, el, loader)
         }
     };
 
+    /**
+     * Show the output for an action
+     *
+     * @param {int} id
+     */
+    this.showOutput = function(id)
+    {
+        output_id = id;
+        $('#outputDialogueBody').html('<i>Loading..</i>');
+        $('#outputDialogue').modal();
+        this.refreshOutput();
+    };
+
+    /**
+     * Refresh the output display
+     */
+    this.refreshOutput = function()
+    {
+        $.ajax(engine.getRouter().get('dashboard_activity_output', {'id': output_id, 'format': 'html'}))
+            .done(function(data)
+            {
+                $('#outputDialogueBody').html(data);
+            });
+    };
 
     // Init
     if (loader) {

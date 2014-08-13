@@ -4,6 +4,7 @@ namespace Hyperion\ApiBundle\Controller\Dashboard;
 use Hyperion\ApiBundle\Entity\Action;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ActivityController extends Controller
@@ -18,7 +19,6 @@ class ActivityController extends Controller
         return [];
     }
 
-
     /**
      * @Route("/activities.json", name="dashboard_activity_list")
      */
@@ -32,7 +32,7 @@ class ActivityController extends Controller
         $closed = $em->createQuery('SELECT a FROM HyperionApiBundle:Action a WHERE a.state > :state ORDER BY a.id DESC')
             ->setParameter('state', 1)->setMaxResults(9)->getResult();
 
-        $out = new \stdClass();
+        $out         = new \stdClass();
         $out->active = [];
         $out->closed = [];
 
@@ -45,6 +45,20 @@ class ActivityController extends Controller
         }
 
         return $this->render('HyperionApiBundle::xhr.json.twig', ['data' => $out]);
+    }
+
+    /**
+     * @Route("/activity/{id}/output.{_format}", name="dashboard_activity_output", defaults={"_format": "html"}, requirements={"_format": "html|txt"})
+     * @Template
+     */
+    public function activityOutputAction($id)
+    {
+        $action = $this->getDoctrine()->getRepository('HyperionApiBundle:Action')->find($id);
+        if (!$action) {
+            throw new NotFoundHttpException("Unknown action ID");
+        }
+
+        return ['output' => $action->getOutput()];
     }
 
     /**

@@ -12,7 +12,8 @@ var Router = function()
 
         // Dashboard
         dashboard_activity: '/dashboard/activity',
-        dashboard_activities: '/dashboard/activities.json'
+        dashboard_activities: '/dashboard/activities.json',
+        dashboard_activity_output: '/dashboard/activity/{id}/output.{format}'
 
     };
 

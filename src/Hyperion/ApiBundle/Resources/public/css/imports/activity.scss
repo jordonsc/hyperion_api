@@ -5,3 +5,34 @@
 #activity th {
   padding-right: 1.5rem;
 }
+
+.output-code {
+  margin: 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: #191919;
+  overflow: auto;
+  max-height: 700px;
+}
+
+.line {
+  font-family: Consolas, "Liberation Mono", Lucida Console, Courier, monospace;
+  font-size: 1.1rem;
+  margin: 0;
+  padding: 0.1rem;
+
+  &.line-default {
+    color: #a9b7c6;
+    background: #191919;
+  }
+
+  &.line-info {
+    color: #ffc66d;
+    background: #191919;
+  }
+
+  &.line-error {
+    color: #d4202d;
+    background: #190e10;
+  }
+}

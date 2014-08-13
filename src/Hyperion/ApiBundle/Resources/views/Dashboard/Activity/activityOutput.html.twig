@@ -1,0 +1,13 @@
+<div class="output-code">
+    {% set lines = output|split("\n") %}
+    {%- for line in lines -%}
+        {% set prefix = line|slice(0, 1) -%}
+        {%- if (prefix == '?') -%}
+            <div class="line line-info">{{ line|slice(2) }}</div>
+        {%- elseif (prefix == '*') -%}
+            <div class="line line-error">{{ line|slice(2) }}</div>
+        {%- else -%}
+            <div class="line line-default">{{ line|slice(2) }}</div>
+        {%- endif -%}
+    {%- endfor -%}
+</div>

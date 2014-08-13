@@ -56,6 +56,16 @@ function Hyperion()
         return admin;
     };
 
+    /**
+     * Get the activity object, if it exists
+     *
+     * @returns {Admin}
+     */
+    this.getActivity = function()
+    {
+        return activity;
+    };
+
 }
 
 

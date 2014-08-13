@@ -19,6 +19,9 @@ function Admin()
         $('#bakeDialogue').modal();
     };
 
+    /**
+     * Call the bake API
+     */
     this.bake = function()
     {
         $('#bakeDialogue').modal('hide');
