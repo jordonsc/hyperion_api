@@ -19,7 +19,7 @@ Application Dependencies
 ### Composer
 
     # Linux:
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 
     # Windows:
     # https://getcomposer.org/download/
@@ -35,6 +35,11 @@ Application Dependencies
 
     # Once node is installed:
     npm install -g uglifycss uglify-js
+
+    # If you are having proxy issues with NPM:
+    #npm config set proxy http://localhost:3128
+    #npm config set https-proxy http://localhost:3128
+    #npm config set registry "http://registry.npmjs.org/"
 
 ### Ruby: Sass & Compass
 

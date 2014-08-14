@@ -10,10 +10,20 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
 use Guzzle\Inflection\Inflector;
 use Hyperion\ApiBundle\Collection\EntityCollection;
 use Hyperion\ApiBundle\Entity\HyperionEntityInterface;
+use Hyperion\Dbal\Entity\Account;
+use Hyperion\Dbal\Entity\Action;
+use Hyperion\Dbal\Entity\Environment;
+use Hyperion\Dbal\Entity\HyperionEntity;
+use Hyperion\Dbal\Entity\Project;
+use Hyperion\Dbal\Entity\Repository;
+use Hyperion\Dbal\Enum\ActionState;
+use Hyperion\Dbal\Enum\ActionType;
 use Hyperion\Dbal\Enum\BakeStatus;
 use Hyperion\Dbal\Enum\EnvironmentType;
 use Hyperion\Dbal\Enum\Packager;
+use Hyperion\Dbal\Enum\RepositoryType;
 use Hyperion\Dbal\Enum\Tenancy;
+use JMS\Serializer\SerializerBuilder;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class CrudControllerTest extends WebTestCase
@@ -165,6 +175,127 @@ class CrudControllerTest extends WebTestCase
         $this->assertGreaterThan(0, $updated->getId());
 
     }
+
+
+    /**
+     * @medium
+     */
+    public function testXRef()
+    {
+        $http_client = new Client(self::BASE_URL);
+        $serializer  = SerializerBuilder::create()->build();
+
+        $account = new Account();
+        $account->setName("Test account");
+        $this->createEntity($account);
+
+        $project = new Project();
+        $project->setName("Test Project");
+        $project->setAccount($account->getId());
+        $project->setBakeStatus(BakeStatus::UNBAKED());
+        $project->setSourceImageId('-');
+        $project->setPackager(Packager::YUM());
+        $project->setUpdateSystemPackages(true);
+        $project->setZones([]);
+        $project->setPackages([]);
+        $project->setServices([]);
+        $this->createEntity($project);
+
+        $repo = new Repository();
+        $repo->setAccount($account->getId());
+        $repo->setName("Test repo");
+        $repo->setCheckoutDirectory('/tmp');
+        $repo->setUrl('git@github.com:stuff.git');
+        $repo->setType(RepositoryType::GIT());
+        $this->createEntity($repo);
+
+        $response = $http_client->put('/api/v1/entity/project/'.$project->getId().'/repository/'.$repo->getId(), [], '')->send();
+        $this->assertEquals(Codes::HTTP_NO_CONTENT, $response->getStatusCode());
+
+        $response = $http_client->get('/api/v1/entity/project/'.$project->getId().'/repository', [])->send();
+        $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
+
+        $retrieved_all = new EntityCollection($serializer->deserialize(
+            $response->getBody(),
+            'ArrayCollection<'.get_class($repo).'>',
+            'json'
+        ));
+
+        $this->assertEquals(1, count($retrieved_all));
+
+        $project->setBakeStatus(BakeStatus::BAKING());
+
+        $id = $project->getId();
+        $project->setId(null);
+
+        $payload = $serializer->serialize($project, 'json');
+        $response = $http_client->put('/api/v1/entity/project/'.$id, [], $payload)->send();
+        $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
+
+        $response = $http_client->get('/api/v1/entity/project/'.$id.'/repository', [])->send();
+        $this->assertEquals(Codes::HTTP_OK, $response->getStatusCode());
+
+        $retrieved_all = new EntityCollection($serializer->deserialize(
+            $response->getBody(),
+            'ArrayCollection<'.get_class($repo).'>',
+            'json'
+        ));
+
+        $this->assertEquals(1, count($retrieved_all));
+
+        $env = new Environment();
+        $env->setName("Test environment");
+        $env->setEnvironmentType(EnvironmentType::BAKERY());
+        $env->setInstanceSize('m1.large');
+        $env->setSshUser('ec2-user');
+        $env->setSshPort(22);
+        $env->setTenancy(Tenancy::DEDICATED());
+        $env->setTags([]);
+        $this->createEntity($env);
+
+        $action = new Action();
+        $action->setProject($project->getId());
+        $action->setEnvironment($env->getId());
+        $action->setActionType(ActionType::BAKE());
+        $action->setState(ActionState::ACTIVE());
+        $action->setOutput('');
+        $action->setErrorMessage(null);
+        $action->setPhase('Test');
+        $this->createEntity($action);
+
+    }
+
+    /**
+     * Create an entity on the API server
+     *
+     * @param HyperionEntity $entity
+     * @return HyperionEntity
+     */
+    protected function createEntity(HyperionEntity &$entity)
+    {
+        $class_name = get_class($entity);
+        $short_name = explode('\\', $class_name);
+        $short_name = strtolower(array_pop($short_name));
+
+        $http_client = new Client(self::BASE_URL);
+        $serializer  = SerializerBuilder::create()->build();
+
+        $payload = $serializer->serialize($entity, 'json');
+        $response = $http_client->post('/api/v1/entity/'.$short_name.'/new', [], $payload)->send();
+        $this->assertEquals(Codes::HTTP_CREATED, $response->getStatusCode());
+
+        $created = $serializer->deserialize(
+            $response->getBody(),
+            $class_name,
+            'json'
+        );
+
+        $this->assertGreaterThan(0, $created->getId());
+        $entity = $created;
+
+        return $created;
+    }
+
 
     /**
      * @medium

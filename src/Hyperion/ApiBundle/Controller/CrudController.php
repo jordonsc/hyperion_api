@@ -268,7 +268,6 @@ class CrudController extends FOSRestController
         }
 
         $result = $data->$fn();
-
         return $this->handleView($this->view($result, Codes::HTTP_OK));
     }
 

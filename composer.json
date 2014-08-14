@@ -2,15 +2,17 @@
     "name": "hyperion/api",
     "type": "project",
     "description": "Hyperion API",
+    "keywords": ["hyperion api", "deploy", "pipeline"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jordon Scott",
+            "email": "jordon@novatek.com.au"
+        }
+    ],
     "autoload": {
         "psr-0": { "": "src/" }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "https://github.com/jordonsc/hyperion_dbal.git"
-        }
-    ],
     "require": {
         "php": ">=5.4",
         "symfony/symfony": "~2.4",
@@ -29,7 +31,7 @@
         "twbs/bootstrap-sass": "~3.2.0",
         "braincrafted/bootstrap-bundle": "~2.0",
         "eloquent/enumeration": "~5.1",
-        "hyperion/dbal": "*@dev",
+        "hyperion/dbal": "~0.0.4@beta",
         "aws/aws-sdk-php": "~2.6",
         "psr/log": "~1.0"
     },
