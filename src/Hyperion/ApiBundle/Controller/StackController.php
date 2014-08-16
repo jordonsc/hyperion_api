@@ -35,7 +35,7 @@ class StackController extends FOSRestController
     }
 
     /**
-     * Build a project
+     * Build an environment
      *
      * @api
      * @Post("/build/{id}")
@@ -62,7 +62,7 @@ class StackController extends FOSRestController
     }
 
     /**
-     * Deploy a project
+     * Deploy an environment
      *
      * @api
      * @Get("/deploy/{id}")
@@ -74,7 +74,7 @@ class StackController extends FOSRestController
     }
 
     /**
-     * Scale a project
+     * Scale a distribution
      *
      * @api
      * @Get("/scale/{id}/{offset}")
@@ -86,15 +86,43 @@ class StackController extends FOSRestController
     }
 
     /**
-     * Tear-down a project
+     * Tear-down a distribution
      *
      * @api
      * @Get("/teardown/{id}")
      * @return Response
      */
-    public function teardownProjectAction($id)
+    public function teardownDistributionAction($id)
     {
-        return $this->handleView($this->view(null));
+        try {
+            $action_id = $this->get('hyperion.workflow_manager')->tearDownById($id);
+            $out       = ['action' => $action_id];
+            return $this->handleView($this->view($out));
+        } catch (UnexpectedValueException $e) {
+            return $this->handleView($this->view($e->getMessage(), Codes::HTTP_BAD_REQUEST));
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view("Invalid distribution ID", Codes::HTTP_NOT_FOUND));
+        }
+    }
+
+    /**
+     * Tear-down all proceeding distributions
+     *
+     * @api
+     * @Get("/teardown-other/{id}")
+     * @return Response
+     */
+    public function teardownOtherDistributionsAction($id)
+    {
+        try {
+            $actions = $this->get('hyperion.workflow_manager')->tearDownOthersById($id);
+            $out     = ['actions' => $actions];
+            return $this->handleView($this->view($out));
+        } catch (UnexpectedValueException $e) {
+            return $this->handleView($this->view($e->getMessage(), Codes::HTTP_BAD_REQUEST));
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view("Invalid distribution ID", Codes::HTTP_NOT_FOUND));
+        }
     }
 
 }

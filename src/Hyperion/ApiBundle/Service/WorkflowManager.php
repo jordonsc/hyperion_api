@@ -187,13 +187,30 @@ class WorkflowManager
     /**
      * Tear-down a distribution
      *
+     * @param int $id
+     * @throws NotFoundException
+     * @return int Action ID
+     */
+    public function tearDownById($id)
+    {
+        $distro = $this->em->getRepository('HyperionApiBundle:Distribution')->find($id);
+        if (!$distro) {
+            throw new NotFoundException("Distribution with ID ".$id." not found");
+        }
+
+        return $this->tearDown($distro);
+    }
+
+    /**
+     * Tear-down a distribution
+     *
      * @param Distribution $distribution
      * @throws UnexpectedValueException
      * @return int Action ID
      */
     public function tearDown(Distribution $distribution)
     {
-        $distribution->setStatus(DistributionStatus::TERMINATING);
+        $distribution->setStatus(DistributionStatus::PENDING);
         $this->em->persist($distribution);
 
         // Create action record
@@ -214,6 +231,47 @@ class WorkflowManager
         $this->createWorkflow('teardown-'.$action->getId(), $action->getId());
 
         return $action->getId();
+    }
+
+    /**
+     * Tear-down all other active/frozen distributions of the same name
+     *
+     * @param int $id
+     * @return int[] Array of action IDs
+     */
+    public function tearDownOthersById($id)
+    {
+        $distro = $this->em->getRepository('HyperionApiBundle:Distribution')->find($id);
+        if (!$distro) {
+            throw new NotFoundException("Distribution with ID ".$id." not found");
+        }
+
+        return $this->tearDownOthers($distro);
+    }
+
+    /**
+     * Tear-down all other active/frozen distributions of the same name
+     *
+     * @param Distribution $distro
+     * @return int[] Array of action IDs
+     */
+    public function tearDownOthers(Distribution $distro)
+    {
+        $distros = $this->em->createQuery(
+            'SELECT d FROM HyperionApiBundle:Distribution d WHERE (d.status = 2 OR d.status = 5) AND d.name = :name AND d.environment = :env'
+        )->setParameter('env', $distro->getEnvironment())->setParameter('name', $distro->getName())->getResult();
+
+        $actions = [];
+        /** @var Distribution $item */
+        foreach ($distros as $item) {
+            if ($item->getId() == $distro->getId()) {
+                continue;
+            }
+
+            $actions[] = $this->tearDown($distro);
+        }
+
+        return $actions;
     }
 
     /**

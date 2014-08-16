@@ -126,7 +126,7 @@ function Distributions(engine, el, loader) {
             case 5:
                 return 'panel-info';
             case 6:
-                return 'panel-danger';
+                return 'panel-default';
             case 7:
                 return 'panel-danger';
             default:
@@ -179,35 +179,6 @@ function Distributions(engine, el, loader) {
                 return '<span class="label label-danger">Failed</span>';
             default:
                 return '<span class="label label-default">Unknown (' + status + ')</span>';
-        }
-    };
-
-    /**
-     * Get the name of the action state
-     *
-     * @param {int} status
-     * @returns {string}
-     */
-    this.getStatusName = function (status) {
-        switch (status) {
-            case 0:
-                return 'Pending';
-            case 1:
-                return 'Building';
-            case 2:
-                return 'Active';
-            case 3:
-                return 'Scaling';
-            case 4:
-                return 'Terminating';
-            case 5:
-                return 'Frozen';
-            case 6:
-                return 'Terminated';
-            case 7:
-                return 'Failed';
-            default:
-                return 'Unknown (' + status + ')';
         }
     };
 
