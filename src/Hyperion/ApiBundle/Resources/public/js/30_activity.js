@@ -49,8 +49,8 @@ function Activity(engine, el, loader)
                 closed += '</div>';
 
                 $('#activity-alerts').html('');
-                $('#active').html(active ? active : '<p>No Active Processes</p>');
-                $('#closed').html(closed ? closed : '<p>No Completed Processes</p>');
+                $('#active').html(obj.active.length ? active : '<p>No Active Processes</p>');
+                $('#closed').html(obj.closed.length ? closed : '<p>No Completed Processes</p>');
             })
             .fail(function()
             {
