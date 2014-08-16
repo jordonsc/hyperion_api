@@ -117,7 +117,7 @@ class WorkflowManager
     }
 
     /**
-     * Start the bakery process for a project given a BAKERY environment
+     * Start the build process for a project given a TEST environment
      *
      * @param Environment $env
      * @param string      $name Build name (eg branch)
@@ -138,10 +138,11 @@ class WorkflowManager
             throw new UnexpectedValueException("Build name must be between 2 and 200 chars long");
         }
 
-        // To build a project, we need to create a distribution for it
+        // To build a project we need to create a distribution for it - and that distro requires a version increment
+        // from previous builds
         $distro = $this->em->createQuery(
-            'SELECT d FROM HyperionApiBundle:Distribution d JOIN d.environment e WHERE d.name = :name AND e.project = :prj ORDER BY d.id DESC'
-        )->setMaxResults(1)->setParameter('prj', $env->getProject())->setParameter('name', $name)->getOneOrNullResult();
+            'SELECT d FROM HyperionApiBundle:Distribution d WHERE d.name = :name AND d.environment = :env ORDER BY d.id DESC'
+        )->setMaxResults(1)->setParameter('env', $env)->setParameter('name', $name)->getOneOrNullResult();
 
         /** @var Distribution $distro */
         if ($distro) {
@@ -149,6 +150,11 @@ class WorkflowManager
         } else {
             $version = 1;
         }
+
+        // Freeze other distributions
+        $this->em->createQuery(
+            'UPDATE HyperionApiBundle:Distribution d SET d.status = 5 WHERE d.status = 2 AND d.name = :name AND d.environment = :env'
+        )->setParameter('env', $env)->setParameter('name', $name)->execute();
 
         // Create the distribution for the new build
         $new_distro = new Distribution();
@@ -174,6 +180,38 @@ class WorkflowManager
 
         // Create workflow
         $this->createWorkflow('build-'.$action->getId(), $action->getId());
+
+        return $action->getId();
+    }
+
+    /**
+     * Tear-down a distribution
+     *
+     * @param Distribution $distribution
+     * @throws UnexpectedValueException
+     * @return int Action ID
+     */
+    public function tearDown(Distribution $distribution)
+    {
+        $distribution->setStatus(DistributionStatus::TERMINATING);
+        $this->em->persist($distribution);
+
+        // Create action record
+        $action = new Action();
+        $action->setProject($distribution->getEnvironment()->getProject());
+        $action->setDistribution($distribution);
+        $action->setEnvironment($distribution->getEnvironment());
+        $action->setActionType(ActionType::TEAR_DOWN);
+        $action->setState(ActionState::ACTIVE);
+        $action->setOutput('');
+        $action->setErrorMessage(null);
+        $action->setPhase(self::ACTION_START_PHASE);
+        $this->em->persist($action);
+
+        $this->em->flush();
+
+        // Create workflow
+        $this->createWorkflow('teardown-'.$action->getId(), $action->getId());
 
         return $action->getId();
     }

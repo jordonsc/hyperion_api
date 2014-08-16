@@ -6,6 +6,7 @@
 function Hyperion()
 {
     var activity = null;
+    var distributions = null;
     var router = null;
     var admin = null;
 
@@ -16,6 +17,10 @@ function Hyperion()
     {
         if ($('#activity').length) {
             activity = new Activity(this, '#activity', 'act-progress');
+        }
+
+        if ($('#distributions').length) {
+            distributions = new Distributions(this, '#distributions', 'distro-progress');
         }
     };
 
@@ -64,6 +69,16 @@ function Hyperion()
     this.getActivity = function()
     {
         return activity;
+    };
+
+    /**
+     * Get the distributions object, if it exists
+     *
+     * @returns {Admin}
+     */
+    this.getDistributions = function()
+    {
+        return distributions;
     };
 
 }

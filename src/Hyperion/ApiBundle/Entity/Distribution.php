@@ -176,9 +176,9 @@ class Distribution implements HyperionEntityInterface
     }
 
     /**
-     * Set Version
+     * Set build version
      *
-     * @param mixed $version
+     * @param int $version
      * @return $this
      */
     public function setVersion($version)
@@ -188,9 +188,9 @@ class Distribution implements HyperionEntityInterface
     }
 
     /**
-     * Get Version
+     * Get build version
      *
-     * @return mixed
+     * @return int
      */
     public function getVersion()
     {
@@ -200,7 +200,7 @@ class Distribution implements HyperionEntityInterface
     /**
      * Set TagString
      *
-     * @param mixed $tag_string
+     * @param string $tag_string
      * @return $this
      */
     public function setTagString($tag_string)
@@ -212,7 +212,7 @@ class Distribution implements HyperionEntityInterface
     /**
      * Get TagString
      *
-     * @return mixed
+     * @return string
      */
     public function getTagString()
     {

@@ -1,3 +1,7 @@
 hyperion_dashboard_activity:
     resource: Hyperion\ApiBundle\Controller\Dashboard\ActivityController
     type:     annotation
+
+hyperion_dashboard_distributions:
+    resource: Hyperion\ApiBundle\Controller\Dashboard\DistributionsController
+    type:     annotation

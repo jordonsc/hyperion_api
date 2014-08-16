@@ -1,12 +1,11 @@
 /**
- * Activity application
+ * Activity dashboard
  *
  * @constructor
  */
 function Activity(engine, el, loader)
 {
     var refresh_time = 3000;
-    var output_refresh_time = 1000;
     var output_id = null;
 
     /**
@@ -54,7 +53,7 @@ function Activity(engine, el, loader)
             })
             .fail(function()
             {
-                $('#activity-alerts').html('<div class="alert alert-danger fade in" role="alert"><p>Unable to update activities</p></div>');
+                $('#activity-alerts').html('<div class="alert alert-danger fade in" role="alert"><p>Unable to update activity list</p></div>');
             })
             .always(function()
             {
@@ -94,7 +93,7 @@ function Activity(engine, el, loader)
         out += '<table>';
         out += '<tr><th>Action ID</th><td>' + obj.id + '</td></tr>';
         out += '<tr><th>Phase</th><td>' + obj.phase + '</td></tr>';
-        out += '<tr><th>Project</th><td>' + obj.project_name + '</td></tr>';
+        out += '<tr><th>Project</th><td>' + $('<div/>').text(obj.project_name).html() + '</td></tr>';
         if (obj.environment_id) {
             out += '<tr><th>Environment</th><td>' + $('<div/>').text(obj.environment_name).html() + '</td></tr>';
         }
@@ -181,7 +180,7 @@ function Activity(engine, el, loader)
     };
 
     /**
-     * Get the glyicon name of the action type
+     * Get the glyphicon name of the action type
      *
      * @param {int} action_type
      * @returns {string}
