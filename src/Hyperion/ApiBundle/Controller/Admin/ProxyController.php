@@ -40,8 +40,11 @@ class ProxyController extends AdminController
             throw new NotFoundHttpException("Unknown proxy ID");
         }
 
+        $form_type = new ProxyType();
+        $form_type->setWebMode(true);
+
         $form = $this->createForm(
-            new ProxyType(),
+            $form_type,
             $proxy,
             ['method' => 'POST', 'action' => $this->generateUrl('admin_proxy_save', ['id' => $id])]
         );

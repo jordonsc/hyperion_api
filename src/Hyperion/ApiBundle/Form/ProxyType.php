@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ProxyType extends AbstractType
+class ProxyType extends WebApiType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -39,8 +39,10 @@ class ProxyType extends AbstractType
             ->add('hostname', 'text', ['required' => true])
             ->add('port', 'integer', ['required' => true])
             ->add('username', 'text', ['required' => false])
-            ->add('password', 'text', ['required' => false])
-            ->add('save', 'submit');
+            ->add('password', 'text', ['required' => false]);
+        if ($this->isWebMode()) {
+            $builder->add('save', 'submit');
+        }
     }
 
     /**

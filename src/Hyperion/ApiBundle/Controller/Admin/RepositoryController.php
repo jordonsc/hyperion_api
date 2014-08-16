@@ -40,8 +40,11 @@ class RepositoryController extends AdminController
             throw new NotFoundHttpException("Unknown repository ID");
         }
 
+        $form_type = new RepositoryType();
+        $form_type->setWebMode(true);
+
         $form = $this->createForm(
-            new RepositoryType(),
+            $form_type,
             $repository,
             ['method' => 'POST', 'action' => $this->generateUrl('admin_repository_save', ['id' => $id])]
         );

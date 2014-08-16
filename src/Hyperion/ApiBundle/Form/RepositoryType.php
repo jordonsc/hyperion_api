@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class RepositoryType extends AbstractType
+class RepositoryType extends WebApiType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -54,8 +54,10 @@ class RepositoryType extends AbstractType
                     'required'      => false,
                     'empty_value'   => 'No Proxy',
                 ]
-            )
-            ->add('save', 'submit');
+            );
+        if ($this->isWebMode()) {
+            $builder->add('save', 'submit');
+        }
     }
 
     /**

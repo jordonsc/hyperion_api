@@ -1,6 +1,7 @@
 <?php
 namespace Hyperion\ApiBundle\Controller\Admin;
 
+use Hyperion\ApiBundle\Form\WebApiType;
 use Hyperion\ApiBundle\Traits\ArraySerialiserTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
@@ -40,7 +41,12 @@ class AdminController extends Controller
         }
 
         $type_class = '\Hyperion\ApiBundle\Form\\'.$entity.'Type';
-        $form       = $this->createForm(new $type_class(), $object);
+
+        /** @var WebApiType $form_type */
+        $form_type = new $type_class();
+        $form_type->setWebMode(true);
+
+        $form = $this->createForm($form_type, $object);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

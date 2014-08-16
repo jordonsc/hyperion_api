@@ -47,8 +47,11 @@ class AccountController extends AdminController
             throw new NotFoundHttpException("Unknown account ID");
         }
 
+        $form_type = new AccountType();
+        $form_type->setWebMode(true);
+
         $form = $this->createForm(
-            new AccountType(),
+            $form_type,
             $account,
             ['method' => 'POST', 'action' => $this->generateUrl('admin_account_save', ['id' => $id])]
         );

@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class DistributionType extends AbstractType
+class DistributionType extends WebApiType
 {
     /**
      * @param FormBuilderInterface $builder

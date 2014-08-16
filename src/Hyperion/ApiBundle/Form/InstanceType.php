@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class InstanceType extends AbstractType
+class InstanceType extends WebApiType
 {
     /**
      * @param FormBuilderInterface $builder

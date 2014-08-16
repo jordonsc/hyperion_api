@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ProjectType extends AbstractType
+class ProjectType extends WebApiType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -40,8 +40,9 @@ class ProjectType extends AbstractType
                     'choices'  => [0 => 'No', 1 => 'Yes'],
                     'required' => true
                 ]
-            )
-            ->add(
+            );
+        if ($this->isWebMode()) {
+            $builder->add(
                 'repositories',
                 'entity',
                 [
@@ -52,17 +53,22 @@ class ProjectType extends AbstractType
                     'multiple'      => true,
                     'expanded'      => true
                 ]
-            )
+            );
+        }
+        $builder
             ->add('packages', 'textarea', ['required' => false, 'label' => 'Packages (1 per line)'])
             ->add('bake_script', 'textarea', ['label' => 'Bakery Script', 'required' => false])
             ->add('launch_script', 'textarea', ['label' => 'Launch Script', 'required' => false])
-            ->add('services', 'textarea', ['label' => 'System Services (1 per line)', 'required' => false])
-            ->add(
+            ->add('services', 'textarea', ['label' => 'System Services (1 per line)', 'required' => false]);
+        if (!$this->isWebMode()) {
+            $builder->add(
                 'bake_status',
                 'choice',
                 ['choices' => [0 => 'Unbaked', 1 => 'Baking', 2 => 'Baked'], 'required' => true]
-            )
-            ->add('save', 'submit');
+            );
+        } else {
+            $builder->add('save', 'submit');
+        }
     }
 
     /**

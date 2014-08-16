@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "73eda3f952b39549786accc9d1ec1754",
+    "hash": "662572eea9477c7cb16e255a96f6bac7",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "2.6.14",
+            "version": "2.6.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "6ce450fa314edb9209671a0cd1930de55bd43123"
+                "reference": "4eaf38f0297533d48f013be7e1ffa1cb2c912e2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6ce450fa314edb9209671a0cd1930de55bd43123",
-                "reference": "6ce450fa314edb9209671a0cd1930de55bd43123",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4eaf38f0297533d48f013be7e1ffa1cb2c912e2f",
+                "reference": "4eaf38f0297533d48f013be7e1ffa1cb2c912e2f",
                 "shasum": ""
             },
             "require": {
@@ -72,7 +72,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2014-08-11 22:46:49"
+            "time": "2014-08-14 20:49:47"
         },
         {
             "name": "braincrafted/bootstrap-bundle",
@@ -1020,16 +1020,16 @@
         },
         {
             "name": "hyperion/dbal",
-            "version": "0.0.4-beta",
+            "version": "0.0.5-beta",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jordonsc/hyperion_dbal.git",
-                "reference": "791b0cbb33bbecd977ece1ea86bc699fe76e69f9"
+                "reference": "21794823da51c349d1e7dd55714e5b589888ccb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jordonsc/hyperion_dbal/zipball/791b0cbb33bbecd977ece1ea86bc699fe76e69f9",
-                "reference": "791b0cbb33bbecd977ece1ea86bc699fe76e69f9",
+                "url": "https://api.github.com/repos/jordonsc/hyperion_dbal/zipball/21794823da51c349d1e7dd55714e5b589888ccb0",
+                "reference": "21794823da51c349d1e7dd55714e5b589888ccb0",
                 "shasum": ""
             },
             "require": {
@@ -1073,7 +1073,7 @@
                 "hyperion",
                 "hyperion dbal"
             ],
-            "time": "2014-08-14 00:23:31"
+            "time": "2014-08-14 07:27:00"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -2483,16 +2483,16 @@
     "packages-dev": [
         {
             "name": "ocramius/instantiator",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ocramius/Instantiator.git",
-                "reference": "8aa99efa86c51319afc26d23254fe6a8b5a5144a"
+                "reference": "a7abbb5fc9df6e7126af741dd6c140d1a7369435"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/Instantiator/zipball/8aa99efa86c51319afc26d23254fe6a8b5a5144a",
-                "reference": "8aa99efa86c51319afc26d23254fe6a8b5a5144a",
+                "url": "https://api.github.com/repos/Ocramius/Instantiator/zipball/a7abbb5fc9df6e7126af741dd6c140d1a7369435",
+                "reference": "a7abbb5fc9df6e7126af741dd6c140d1a7369435",
                 "shasum": ""
             },
             "require": {
@@ -2534,7 +2534,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2014-08-11 23:48:35"
+            "time": "2014-08-14 15:10:55"
         },
         {
             "name": "ocramius/lazy-map",

@@ -45,8 +45,11 @@ class EnvironmentController extends AdminController
         $environment->setKeyPairs($this->jsonToList($environment->getKeyPairs()));
         $environment->setTags($this->jsonToListAssoc($environment->getTags()));
 
+        $form_type = new EnvironmentType();
+        $form_type->setWebMode(true);
+
         $form = $this->createForm(
-            new EnvironmentType(),
+            $form_type,
             $environment,
             ['method' => 'POST', 'action' => $this->generateUrl('admin_environment_save', ['id' => $id])]
         );

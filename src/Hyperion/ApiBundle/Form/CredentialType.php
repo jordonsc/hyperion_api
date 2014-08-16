@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class CredentialType extends AbstractType
+class CredentialType extends WebApiType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -38,8 +38,10 @@ class CredentialType extends AbstractType
             )
             ->add('access_key', 'text', ['label' => 'Access key/Username', 'required' => false])
             ->add('secret', 'text', ['label' => 'Secret/Password', 'required' => false])
-            ->add('region', 'text', ['label' => 'Provider Region', 'required' => false])
-            ->add('save', 'submit');
+            ->add('region', 'text', ['label' => 'Provider Region', 'required' => false]);
+        if ($this->isWebMode()) {
+            $builder->add('save', 'submit');
+        }
     }
 
     /**

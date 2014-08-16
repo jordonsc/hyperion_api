@@ -40,8 +40,11 @@ class CredentialController extends AdminController
             throw new NotFoundHttpException("Unknown credential ID");
         }
 
+        $form_type = new CredentialType();
+        $form_type->setWebMode(true);
+
         $form = $this->createForm(
-            new CredentialType(),
+            $form_type,
             $credential,
             ['method' => 'POST', 'action' => $this->generateUrl('admin_credential_save', ['id' => $id])]
         );

@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class EnvironmentType extends AbstractType
+class EnvironmentType extends WebApiType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -80,8 +80,10 @@ class EnvironmentType extends AbstractType
                 'text',
                 ['required' => false, 'label' => 'Instance SSH password / Private-key password']
             )
-            ->add('ssh_pkey', 'textarea', ['required' => false, 'label' => 'Instance SSH private-key'])
-            ->add('save', 'submit');
+            ->add('ssh_pkey', 'textarea', ['required' => false, 'label' => 'Instance SSH private-key']);
+        if ($this->isWebMode()) {
+            $builder->add('save', 'submit');
+        }
     }
 
     /**

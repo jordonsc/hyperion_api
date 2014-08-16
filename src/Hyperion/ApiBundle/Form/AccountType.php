@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class AccountType extends AbstractType
+class AccountType extends WebApiType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -14,7 +14,10 @@ class AccountType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')->add('save', 'submit');
+        $builder->add('name');
+        if ($this->isWebMode()) {
+            $builder->add('save', 'submit');
+        }
     }
 
     /**
@@ -24,7 +27,7 @@ class AccountType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Hyperion\ApiBundle\Entity\Account',
+                'data_class'      => 'Hyperion\ApiBundle\Entity\Account',
                 'csrf_protection' => false
             )
         );

@@ -45,8 +45,11 @@ class ProjectController extends AdminController
         $project->setZones($this->jsonToList($project->getZones()));
         $project->setServices($this->jsonToList($project->getServices()));
 
+        $form_type = new ProjectType();
+        $form_type->setWebMode(true);
+
         $form = $this->createForm(
-            new ProjectType(),
+            $form_type,
             $project,
             ['method' => 'POST', 'action' => $this->generateUrl('admin_project_save', ['id' => $id])]
         );
