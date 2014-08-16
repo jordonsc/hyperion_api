@@ -2,8 +2,11 @@
 namespace Hyperion\ApiBundle\Controller\Admin;
 
 use Hyperion\ApiBundle\Entity\Environment;
+use Hyperion\ApiBundle\Entity\Repository;
 use Hyperion\ApiBundle\Form\EnvironmentType;
 use Hyperion\ApiBundle\Traits\ArraySerialiserTrait;
+use Hyperion\Dbal\Exception\ParseException;
+use Hyperion\Dbal\Utility\TagStringHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -109,5 +112,91 @@ class EnvironmentController extends AdminController
         $em->flush();
 
         return $this->redirect($this->generateUrl('admin_project', ['id' => $environment->getProject()->getId()]), 303);
+    }
+
+    /**
+     * Build environment
+     *
+     * @Route("/environment/build/{id}", name="admin_environment_build")
+     * @Method({"POST"})
+     */
+    public function environmentBakeAction($id, Request $request)
+    {
+        $environment = $this->getDoctrine()->getRepository('HyperionApiBundle:Environment')->find($id);
+
+        if (!$environment) {
+            throw new NotFoundHttpException("Unknown environment ID");
+        }
+
+        $repos = $environment->getProject()->getRepositories();
+
+        $build_name = $request->get('build-name');
+        $tags       = [];
+
+        /** @var Repository $repo */
+        foreach ($repos as $repo) {
+            $repo_tag = trim($request->get('repo-'.$repo->getId()));
+            if ($repo_tag) {
+                $tags[$repo->getId()] = $repo_tag;
+            }
+        }
+
+        // Check that we have something to build on
+        if (!$build_name && !count($tags)) {
+            return $this->render(
+                'HyperionApiBundle::xhr.json.twig',
+                [
+                    'data' => [
+                        'result'  => 'error',
+                        'message' => 'You must specify a build name or provide new repository tags'
+                    ]
+                ]
+            );
+        }
+
+
+        try {
+            $tag_helper = new TagStringHelper();
+            $tag_string = $tag_helper->buildTagString($tags);
+
+            if (!$build_name) {
+                $build_name = $tag_helper->createBuildNameFromTags($tags);
+            }
+        } catch (ParseException $e) {
+            return $this->render(
+                'HyperionApiBundle::xhr.json.twig',
+                [
+                    'data' => [
+                        'result'  => 'error',
+                        'message' => $e->getMessage()
+                    ]
+                ]
+            );
+        }
+
+        try {
+            $wf        = $this->get('hyperion.workflow_manager');
+            $action_id = $wf->build($environment, $build_name, $tag_string);
+
+            return $this->render(
+                'HyperionApiBundle::xhr.json.twig',
+                [
+                    'data' => [
+                        'result'  => 'success',
+                        'message' => 'Action ID: '.$action_id
+                    ]
+                ]
+            );
+        } catch (\Exception $e) {
+            return $this->render(
+                'HyperionApiBundle::xhr.json.twig',
+                [
+                    'data' => [
+                        'result'  => 'error',
+                        'message' => $e->getMessage()
+                    ]
+                ]
+            );
+        }
     }
 }

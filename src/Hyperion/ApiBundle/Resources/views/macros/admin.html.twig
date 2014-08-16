@@ -155,7 +155,7 @@
                 <a href="javascript:engine.getAdmin().bakeDialogue({{ environment.id }}, '{{ environment.name|escape('html')|replace({"'": "\\'"}) }}')" class="btn btn-default btn-sm">
                     <span class="glyphicon glyphicon-hdd"></span> Bake</a>
             {% elseif environment.environmentType == 1 %}
-                <a href="javascript:" class="btn btn-default btn-sm">
+                <a href="javascript:engine.getAdmin().buildDialogue({{ environment.project.id }}, {{ environment.id }})" class="btn btn-default btn-sm">
                     <span class="glyphicon glyphicon-cog"></span> Build</a>
             {% elseif environment.environmentType == 2 %}
                 <a href="javascript:" class="btn btn-default btn-sm">

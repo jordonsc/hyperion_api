@@ -2,6 +2,7 @@
 namespace Hyperion\ApiBundle\Controller\Admin;
 
 use Hyperion\ApiBundle\Entity\Project;
+use Hyperion\ApiBundle\Entity\Repository;
 use Hyperion\ApiBundle\Form\ProjectType;
 use Hyperion\ApiBundle\Traits\ArraySerialiserTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -86,5 +87,30 @@ class ProjectController extends AdminController
         $em->flush();
 
         return $this->redirect($this->generateUrl('admin_account', ['id' => $project->getAccount()->getId()]), 303);
+    }
+
+    /**
+     * Get project branches
+     *
+     * @Route("/project/{id}/branches", name="admin_project_branches")
+     * @Method({"GET"})
+     */
+    public function projectBranchesAction($id)
+    {
+        $project = $this->getDoctrine()->getRepository('HyperionApiBundle:Project')->find($id);
+
+        if (!$project) {
+            throw new NotFoundHttpException("Unknown project ID");
+        }
+
+        $out = [];
+        $repos = $project->getRepositories();
+
+        /** @var Repository $repo */
+        foreach ($repos as $repo) {
+            $out[$repo->getId()] = ['name' => $repo->getName(), 'tag' => $repo->getTag()];
+        }
+
+        return $this->render('HyperionApiBundle::xhr.json.twig', ['data' => $out]);
     }
 }

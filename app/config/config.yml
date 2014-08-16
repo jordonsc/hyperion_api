@@ -14,7 +14,7 @@ framework:
     validation:      { enable_annotations: true }
     templating:
         engines: ['twig']
-        assets_version: v=1
+        assets_version: v=2
     default_locale:  "%locale%"
     trusted_hosts:   ~
     trusted_proxies: ~
@@ -48,13 +48,10 @@ assetic:
     assets:
         main_css:
             inputs:
-                - %kernel.root_dir%/Resources/public/css/*
                 - @HyperionApiBundle/Resources/public/css/*
-                - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/stylesheets/bootstrap.scss
             output: assets/styles.css
         main_js:
             inputs:
-                - %kernel.root_dir%/Resources/public/js/*
                 - @HyperionApiBundle/Resources/public/js/*
                 - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js
                 - %kernel.root_dir%/../vendor/twbs/bootstrap-sass/assets/javascripts/bootstrap/affix.js

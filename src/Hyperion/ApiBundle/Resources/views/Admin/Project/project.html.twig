@@ -13,7 +13,7 @@
     </div>
 
     {% if project.id %}
-        <div class="fk-1 sm">
+        <div class="fk-5 sm">
             <div class="container">
                 <h2>Environments</h2>
 
@@ -22,7 +22,8 @@
                 </div>
 
                 <p>
-                    <a href="{{ path('admin_environment', {'id': 'new:' ~ project.id}) }}" class="btn btn-sm btn-primary">
+                    <a href="{{ path('admin_environment', {'id': 'new:' ~ project.id}) }}"
+                       class="btn btn-sm btn-default">
                         <span class="glyphicon glyphicon-plus-sign"></span> New Environment</a>
                 </p>
             </div>
@@ -34,11 +35,13 @@
                     <span class="glyphicon glyphicon-fire"></span> Delete Project</a></p>
         </div>
 
-        <div class="modal fade" id="bakeDialogue" tabindex="-1" role="dialog" aria-labelledby="bakeDialogueTitle" aria-hidden="true">
+        <div class="modal fade" id="bakeDialogue" tabindex="-1" role="dialog" aria-labelledby="bakeDialogueTitle"
+             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
                         <h4 class="modal-title" id="bakeDialogueTitle">Bake Confirmation</h4>
                     </div>
                     <div class="modal-body" id="bakeDialogueBody"></div>
@@ -49,6 +52,39 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" id="bake-id" value=""/>
+
+        <div class="modal fade" id="buildDialogue" tabindex="-1" role="dialog" aria-labelledby="bakeDialogueTitle"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="buildDialogueTitle">Build Project</h4>
+                    </div>
+                    <div class="modal-body" id="buildDialogueBody">
+                        <form role="form" id="build-form">
+                            <div class="form-group">
+                                <label for="build-name">Build Name (optional)</label>
+                                <input type="text" class="form-control" id="build-name" name="build-name"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Repository Branches</label>
+
+                                <div id="repo-branches"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="engine.getAdmin().build()">Build</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="build-id" value=""/>
+
+
     {% endif %}
 {% endblock %}

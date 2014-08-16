@@ -17,7 +17,7 @@
                 </div>
 
                 <p>
-                    <a href="{{ path('admin_project', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-primary">
+                    <a href="{{ path('admin_project', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-default">
                         <span class="glyphicon glyphicon-plus-sign"></span> New Project</a>
                 </p>
             </div>
@@ -31,7 +31,7 @@
                 </div>
 
                 <p>
-                    <a href="{{ path('admin_repository', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-primary">
+                    <a href="{{ path('admin_repository', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-default">
                         <span class="glyphicon glyphicon-plus-sign"></span> New Repository</a>
                 </p>
             </div>
@@ -45,7 +45,7 @@
                 </div>
 
                 <p>
-                    <a href="{{ path('admin_credential', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-primary">
+                    <a href="{{ path('admin_credential', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-default">
                         <span class="glyphicon glyphicon-plus-sign"></span> New Credential</a>
                 </p>
             </div>
@@ -58,7 +58,7 @@
                     {{ admin.listProxies(account.proxies) }}
                 </div>
                 <p>
-                    <a href="{{ path('admin_proxy', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-primary">
+                    <a href="{{ path('admin_proxy', {'id': 'new:' ~ account.id}) }}" class="btn btn-sm btn-default">
                         <span class="glyphicon glyphicon-plus-sign"></span> New Proxy Server</a>
                 </p>
             </div>

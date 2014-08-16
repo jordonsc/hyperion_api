@@ -80,7 +80,8 @@ class ActivityController extends Controller
 
         if ($action->getDistribution()) {
             $out->distribution_id   = $action->getDistribution()->getId();
-            $out->distribution_name = $action->getDistribution()->getName();
+            $out->distribution_name =
+                $action->getDistribution()->getName().' ('.$action->getDistribution()->getVersion().')';
         } else {
             $out->distribution_id   = null;
             $out->distribution_name = null;

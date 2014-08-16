@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "662572eea9477c7cb16e255a96f6bac7",
+    "hash": "4432b9a077985bfb65e33c6fb3ec4363",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -236,7 +236,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1020,16 +1020,16 @@
         },
         {
             "name": "hyperion/dbal",
-            "version": "0.0.5-beta",
+            "version": "0.0.6-beta",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jordonsc/hyperion_dbal.git",
-                "reference": "21794823da51c349d1e7dd55714e5b589888ccb0"
+                "reference": "22e4e2f03abcb2b3e21a655509172bcd4dffe693"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jordonsc/hyperion_dbal/zipball/21794823da51c349d1e7dd55714e5b589888ccb0",
-                "reference": "21794823da51c349d1e7dd55714e5b589888ccb0",
+                "url": "https://api.github.com/repos/jordonsc/hyperion_dbal/zipball/22e4e2f03abcb2b3e21a655509172bcd4dffe693",
+                "reference": "22e4e2f03abcb2b3e21a655509172bcd4dffe693",
                 "shasum": ""
             },
             "require": {
@@ -1073,7 +1073,7 @@
                 "hyperion",
                 "hyperion dbal"
             ],
-            "time": "2014-08-14 07:27:00"
+            "time": "2014-08-16 08:24:41"
         },
         {
             "name": "incenteev/composer-parameter-handler",

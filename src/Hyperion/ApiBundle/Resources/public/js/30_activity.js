@@ -24,17 +24,29 @@ function Activity(engine, el, loader)
             {
                 var obj = $.parseJSON(data);
 
-                var active = '';
+                var col = 0;
+                var active = '<div class="row">';
                 $.each(obj.active, function(key, val)
                 {
+                    if (col++ == 3) {
+                        col = 1;
+                        active += '</div><div class="row">';
+                    }
                     active += act.render(val);
                 });
+                active += '</div>';
 
-                var closed = '';
+                col = 0;
+                var closed = '<div class="row">';
                 $.each(obj.closed, function(key, val)
                 {
+                    if (col++ == 3) {
+                        col = 1;
+                        closed += '</div><div class="row">';
+                    }
                     closed += act.render(val);
                 });
+                closed += '</div>';
 
                 $('#activity-alerts').html('');
                 $('#active').html(active ? active : '<p>No Active Processes</p>');

@@ -8,26 +8,32 @@
 %fk {
   padding: 0 0 20px 0;
   margin: 0;
+  color: #222;
 }
 
 .fk-1 {
   @extend %fk;
-  background: #FFD1A6;
+  background: #f19f0f;
 }
 
 .fk-2 {
   @extend %fk;
-  background: #A6B4FF;
+  background: #cd4436;
 }
 
 .fk-3 {
   @extend %fk;
-  background: #FFA6A6;
+  background: #1d89cf;
 }
 
 .fk-4 {
   @extend %fk;
-  background: #A6FFC6;
+  background: #857198;
+}
+
+.fk-5 {
+  @extend %fk;
+  background: #A5C6C9;
 }
 
 /* Section Margin */

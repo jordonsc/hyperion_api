@@ -1,14 +1,16 @@
 /**
  * Routing exposed to the front-end
  */
-var Router = function()
-{
+var Router = function () {
     var routes = {
         // API
         api_bake: '/api/v1/bake/{id}',
+        api_build: '/api/v1/build/{id}',
 
         // Admin
         admin_home: '/admin/',
+        admin_project_branches: '/admin/project/{id}/branches',
+        admin_environment_build: '/admin/environment/build/{id}',
 
         // Dashboard
         dashboard_activity: '/dashboard/activity',
@@ -24,8 +26,7 @@ var Router = function()
      * @param {Array} params
      * @returns {string}
      */
-    this.get = function(route, params)
-    {
+    this.get = function (route, params) {
         if (!routes[route]) {
             return null;
         }
@@ -33,8 +34,7 @@ var Router = function()
         var path = routes[route];
 
         if (params !== undefined) {
-            $.each(params, function(key, val)
-            {
+            $.each(params, function (key, val) {
                 var regex = new RegExp('{' + key + '}', 'g');
                 path = path.replace(regex, val);
             });
