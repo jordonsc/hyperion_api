@@ -14,15 +14,15 @@ function Distributions(engine, el, loader) {
      * @param {int} update Time to call this function again
      * @param {bool} propagate_callback Include the callback on consecutive calls
      */
-    this.refresh = function (callback, update, propagate_callback) {
+    this.refresh = function(callback, update, propagate_callback) {
         var distro = this;
         $.ajax(engine.getRouter().get('dashboard_distributions_list', {}))
-            .done(function (data) {
+            .done(function(data) {
                 var obj = $.parseJSON(data);
 
                 var col = 0;
                 var active = '<div class="row">';
-                $.each(obj.active, function (key, val) {
+                $.each(obj.active, function(key, val) {
                     if (col++ == 3) {
                         col = 1;
                         active += '</div><div class="row">';
@@ -33,7 +33,7 @@ function Distributions(engine, el, loader) {
 
                 col = 0;
                 var closed = '<div class="row">';
-                $.each(obj.closed, function (key, val) {
+                $.each(obj.closed, function(key, val) {
                     if (col++ == 3) {
                         col = 1;
                         closed += '</div><div class="row">';
@@ -46,15 +46,15 @@ function Distributions(engine, el, loader) {
                 $('#active').html(obj.active.length ? active : '<p>No Active Distributions</p>');
                 $('#closed').html(obj.closed.length ? closed : '<p>No Closed Distributions</p>');
             })
-            .fail(function () {
+            .fail(function() {
                 $('#distribution-alerts').html('<div class="alert alert-danger fade in" role="alert"><p>Unable to update distribution list</p></div>');
             })
-            .always(function () {
+            .always(function() {
                 if (callback) {
                     callback();
                 }
                 if (update) {
-                    setTimeout(function () {
+                    setTimeout(function() {
                         if (propagate_callback) {
                             distro.refresh(callback, update, propagate_callback);
                         } else {
@@ -71,7 +71,7 @@ function Distributions(engine, el, loader) {
      * @param obj
      * @returns {string}
      */
-    this.render = function (obj) {
+    this.render = function(obj) {
         var out = '<div class="col-lg-4"><div class="panel ' + this.getPanelClass(obj.status) + '"><div class="panel-heading">';
         out += '<h5 class="text-right">' + this.getStatusLabel(obj.status) + '</h5>';
         out += '<h3 class="panel-title"><span class="glyphicon ' + this.getStatusGlyph(obj.status) + '"></span> ' + obj.name;
@@ -119,7 +119,7 @@ function Distributions(engine, el, loader) {
      * @param {int} status
      * @returns {string}
      */
-    this.getPanelClass = function (status) {
+    this.getPanelClass = function(status) {
         switch (status) {
             case 0:
                 return 'panel-default';
@@ -148,7 +148,7 @@ function Distributions(engine, el, loader) {
      * @param {int} env_type
      * @returns {string}
      */
-    this.getEnvLabel = function (env_type) {
+    this.getEnvLabel = function(env_type) {
         switch (env_type) {
             case 0:
                 return '<span class="label label-danger">Bakery</span>';
@@ -167,7 +167,7 @@ function Distributions(engine, el, loader) {
      * @param {int} status
      * @returns {string}
      */
-    this.getStatusLabel = function (status) {
+    this.getStatusLabel = function(status) {
         switch (status) {
             case 0:
                 return '<span class="label label-default">Pending</span>';
@@ -196,7 +196,7 @@ function Distributions(engine, el, loader) {
      * @param {int} action_type
      * @returns {string}
      */
-    this.getStatusGlyph = function (action_type) {
+    this.getStatusGlyph = function(action_type) {
         switch (action_type) {
             case 0:
                 return 'glyphicon-time';
@@ -224,7 +224,7 @@ function Distributions(engine, el, loader) {
      *
      * @param {int} id
      */
-    this.rebuildConf = function (id) {
+    this.rebuildConf = function(id) {
         distro_id = id;
         $('#rebuildDialogue').modal();
     };
@@ -234,7 +234,7 @@ function Distributions(engine, el, loader) {
      *
      * @param {int} id
      */
-    this.tearDownConf = function (id) {
+    this.tearDownConf = function(id) {
         distro_id = id;
         $('#tearDownDialogue').modal();
     };
@@ -242,10 +242,10 @@ function Distributions(engine, el, loader) {
     /**
      * Rebuild an environment
      */
-    this.rebuild = function () {
+    this.rebuild = function() {
         $('#rebuildDialogue').modal('hide');
         $.ajax(engine.getRouter().get('dashboard_rebuild_distribution', {id: distro_id}))
-            .fail(function () {
+            .fail(function() {
                 alert("Error rebuilding distribution");
             });
     };
@@ -253,10 +253,10 @@ function Distributions(engine, el, loader) {
     /**
      * Tear-down an environment
      */
-    this.tearDown = function () {
+    this.tearDown = function() {
         $('#tearDownDialogue').modal('hide');
         $.ajax(engine.getRouter().get('dashboard_teardown_distribution', {id: distro_id}))
-            .fail(function () {
+            .fail(function() {
                 alert("Error tearing down distribution");
             });
     };
@@ -264,13 +264,13 @@ function Distributions(engine, el, loader) {
     // Init
     if (loader) {
         engine.setProgressBar(loader, 75);
-        this.refresh(function () {
+        this.refresh(function() {
             $(el).slideDown();
             engine.setProgressBar(loader, 100);
             $('#' + loader).slideUp();
         }, refresh_time, false);
     } else {
-        this.refresh(function () {
+        this.refresh(function() {
             $(el).slideDown();
         }, refresh_time, false);
     }

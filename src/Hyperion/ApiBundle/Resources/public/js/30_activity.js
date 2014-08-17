@@ -14,15 +14,15 @@ function Activity(engine, el, loader) {
      * @param {int} update Time to call this function again
      * @param {bool} propagate_callback Include the callback on consecutive calls
      */
-    this.refresh = function (callback, update, propagate_callback) {
+    this.refresh = function(callback, update, propagate_callback) {
         var act = this;
         $.ajax(engine.getRouter().get('dashboard_activities', {}))
-            .done(function (data) {
+            .done(function(data) {
                 var obj = $.parseJSON(data);
 
                 var col = 0;
                 var active = '<div class="row">';
-                $.each(obj.active, function (key, val) {
+                $.each(obj.active, function(key, val) {
                     if (col++ == 3) {
                         col = 1;
                         active += '</div><div class="row">';
@@ -33,7 +33,7 @@ function Activity(engine, el, loader) {
 
                 col = 0;
                 var closed = '<div class="row">';
-                $.each(obj.closed, function (key, val) {
+                $.each(obj.closed, function(key, val) {
                     if (col++ == 3) {
                         col = 1;
                         closed += '</div><div class="row">';
@@ -46,15 +46,15 @@ function Activity(engine, el, loader) {
                 $('#active').html(obj.active.length ? active : '<p>No Active Processes</p>');
                 $('#closed').html(obj.closed.length ? closed : '<p>No Completed Processes</p>');
             })
-            .fail(function () {
+            .fail(function() {
                 $('#activity-alerts').html('<div class="alert alert-danger fade in" role="alert"><p>Unable to update activity list</p></div>');
             })
-            .always(function () {
+            .always(function() {
                 if (callback) {
                     callback();
                 }
                 if (update) {
-                    setTimeout(function () {
+                    setTimeout(function() {
                         if (propagate_callback) {
                             act.refresh(callback, update, propagate_callback);
                         } else {
@@ -71,7 +71,7 @@ function Activity(engine, el, loader) {
      * @param obj
      * @returns {string}
      */
-    this.render = function (obj) {
+    this.render = function(obj) {
         var out = '<div class="col-lg-4"><div class="panel ' + this.getPanelClass(obj.state) + '"><div class="panel-heading">';
         out += '<h5 class="text-right">' + this.getStateLabel(obj.state) + '</h5>';
         out += '<h3 class="panel-title"><span class="glyphicon ' + this.getActionGlyph(obj.action_type) + '"></span> ' + this.getActionName(obj.action_type);
@@ -92,10 +92,11 @@ function Activity(engine, el, loader) {
             out += '<tr><th>Distribution</th><td>' + obj.distribution_name + ' <span class="badge">' +
                 obj.distribution_version + '</span></td></tr>';
         }
-        out += '</table>';
-        out += '<a href="javascript:engine.getActivity().showOutput(' + obj.id + ')" class="btn btn-xs btn-default">Output</a>';
-
-        out += '</div></div></div>';
+        out += '</table><div class="btn-group">';
+        if (obj.has_output) {
+            out += '<a href="javascript:engine.getActivity().showOutput(' + obj.id + ')" class="btn btn-xs btn-default">Output</a>';
+        }
+        out += '</div></div></div></div>';
         return out;
     };
 
@@ -105,7 +106,7 @@ function Activity(engine, el, loader) {
      * @param {int} action_state
      * @returns {string}
      */
-    this.getPanelClass = function (action_state) {
+    this.getPanelClass = function(action_state) {
         switch (action_state) {
             case 0:
                 return 'panel-default';
@@ -128,7 +129,7 @@ function Activity(engine, el, loader) {
      * @param {int} action_state
      * @returns {string}
      */
-    this.getStateLabel = function (action_state) {
+    this.getStateLabel = function(action_state) {
         switch (action_state) {
             case 0:
                 return '<span class="label label-default">Pending</span>';
@@ -151,7 +152,7 @@ function Activity(engine, el, loader) {
      * @param {int} action_type
      * @returns {string}
      */
-    this.getActionName = function (action_type) {
+    this.getActionName = function(action_type) {
         switch (action_type) {
             case 0:
                 return 'Deploy';
@@ -174,7 +175,7 @@ function Activity(engine, el, loader) {
      * @param {int} action_type
      * @returns {string}
      */
-    this.getActionGlyph = function (action_type) {
+    this.getActionGlyph = function(action_type) {
         switch (action_type) {
             case 0:
                 return 'glyphicon-globe';
@@ -196,7 +197,7 @@ function Activity(engine, el, loader) {
      *
      * @param {int} id
      */
-    this.showOutput = function (id) {
+    this.showOutput = function(id) {
         output_id = id;
         $('#outputDialogueBody').html('<i>Loading..</i>');
         $('#outputDialogue').modal();
@@ -206,9 +207,9 @@ function Activity(engine, el, loader) {
     /**
      * Refresh the output display
      */
-    this.refreshOutput = function () {
+    this.refreshOutput = function() {
         $.ajax(engine.getRouter().get('dashboard_activity_output', {'id': output_id, 'format': 'html'}))
-            .done(function (data) {
+            .done(function(data) {
                 $('#outputDialogueBody').html(data);
             });
     };
@@ -216,13 +217,13 @@ function Activity(engine, el, loader) {
     // Init
     if (loader) {
         engine.setProgressBar(loader, 75);
-        this.refresh(function () {
+        this.refresh(function() {
             $(el).slideDown();
             engine.setProgressBar(loader, 100);
             $('#' + loader).slideUp();
         }, refresh_time, false);
     } else {
-        this.refresh(function () {
+        this.refresh(function() {
             $(el).slideDown();
         }, refresh_time, false);
     }

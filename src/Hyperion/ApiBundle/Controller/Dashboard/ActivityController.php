@@ -78,6 +78,7 @@ class ActivityController extends Controller
         $out->error_message = $action->getErrorMessage();
         $out->phase         = $action->getPhase();
         $out->state         = $action->getState();
+        $out->has_output    = $action->getOutput() ? true : false;
 
         if ($action->getDistribution()) {
             $out->distribution_id      = $action->getDistribution()->getId();
