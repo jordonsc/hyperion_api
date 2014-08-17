@@ -1,6 +1,6 @@
 <?php
 
-namespace Hyperion\ApiBundle\Controller;
+namespace Hyperion\ApiBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;

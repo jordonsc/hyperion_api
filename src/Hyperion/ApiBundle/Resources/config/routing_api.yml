@@ -1,0 +1,11 @@
+hyperion_api_crud:
+    resource: Hyperion\ApiBundle\Controller\Api\CrudController
+    type:     annotation
+
+hyperion_api_stack:
+    resource: Hyperion\ApiBundle\Controller\Api\StackController
+    type:     annotation
+
+hyperion_api_triggers:
+    resource: Hyperion\ApiBundle\Controller\Api\TriggersController
+    type:     annotation

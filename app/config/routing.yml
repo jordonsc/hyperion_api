@@ -1,15 +1,9 @@
-# API v1
-hyperion_api_stack:
-    resource: Hyperion\ApiBundle\Controller\StackController
-    type:     rest
-    prefix:   /api/v1/
+# API Server v1
+hyperion_api:
+    resource: @HyperionApiBundle/Resources/config/routing_api.yml
+    prefix:   /api/v1
 
-hyperion_api_crud:
-    resource: Hyperion\ApiBundle\Controller\CrudController
-    type:     rest
-    prefix:   /api/v1/entity/
-
-# Admin
+# Admin Interface
 hyperion_admin:
     resource: @HyperionApiBundle/Resources/config/routing_admin.yml
     prefix:   /admin
@@ -20,7 +14,7 @@ hyperion_dashboard:
     prefix:   /dashboard
 
 # Optional - contains a welcome home page
-hyperion_api_static:
+hyperion_static:
     resource: Hyperion\ApiBundle\Controller\StaticController
     type:     annotation
 

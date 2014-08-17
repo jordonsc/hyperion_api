@@ -1,6 +1,6 @@
 <?php
 
-namespace Hyperion\ApiBundle\Controller;
+namespace Hyperion\ApiBundle\Controller\Api;
 
 use Doctrine\Common\Inflector\Inflector;
 use Doctrine\ORM\EntityManager;
