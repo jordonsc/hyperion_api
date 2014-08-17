@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ActivityController extends Controller
 {
+    const CLOSED_LIMIT = 15;
 
     /**
      * @Route("/activity", name="dashboard_activity")
@@ -30,7 +31,7 @@ class ActivityController extends Controller
             ->setParameter('state', 2)->getResult();
 
         $closed = $em->createQuery('SELECT a FROM HyperionApiBundle:Action a WHERE a.state > :state ORDER BY a.id DESC')
-            ->setParameter('state', 1)->setMaxResults(9)->getResult();
+            ->setParameter('state', 1)->setMaxResults(self::CLOSED_LIMIT)->getResult();
 
         $out         = new \stdClass();
         $out->active = [];
@@ -79,12 +80,13 @@ class ActivityController extends Controller
         $out->state         = $action->getState();
 
         if ($action->getDistribution()) {
-            $out->distribution_id   = $action->getDistribution()->getId();
-            $out->distribution_name =
-                $action->getDistribution()->getName().' ('.$action->getDistribution()->getVersion().')';
+            $out->distribution_id      = $action->getDistribution()->getId();
+            $out->distribution_name    = $action->getDistribution()->getName();
+            $out->distribution_version = $action->getDistribution()->getVersion();
         } else {
-            $out->distribution_id   = null;
-            $out->distribution_name = null;
+            $out->distribution_id      = null;
+            $out->distribution_name    = null;
+            $out->distribution_version = null;
         }
 
         if ($action->getEnvironment()) {

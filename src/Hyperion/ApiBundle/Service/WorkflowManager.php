@@ -210,7 +210,7 @@ class WorkflowManager
      */
     public function tearDown(Distribution $distribution)
     {
-        $distribution->setStatus(DistributionStatus::PENDING);
+        $distribution->setStatus(DistributionStatus::TERMINATING);
         $this->em->persist($distribution);
 
         // Create action record
@@ -258,7 +258,7 @@ class WorkflowManager
     public function tearDownOthers(Distribution $distro)
     {
         $distros = $this->em->createQuery(
-            'SELECT d FROM HyperionApiBundle:Distribution d WHERE (d.status = 2 OR d.status = 5) AND d.name = :name AND d.environment = :env'
+            'SELECT d FROM HyperionApiBundle:Distribution d WHERE (d.status = 2 OR d.status = 5 OR d.status = 7) AND d.name = :name AND d.environment = :env'
         )->setParameter('env', $distro->getEnvironment())->setParameter('name', $distro->getName())->getResult();
 
         $actions = [];
@@ -268,7 +268,7 @@ class WorkflowManager
                 continue;
             }
 
-            $actions[] = $this->tearDown($distro);
+            $actions[] = $this->tearDown($item);
         }
 
         return $actions;

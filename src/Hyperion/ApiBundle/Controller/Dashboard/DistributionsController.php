@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DistributionsController extends Controller
 {
+    const CLOSED_LIMIT = 15;
 
     /**
      * @Route("/distributions", name="dashboard_distributions")
@@ -30,14 +31,17 @@ class DistributionsController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $active = $em->createQuery(
-            'SELECT d FROM HyperionApiBundle:Distribution d WHERE d.status < :status ORDER BY d.id DESC'
+            'SELECT d FROM HyperionApiBundle:Distribution d WHERE d.status != :status ORDER BY d.id DESC'
         )
-            ->setParameter('status', DistributionStatus::TERMINATED)->getResult();
+            ->setParameter('status', DistributionStatus::TERMINATED)
+            ->getResult();
 
         $closed = $em->createQuery(
-            'SELECT d FROM HyperionApiBundle:Distribution d WHERE d.status >= :status ORDER BY d.id DESC'
+            'SELECT d FROM HyperionApiBundle:Distribution d WHERE d.status = :status ORDER BY d.id DESC'
         )
-            ->setParameter('status', DistributionStatus::TERMINATED)->setMaxResults(9)->getResult();
+            ->setParameter('status', DistributionStatus::TERMINATED)
+            ->setMaxResults(self::CLOSED_LIMIT)
+            ->getResult();
 
         $out         = new \stdClass();
         $out->active = [];
@@ -106,12 +110,28 @@ class DistributionsController extends Controller
         $out->environment_id   = $distribution->getEnvironment()->getId();
         $out->environment_name = $distribution->getEnvironment()->getName();
         $out->environment_type = $distribution->getEnvironment()->getEnvironmentType();
+        $out->instances        = count($distribution->getInstances());
 
-        if ($distribution->getEnvironment()->getEnvironmentType() == EnvironmentType::PRODUCTION) {
-            $out->instances = count($distribution->getInstances());
-        } else {
-            $instances      = $distribution->getInstances();
-            $out->instances = $instances->count() ? $instances->current()->getInstanceId() : '-';
+        if ($distribution->getEnvironment()->getEnvironmentType() == EnvironmentType::TEST) {
+            $instances = $distribution->getInstances();
+            if ($instances->count()) {
+                $current          = $instances->current();
+                $out->instance_id = $current->getInstanceId();
+                $out->public_dns  = $current->getPublicDns();
+                $out->public_ip4  = $current->getPublicIp4();
+                $out->public_ip6  = $current->getPublicIp6();
+                $out->private_dns = $current->getPrivateDns();
+                $out->private_ip4 = $current->getPrivateIp4();
+                $out->private_ip6 = $current->getPrivateIp6();
+            } else {
+                $out->instance_id = null;
+                $out->public_dns  = null;
+                $out->public_ip6  = null;
+                $out->public_ip6  = null;
+                $out->private_dns = null;
+                $out->private_ip4 = null;
+                $out->private_ip6 = null;
+            }
         }
         return $out;
     }

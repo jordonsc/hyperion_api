@@ -87,17 +87,25 @@ function Distributions(engine, el, loader) {
         out += '<tr><th>Environment Type</th><td>' + this.getEnvLabel(obj.environment_type) + '</td></tr>';
         out += '<tr><th>Project</th><td>' + $('<div/>').text(obj.project_name).html() + '</td></tr>';
         out += '<tr><th>Environment</th><td>' + $('<div/>').text(obj.environment_name).html() + '</td></tr>';
-        if (obj.environment_type == 2) {
-            out += '<tr><th>Instances</th><td>' + obj.instances + '</td></tr>';
+        if (obj.environment_type == 1) {
+            if (obj.instance_id) {
+                out += '<tr><th>Instance ID</th><td>' + obj.instance_id + '</td></tr>';
+            }
+            if (obj.public_ip4) {
+                out += '<tr><th>Public IPv4</th><td><a href="http://' + obj.public_ip4 + '/">' + obj.public_ip4 + '</a></td></tr>';
+            }
+            if (obj.public_ip6) {
+                out += '<tr><th>Public IPv6</th><td><a href="http://' + obj.public_dns + '/">' + obj.public_ip6 + '</a></td></tr>';
+            }
         } else {
-            out += '<tr><th>Instance ID</th><td>' + obj.instances + '</td></tr>';
+            out += '<tr><th>Instances</th><td>' + obj.instances + '</td></tr>';
         }
         out += '</table><div class="btn-group">';
 
         if (obj.status == 2 || obj.status > 5) {
             out += '<a href="javascript:engine.getDistributions().rebuildConf(' + obj.id + ')" class="btn btn-xs btn-default">Rebuild</a>';
         }
-        if (obj.status == 2 || obj.status == 5) {
+        if (obj.status == 2 || obj.status == 5 || obj.status == 7) {
             out += '<a href="javascript:engine.getDistributions().tearDownConf(' + obj.id + ')" class="btn btn-xs btn-default">Tear down</a>';
         }
 
@@ -166,7 +174,7 @@ function Distributions(engine, el, loader) {
             case 1:
                 return '<span class="label label-primary">Building</span>';
             case 2:
-                return '<span class="label label-success">Active</span>';
+                return '<span class="label label-success">Online</span>';
             case 3:
                 return '<span class="label label-primary">Scaling</span>';
             case 4:
@@ -195,13 +203,13 @@ function Distributions(engine, el, loader) {
             case 1:
                 return 'glyphicon-cog';
             case 2:
-                return 'glyphicon-globe';
+                return 'glyphicon-flash';
             case 3:
                 return 'glyphicon-fullscreen';
             case 4:
                 return 'glyphicon-fire';
             case 5:
-                return 'glyphicon-globe';
+                return 'glyphicon-flash';
             case 6:
                 return 'glyphicon-stop';
             case 7:
@@ -216,7 +224,7 @@ function Distributions(engine, el, loader) {
      *
      * @param {int} id
      */
-    this.rebuildConf = function(id) {
+    this.rebuildConf = function (id) {
         distro_id = id;
         $('#rebuildDialogue').modal();
     };
@@ -226,7 +234,7 @@ function Distributions(engine, el, loader) {
      *
      * @param {int} id
      */
-    this.tearDownConf = function(id) {
+    this.tearDownConf = function (id) {
         distro_id = id;
         $('#tearDownDialogue').modal();
     };
@@ -234,7 +242,7 @@ function Distributions(engine, el, loader) {
     /**
      * Rebuild an environment
      */
-    this.rebuild = function() {
+    this.rebuild = function () {
         $('#rebuildDialogue').modal('hide');
         $.ajax(engine.getRouter().get('dashboard_rebuild_distribution', {id: distro_id}))
             .fail(function () {
@@ -245,7 +253,7 @@ function Distributions(engine, el, loader) {
     /**
      * Tear-down an environment
      */
-    this.tearDown = function() {
+    this.tearDown = function () {
         $('#tearDownDialogue').modal('hide');
         $.ajax(engine.getRouter().get('dashboard_teardown_distribution', {id: distro_id}))
             .fail(function () {

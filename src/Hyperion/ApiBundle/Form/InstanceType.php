@@ -17,6 +17,12 @@ class InstanceType extends WebApiType
     {
         $builder
             ->add('instance_id')
+            ->add('private_dns')
+            ->add('private_ip4')
+            ->add('private_ip6')
+            ->add('public_dns')
+            ->add('public_ip4')
+            ->add('public_ip6')
             ->add(
                 'distribution',
                 'entity',
