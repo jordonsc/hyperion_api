@@ -5,6 +5,8 @@
  */
 function Admin()
 {
+    var bake_id = null;
+    var build_id = null;
 
     /**
      * Bake an environment
@@ -14,7 +16,7 @@ function Admin()
      */
     this.bakeDialogue = function(id, name)
     {
-        $('#bake-id').val(id);
+        bake_id = id;
         $('#bakeDialogueBody').html('<p>Are you sure you want to start the bake process for environment <b>' + name + '</b>?</p>');
         $('#bakeDialogue').modal();
     };
@@ -25,8 +27,6 @@ function Admin()
     this.bake = function()
     {
         $('#bakeDialogue').modal('hide');
-
-        var bake_id = $('#bake-id').val();
 
         $.ajax(engine.getRouter().get('api_bake', {'id': bake_id}))
             .done(function()
@@ -47,7 +47,7 @@ function Admin()
      */
     this.buildDialogue = function(project_id, environment_id)
     {
-        $('#build-id').val(environment_id);
+        build_id = environment_id;
         $('#buildDialogue').modal();
         $('#repo-branches').html('<i>Loading..</i>');
 
@@ -76,8 +76,6 @@ function Admin()
     {
         var form_data = $('#build-form').serialize();
         $('#buildDialogue').modal('hide');
-
-        var build_id = $('#build-id').val();
 
         $.post(engine.getRouter().get('admin_environment_build', {'id': build_id}), form_data)
             .done(function(data)
