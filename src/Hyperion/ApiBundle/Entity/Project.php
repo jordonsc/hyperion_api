@@ -4,6 +4,7 @@ namespace Hyperion\ApiBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Hyperion\Dbal\Enum\BakeStatus;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -104,6 +105,16 @@ class Project implements HyperionEntityInterface
 
     // --
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->bake_status  = BakeStatus::UNBAKED;
+        $this->actions      = new ArrayCollection();
+        $this->environments = new ArrayCollection();
+        $this->repositories = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -113,16 +124,6 @@ class Project implements HyperionEntityInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->actions      = new ArrayCollection();
-        $this->environments = new ArrayCollection();
-        $this->repositories = new ArrayCollection();
     }
 
     /**
@@ -141,7 +142,7 @@ class Project implements HyperionEntityInterface
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -164,7 +165,7 @@ class Project implements HyperionEntityInterface
     /**
      * Get bake_status
      *
-     * @return integer 
+     * @return integer
      */
     public function getBakeStatus()
     {
@@ -187,7 +188,7 @@ class Project implements HyperionEntityInterface
     /**
      * Get baked_image_id
      *
-     * @return string 
+     * @return string
      */
     public function getBakedImageId()
     {
@@ -210,7 +211,7 @@ class Project implements HyperionEntityInterface
     /**
      * Get source_image_id
      *
-     * @return string 
+     * @return string
      */
     public function getSourceImageId()
     {
@@ -233,7 +234,7 @@ class Project implements HyperionEntityInterface
     /**
      * Get packager
      *
-     * @return integer 
+     * @return integer
      */
     public function getPackager()
     {
@@ -256,7 +257,7 @@ class Project implements HyperionEntityInterface
     /**
      * Get update_system_packages
      *
-     * @return integer 
+     * @return integer
      */
     public function getUpdateSystemPackages()
     {
@@ -279,7 +280,7 @@ class Project implements HyperionEntityInterface
     /**
      * Get packages
      *
-     * @return string 
+     * @return string
      */
     public function getPackages()
     {
@@ -302,7 +303,7 @@ class Project implements HyperionEntityInterface
     /**
      * Get zones
      *
-     * @return string 
+     * @return string
      */
     public function getZones()
     {
@@ -325,7 +326,7 @@ class Project implements HyperionEntityInterface
     /**
      * Get the script executed during baking only
      *
-     * @return string 
+     * @return string
      */
     public function getBakeScript()
     {
@@ -370,7 +371,7 @@ class Project implements HyperionEntityInterface
     /**
      * Get services
      *
-     * @return string 
+     * @return string
      */
     public function getServices()
     {
