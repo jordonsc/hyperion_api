@@ -65,7 +65,7 @@ class Environment implements HyperionEntityInterface
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $network;
+    protected $zones;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -148,6 +148,7 @@ class Environment implements HyperionEntityInterface
         $this->tags = '[]';
         $this->key_pairs = '[]';
         $this->firewalls = '[]';
+        $this->zones = '[]';
         $this->ssh_port = 22;
     }
 
@@ -222,26 +223,28 @@ class Environment implements HyperionEntityInterface
     }
 
     /**
-     * Set network
+     * Set availability zones/subnets
+     * JSON array
      *
-     * @param string $network
+     * @param string $zones
      * @return Environment
      */
-    public function setNetwork($network)
+    public function setZones($zones)
     {
-        $this->network = $network;
+        $this->zones = $zones;
 
         return $this;
     }
 
     /**
-     * Get network
+     * Get availability zones/subnets
+     * JSON array
      *
      * @return string 
      */
-    public function getNetwork()
+    public function getZones()
     {
-        return $this->network;
+        return $this->zones;
     }
 
     /**

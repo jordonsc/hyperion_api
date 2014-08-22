@@ -28,7 +28,6 @@ class ProjectType extends WebApiType
                 ]
             )
             ->add('name', 'text', ['required' => true])
-            ->add('zones', 'textarea', ['label' => 'Distribution Zones (1 per line)', 'required' => false])
             ->add('source_image_id', 'text', ['label' => 'Source Image ID', 'required' => true])
             ->add('baked_image_id', 'text', ['label' => 'Baked Image ID', 'read_only' => true, 'required' => false])
             ->add('packager', 'choice', ['choices' => [0 => 'YUM', 1 => 'APT'], 'required' => true])

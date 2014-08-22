@@ -41,8 +41,6 @@ Hyperion\ApiBundle\Entity\Environment:
 
 Hyperion\ApiBundle\Entity\Instance:
     properties:
-        distribution:
-            - NotNull: ~
         instance_id:
             - NotBlank: ~
             - Length:

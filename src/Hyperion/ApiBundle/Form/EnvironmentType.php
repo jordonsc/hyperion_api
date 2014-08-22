@@ -45,7 +45,7 @@ class EnvironmentType extends WebApiType
                     'required' => true
                 ]
             )
-            ->add('network', 'text', ['required' => false])
+            ->add('zones', 'textarea', ['label' => 'Subnet IDs/Zones (1 per line)', 'required' => false])
             ->add('instance_size', 'text', ['required' => true])
             ->add('tags', 'textarea', ['required' => false, 'label' => 'Tags (1 per line)'])
             ->add('key_pairs', 'textarea', ['required' => false, 'label' => 'Key-pairs (1 per line)'])

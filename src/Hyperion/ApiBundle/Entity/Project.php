@@ -82,12 +82,6 @@ class Project implements HyperionEntityInterface
     protected $packages;
 
     /**
-     * JSON array
-     * @ORM\Column(type="text")
-     */
-    protected $zones;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     protected $bake_script;
@@ -114,6 +108,8 @@ class Project implements HyperionEntityInterface
         $this->actions      = new ArrayCollection();
         $this->environments = new ArrayCollection();
         $this->repositories = new ArrayCollection();
+        $this->packages     = '[]';
+        $this->services     = '[]';
     }
 
     /**
@@ -285,29 +281,6 @@ class Project implements HyperionEntityInterface
     public function getPackages()
     {
         return $this->packages;
-    }
-
-    /**
-     * Set zones
-     *
-     * @param string $zones
-     * @return Project
-     */
-    public function setZones($zones)
-    {
-        $this->zones = $zones;
-
-        return $this;
-    }
-
-    /**
-     * Get zones
-     *
-     * @return string
-     */
-    public function getZones()
-    {
-        return $this->zones;
     }
 
     /**

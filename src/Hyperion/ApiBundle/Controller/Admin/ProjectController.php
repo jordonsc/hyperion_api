@@ -43,7 +43,6 @@ class ProjectController extends AdminController
 
         // Convert JSON arrays to \n lists for the forms
         $project->setPackages($this->jsonToList($project->getPackages()));
-        $project->setZones($this->jsonToList($project->getZones()));
         $project->setServices($this->jsonToList($project->getServices()));
 
         $form_type = new ProjectType();
@@ -66,7 +65,7 @@ class ProjectController extends AdminController
      */
     public function projectSaveAction($id, Request $request)
     {
-        return $this->saveEntity('Project', $id, $request, ['Packages', 'Zones', 'Services']);
+        return $this->saveEntity('Project', $id, $request, ['Packages', 'Services']);
     }
 
     /**
