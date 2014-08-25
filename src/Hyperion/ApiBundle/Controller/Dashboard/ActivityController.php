@@ -2,6 +2,7 @@
 namespace Hyperion\ApiBundle\Controller\Dashboard;
 
 use Hyperion\ApiBundle\Entity\Action;
+use Hyperion\ApiBundle\Service\AnsiColouriser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -59,7 +60,7 @@ class ActivityController extends Controller
             throw new NotFoundHttpException("Unknown action ID");
         }
 
-        return ['output' => $action->getOutput()];
+        return ['output' => $action->getOutput(), 'parser' => new AnsiColouriser()];
     }
 
     /**
