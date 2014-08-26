@@ -104,6 +104,10 @@ class Environment implements HyperionEntityInterface
      */
     protected $proxy;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $private_network;
 
     /**
      * @ORM\Column(type="integer")
@@ -150,6 +154,7 @@ class Environment implements HyperionEntityInterface
         $this->firewalls = '[]';
         $this->zones = '[]';
         $this->ssh_port = 22;
+        $this->private_network = 0;
     }
 
 
@@ -584,6 +589,27 @@ class Environment implements HyperionEntityInterface
         return $this->ssh_user;
     }
 
+    /**
+     * Set private network flag
+     *
+     * @param int $private_network
+     * @return $this
+     */
+    public function setPrivateNetwork($private_network)
+    {
+        $this->private_network = $private_network;
+        return $this;
+    }
+
+    /**
+     * Get private network flag
+     *
+     * @return int
+     */
+    public function getPrivateNetwork()
+    {
+        return $this->private_network;
+    }
 
     // Serialisers --
 

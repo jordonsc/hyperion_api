@@ -73,6 +73,15 @@ class EnvironmentType extends WebApiType
                     'empty_value'   => 'No Proxy',
                 ]
             )
+            ->add(
+                'private_network',
+                'choice',
+                [
+                    'label'    => 'Network Scope',
+                    'choices'  => [0 => 'External', 1 => 'Private'],
+                    'required' => true
+                ]
+            )
             ->add('ssh_port', 'integer', ['required' => true, 'label' => 'Instance SSH port'])
             ->add('ssh_user', 'text', ['required' => true, 'label' => 'Instance SSH username'])
             ->add(
