@@ -129,6 +129,21 @@ class Environment implements HyperionEntityInterface
      */
     protected $ssh_pkey;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $dns_zone;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $dns_name;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $dns_ttl;
+
     // --
 
 
@@ -147,16 +162,16 @@ class Environment implements HyperionEntityInterface
      */
     public function __construct()
     {
-        $this->distributions = new ArrayCollection();
-        $this->actions = new ArrayCollection();
-        $this->tags = '[]';
-        $this->key_pairs = '[]';
-        $this->firewalls = '[]';
-        $this->zones = '[]';
-        $this->ssh_port = 22;
+        $this->distributions   = new ArrayCollection();
+        $this->actions         = new ArrayCollection();
+        $this->tags            = '[]';
+        $this->key_pairs       = '[]';
+        $this->firewalls       = '[]';
+        $this->zones           = '[]';
+        $this->ssh_port        = 22;
         $this->private_network = 0;
+        $this->dns_ttl         = 60;
     }
-
 
     /**
      * Set name
@@ -174,7 +189,7 @@ class Environment implements HyperionEntityInterface
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -197,7 +212,7 @@ class Environment implements HyperionEntityInterface
     /**
      * Get environment_type
      *
-     * @return integer 
+     * @return integer
      */
     public function getEnvironmentType()
     {
@@ -220,7 +235,7 @@ class Environment implements HyperionEntityInterface
     /**
      * Get tenancy
      *
-     * @return integer 
+     * @return integer
      */
     public function getTenancy()
     {
@@ -245,7 +260,7 @@ class Environment implements HyperionEntityInterface
      * Get availability zones/subnets
      * JSON array
      *
-     * @return string 
+     * @return string
      */
     public function getZones()
     {
@@ -268,7 +283,7 @@ class Environment implements HyperionEntityInterface
     /**
      * Get instance_size
      *
-     * @return string 
+     * @return string
      */
     public function getInstanceSize()
     {
@@ -291,7 +306,7 @@ class Environment implements HyperionEntityInterface
     /**
      * Get tags
      *
-     * @return string 
+     * @return string
      */
     public function getTags()
     {
@@ -314,7 +329,7 @@ class Environment implements HyperionEntityInterface
     /**
      * Get key pairs
      *
-     * @return string 
+     * @return string
      */
     public function getKeyPairs()
     {
@@ -337,7 +352,7 @@ class Environment implements HyperionEntityInterface
     /**
      * Get firewalls
      *
-     * @return string 
+     * @return string
      */
     public function getFirewalls()
     {
@@ -611,6 +626,75 @@ class Environment implements HyperionEntityInterface
         return $this->private_network;
     }
 
+    /**
+     * Set the DNS subdomain key
+     *
+     * eg: uat-$BUILD_ID
+     *
+     * @param string $dns_name
+     * @return $this
+     */
+    public function setDnsName($dns_name)
+    {
+        $this->dns_name = $dns_name;
+        return $this;
+    }
+
+    /**
+     * Get the DNS subdomain key
+     *
+     * @return string
+     */
+    public function getDnsName()
+    {
+        return $this->dns_name;
+    }
+
+    /**
+     * Set the DNS TTL in seconds
+     *
+     * @param int $dns_ttl
+     * @return $this
+     */
+    public function setDnsTtl($dns_ttl)
+    {
+        $this->dns_ttl = $dns_ttl;
+        return $this;
+    }
+
+    /**
+     * Get the DNS TTL in seconds
+     *
+     * @return int
+     */
+    public function getDnsTtl()
+    {
+        return $this->dns_ttl;
+    }
+
+    /**
+     * Set the DNS zone
+     *
+     * @param string $dns_zone
+     * @return $this
+     */
+    public function setDnsZone($dns_zone)
+    {
+        $this->dns_zone = $dns_zone;
+        return $this;
+    }
+
+    /**
+     * Get the DNS zone
+     *
+     * @return string
+     */
+    public function getDnsZone()
+    {
+        return $this->dns_zone;
+    }
+
+
     // Serialisers --
 
     public function __toString()
@@ -618,16 +702,19 @@ class Environment implements HyperionEntityInterface
         return '['.$this->getId().'] '.$this->getName();
     }
 
-    public function getProjectId() {
+    public function getProjectId()
+    {
         return $this->getProject() ? $this->getProject()->getId() : null;
     }
 
 
-    public function getProxyId() {
+    public function getProxyId()
+    {
         return $this->getProxy() ? $this->getProxy()->getId() : null;
     }
 
-    public function getCredentialId() {
+    public function getCredentialId()
+    {
         return $this->getCredential() ? $this->getCredential()->getId() : null;
     }
 

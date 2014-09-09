@@ -111,8 +111,9 @@ class DistributionsController extends Controller
         $out->environment_name = $distribution->getEnvironment()->getName();
         $out->environment_type = $distribution->getEnvironment()->getEnvironmentType();
         $out->instances        = count($distribution->getInstances());
+        $out->dns              = $distribution->getDns();
 
-        if ($distribution->getEnvironment()->getEnvironmentType() == EnvironmentType::TEST) {
+        if ($distribution->getEnvironment()->getEnvironmentType() != EnvironmentType::PRODUCTION) {
             $instances = $distribution->getInstances();
             if ($instances->count()) {
                 $current          = $instances->current();

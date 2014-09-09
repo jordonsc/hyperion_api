@@ -89,7 +89,10 @@ class EnvironmentType extends WebApiType
                 'text',
                 ['required' => false, 'label' => 'Instance SSH password / Private-key password']
             )
-            ->add('ssh_pkey', 'textarea', ['required' => false, 'label' => 'Instance SSH private-key']);
+            ->add('ssh_pkey', 'textarea', ['required' => false, 'label' => 'Instance SSH private-key'])
+            ->add('dns_zone', 'text', ['required' => false, 'label' => 'DNS Zone ID'])
+            ->add('dns_name', 'text', ['required' => false, 'label' => 'Full DNS Name'])
+            ->add('dns_ttl', 'integer', ['required' => true, 'label' => 'DNS TTL']);
         if ($this->isWebMode()) {
             $builder->add('save', 'submit');
         }

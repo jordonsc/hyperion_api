@@ -49,6 +49,11 @@ class Distribution implements HyperionEntityInterface
     protected $tag_string;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $dns;
+
+    /**
      * @ORM\OneToMany(targetEntity="Instance", mappedBy="distribution")
      */
     protected $instances;
@@ -217,6 +222,28 @@ class Distribution implements HyperionEntityInterface
     public function getTagString()
     {
         return $this->tag_string;
+    }
+
+    /**
+     * Set Dns
+     *
+     * @param string $dns
+     * @return $this
+     */
+    public function setDns($dns)
+    {
+        $this->dns = $dns;
+        return $this;
+    }
+
+    /**
+     * Get Dns
+     *
+     * @return string
+     */
+    public function getDns()
+    {
+        return $this->dns;
     }
 
     // Serialisers --

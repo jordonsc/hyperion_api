@@ -87,7 +87,7 @@ function Distributions(engine, el, loader) {
         out += '<tr><th>Environment Type</th><td>' + this.getEnvLabel(obj.environment_type) + '</td></tr>';
         out += '<tr><th>Project</th><td>' + $('<div/>').text(obj.project_name).html() + '</td></tr>';
         out += '<tr><th>Environment</th><td>' + $('<div/>').text(obj.environment_name).html() + '</td></tr>';
-        if (obj.environment_type == 1) {
+        if (obj.environment_type < 2) {
             if (obj.instance_id) {
                 out += '<tr><th>Instance ID</th><td>' + obj.instance_id + '</td></tr>';
             }
@@ -99,6 +99,9 @@ function Distributions(engine, el, loader) {
             }
         } else {
             out += '<tr><th>Instances</th><td>' + obj.instances + '</td></tr>';
+        }
+        if (obj.dns) {
+            out += '<tr><th>DNS</th><td><div class="el"><a href="http://' + obj.dns + '/">' + obj.dns + '</a></div></td></tr>';
         }
         out += '</table><div class="btn-group">';
 
