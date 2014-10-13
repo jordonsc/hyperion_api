@@ -17,6 +17,12 @@
                     {{ common.paintNavLink('dashboard_distributions', 'Distributions') }}
                     {{ common.paintNavLink('dashboard_activity', 'Activity') }}
                     {{ common.paintNavLink('admin_index', 'Admin') }}
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        {% set username = 'User ' ~ app.user.username ~ '. Logout' %}
+                        {{ common.paintNavLink('fos_user_security_logout', username) }}
+                    {% else %}
+                        {{ common.paintNavLink('fos_user_security_login', 'Login') }}
+                    {% endif %}
                 </ul>
             </div>
         </div>
