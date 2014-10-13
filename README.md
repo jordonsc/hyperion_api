@@ -60,3 +60,7 @@ A sample vhost file for Apache is available in the docs folder.
 Quirks
 ------
 See [Quirks](docs/Quirks.md) for some common causes of unexpected issues.
+
+Config
+------
+See config/docs/Config.md for various configurations
