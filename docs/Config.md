@@ -9,6 +9,9 @@ app/console fos:user:create admin --super-admin
 # 3 (optional) create generic user through console, will prompt for more info
 app/console fos:user:create userName
 
+# 4 guide to create|modify|delete users through command line
+https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/command_line_tools.md
+
 #################################################
 
 # Using PDO to save session in database
