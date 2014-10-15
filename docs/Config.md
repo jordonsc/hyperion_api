@@ -1,26 +1,24 @@
-# Using FOSUserBundle for login
+Using FOSUserBundle
+===================
 
-# 1. create fos_user table based on Hyperion\ApiBundle\Entity\User.php
-app/console doctrine:schema:update --force
+### Creating a Super-Admin user
+`app/console fos:user:create admin --super-admin`
 
-# 2. create superadmin 'admin' user through console, will prompt for more info
-app/console fos:user:create admin --super-admin
+### Creating generic users
+`app/console fos:user:create userName`
 
-# 3 (optional) create generic user through console, will prompt for more info
-app/console fos:user:create userName
+### More Info
 
-# 4 guide to create|modify|delete users through command line
-https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/command_line_tools.md
+* [FOS User CLI](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/command_line_tools.md)
 
-#################################################
 
-# Using PDO to save session in database
-# query for creating where to store the session
-
-CREATE TABLE `session` (
-    `session_id` varchar(255) NOT NULL,
-    `session_value` text NOT NULL,
-    `session_time` int(11) NOT NULL,
-    PRIMARY KEY (`session_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+PDO Sessions
+============
+For PDO sessions you must manually add a table to the database, Doctrine will not do this for you -
+    
+    CREATE TABLE `session` (
+        `session_id` varchar(255) NOT NULL,
+        `session_value` text NOT NULL,
+        `session_time` int(11) NOT NULL,
+        PRIMARY KEY (`session_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

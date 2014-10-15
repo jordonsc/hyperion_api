@@ -57,10 +57,10 @@ Vhost Install
 -------------
 A sample vhost file for Apache is available in the docs folder.
 
+Config
+------
+See [Config](docs/Config.md) for user and database configuration, including PDO session setup.
+
 Quirks
 ------
 See [Quirks](docs/Quirks.md) for some common causes of unexpected issues.
-
-Config
-------
-See config/docs/Config.md for various configurations
