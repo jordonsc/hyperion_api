@@ -70,7 +70,15 @@ class StackController extends FOSRestController
      */
     public function deployProjectAction($id)
     {
-        return $this->handleView($this->view(null));
+        try {
+            $action_id = $this->get('hyperion.workflow_manager')->deployById($id);
+            $out       = ['action' => $action_id];
+            return $this->handleView($this->view($out));
+        } catch (UnexpectedValueException $e) {
+            return $this->handleView($this->view($e->getMessage(), Codes::HTTP_BAD_REQUEST));
+        } catch (NotFoundException $e) {
+            return $this->handleView($this->view("Invalid environment ID", Codes::HTTP_NOT_FOUND));
+        }
     }
 
     /**

@@ -81,7 +81,7 @@ class WorkflowManager
 
         $name = 'bakery:'.$env->getId();
 
-        // To build a project we need to create a distribution for it - and that distro requires a version increment
+        // To bake a project we need to create a distribution for it - and that distro requires a version increment
         // from previous builds
         $distro = $this->em->createQuery(
             'SELECT d FROM HyperionApiBundle:Distribution d WHERE d.name = :name AND d.environment = :env ORDER BY d.id DESC'
@@ -205,6 +205,80 @@ class WorkflowManager
 
         // Create workflow
         $this->createWorkflow('build-'.$action->getId(), $action->getId());
+
+        return $action->getId();
+    }
+
+
+    /**
+     * Deploy a project by environment ID
+     *
+     * @param int $id Environment ID
+     * @return int
+     * @throws NotFoundException
+     */
+    public function deployById($id)
+    {
+        $env = $this->em->getRepository('HyperionApiBundle:Environment')->find($id);
+        if (!$env) {
+            throw new NotFoundException("Environment with ID ".$id." not found");
+        }
+
+        return $this->deploy($env);
+    }
+
+    /**
+     * Start the deploy process for a project given a PRODUCTION environment
+     *
+     * @param Environment $env
+     * @throws UnexpectedValueException
+     * @return int Action ID
+     */
+    public function deploy(Environment $env)
+    {
+        if ($env->getEnvironmentType() != EnvironmentType::PRODUCTION()) {
+            throw new UnexpectedValueException("Cannot release a non-production environment");
+        }
+
+        $name = 'deploy:'.$env->getId();
+
+        // To deploy a project we need to create a distribution for it - and that distro requires a version increment
+        // from previous builds
+        $distro = $this->em->createQuery(
+            'SELECT d FROM HyperionApiBundle:Distribution d WHERE d.name = :name AND d.environment = :env ORDER BY d.id DESC'
+        )->setMaxResults(1)->setParameter('env', $env)->setParameter('name', $name)->getOneOrNullResult();
+
+        /** @var Distribution $distro */
+        if ($distro) {
+            $version = $distro->getVersion() + 1;
+        } else {
+            $version = 1;
+        }
+
+        // Create a distribution for the release
+        $new_distro = new Distribution();
+        $new_distro->setName($name);
+        $new_distro->setVersion($version);
+        $new_distro->setTagString(null);
+        $new_distro->setEnvironment($env);
+        $new_distro->setStatus(DistributionStatus::PENDING);
+        $this->em->persist($new_distro);
+
+        // Create action record
+        $action = new Action();
+        $action->setProject($env->getProject());
+        $action->setEnvironment($env);
+        $action->setActionType(ActionType::DEPLOY());
+        $action->setState(ActionState::ACTIVE);
+        $action->setOutput('');
+        $action->setErrorMessage(null);
+        $action->setPhase(self::ACTION_START_PHASE);
+        $action->setDistribution($new_distro);
+        $this->em->persist($action);
+        $this->em->flush();
+
+        // Create workflow
+        $this->createWorkflow('deploy-'.$action->getId(), $action->getId());
 
         return $action->getId();
     }

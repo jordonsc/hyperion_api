@@ -116,7 +116,7 @@ function Admin()
     {
         $('#releaseDialogue').modal('hide');
 
-        $.ajax(engine.getRouter().get('api_release', {'id': release_id}))
+        $.ajax(engine.getRouter().get('api_deploy', {'id': release_id}))
             .done(function()
             {
                 window.location = engine.getRouter().get('dashboard_activity');
