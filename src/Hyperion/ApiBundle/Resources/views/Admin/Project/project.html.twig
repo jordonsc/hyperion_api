@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="buildDialogue" tabindex="-1" role="dialog" aria-labelledby="bakeDialogueTitle"
+        <div class="modal fade" id="buildDialogue" tabindex="-1" role="dialog" aria-labelledby="buildDialogueTitle"
              aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -78,6 +78,24 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" onclick="engine.getAdmin().build()">Build</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="releaseDialogue" tabindex="-1" role="dialog" aria-labelledby="releaseDialogueTitle"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="releaseDialogueTitle">Release Confirmation</h4>
+                    </div>
+                    <div class="modal-body" id="releaseDialogueBody"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="engine.getAdmin().release()">Release</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>

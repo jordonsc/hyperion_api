@@ -22,6 +22,8 @@ function Hyperion()
         if ($('#distributions').length) {
             distributions = new Distributions(this, '#distributions', 'distro-progress');
         }
+
+        this.getAdmin();
     };
 
     /**

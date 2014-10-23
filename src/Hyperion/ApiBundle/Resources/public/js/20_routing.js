@@ -6,6 +6,7 @@ var Router = function () {
         // API
         api_bake: '/api/v1/bake/{id}',
         api_build: '/api/v1/build/{id}',
+        api_release: '/api/v1/release/{id}',
 
         // Admin
         admin_home: '/admin/',
@@ -47,4 +48,3 @@ var Router = function () {
     };
 
 };
-

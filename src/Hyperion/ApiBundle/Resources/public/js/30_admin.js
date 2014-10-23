@@ -7,6 +7,7 @@ function Admin()
 {
     var bake_id = null;
     var build_id = null;
+    var release_id = null;
 
     /**
      * Bake an environment
@@ -95,5 +96,57 @@ function Admin()
             });
     };
 
+    /**
+     * Release an environment
+     *
+     * @param {int} environment_id
+     * @param {string} name
+     */
+    this.releaseDialogue = function(environment_id, name)
+    {
+        release_id = environment_id;
+        $('#releaseDialogueBody').html('<p>Are you sure you want to RELEASE environment <b>' + name + '</b>?</p>');
+        $('#releaseDialogue').modal();
+    };
+
+    /**
+     * Call the release API
+     */
+    this.release = function()
+    {
+        $('#releaseDialogue').modal('hide');
+
+        $.ajax(engine.getRouter().get('api_release', {'id': release_id}))
+            .done(function()
+            {
+                window.location = engine.getRouter().get('dashboard_activity');
+            })
+            .fail(function()
+            {
+                alert("Error starting release");
+            });
+    };
+
+    /**
+     * Admin environment form change event
+     */
+    this.onEnvChange = function(val)
+    {
+        if (val == 2) {
+            $('#environment_group_prod').show();
+            $('#environment_group_prod_label').show();
+        } else {
+            $('#environment_group_prod').hide();
+            $('#environment_group_prod_label').hide();
+        }
+    };
+
+    // Init
+    var self = this;
+    $('#environment_environment_type').change(function() {
+        self.onEnvChange($(this).val());
+    }).each(function () {
+        self.onEnvChange($(this).val());
+    });
 
 }

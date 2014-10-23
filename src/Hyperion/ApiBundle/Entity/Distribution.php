@@ -58,6 +58,11 @@ class Distribution implements HyperionEntityInterface
      */
     protected $instances;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $asg;
+
     // --
 
     /**
@@ -244,6 +249,28 @@ class Distribution implements HyperionEntityInterface
     public function getDns()
     {
         return $this->dns;
+    }
+
+    /**
+     * Get Asg
+     *
+     * @return mixed
+     */
+    public function getAsg()
+    {
+        return $this->asg;
+    }
+
+    /**
+     * Set Asg
+     *
+     * @param mixed $asg
+     * @return $this
+     */
+    public function setAsg($asg)
+    {
+        $this->asg = $asg;
+        return $this;
     }
 
     // Serialisers --

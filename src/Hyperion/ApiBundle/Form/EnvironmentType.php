@@ -23,8 +23,8 @@ class EnvironmentType extends WebApiType
                 [
                     'class'         => 'HyperionApiBundle:Project',
                     'query_builder' => function (EntityRepository $er) {
-                            return $er->createQueryBuilder('u');
-                        },
+                        return $er->createQueryBuilder('u');
+                    },
                 ]
             )
             ->add(
@@ -57,8 +57,8 @@ class EnvironmentType extends WebApiType
                 [
                     'class'         => 'HyperionApiBundle:Credential',
                     'query_builder' => function (EntityRepository $er) {
-                            return $er->createQueryBuilder('u');
-                        },
+                        return $er->createQueryBuilder('u');
+                    },
                 ]
             )
             ->add(
@@ -67,8 +67,8 @@ class EnvironmentType extends WebApiType
                 [
                     'class'         => 'HyperionApiBundle:Proxy',
                     'query_builder' => function (EntityRepository $er) {
-                            return $er->createQueryBuilder('u');
-                        },
+                        return $er->createQueryBuilder('u');
+                    },
                     'required'      => false,
                     'empty_value'   => 'No Proxy',
                 ]
@@ -92,7 +92,38 @@ class EnvironmentType extends WebApiType
             ->add('ssh_pkey', 'textarea', ['required' => false, 'label' => 'Instance SSH private-key'])
             ->add('dns_zone', 'text', ['required' => false, 'label' => 'DNS Zone ID'])
             ->add('dns_name', 'text', ['required' => false, 'label' => 'Full DNS Name'])
-            ->add('dns_ttl', 'integer', ['required' => true, 'label' => 'DNS TTL']);
+            ->add('dns_ttl', 'integer', ['required' => true, 'label' => 'DNS TTL'])
+            ->add(
+                $builder->create(
+                    'group_prod',
+                    'form',
+                    [
+                        'virtual'    => true,
+                        'label'      => 'Production Configuration',
+                        'label_attr' => ['id' => 'environment_group_prod_label', 'class' => 'subsection']
+                    ]
+                )
+                    ->add(
+                        'strategy',
+                        'choice',
+                        [
+                            'label'    => 'Deployment Strategy',
+                            'choices'  => [0 => 'Auto-Scaling', 1 => 'Managed'],
+                            'required' => true
+                        ]
+                    )
+                    ->add('load_balancers', 'textarea', ['label' => 'Load Balancers (1 per line)', 'required' => false])
+                    ->add('min_instances', 'integer', ['required' => true, 'label' => 'Minimum Instances'])
+                    ->add('max_instances', 'integer', ['required' => true, 'label' => 'Maximum Instances'])
+                    ->add('desired_capacity', 'integer', ['required' => true, 'label' => 'Desired Capacity'])
+                    ->add('scale_cooldown', 'integer', ['required' => true, 'label' => 'Scale Cooldown (secs)'])
+                    ->add(
+                        'health_check_grace_period',
+                        'integer',
+                        ['required' => true, 'label' => 'Health Check Grace Period']
+                    )
+            );
+
         if ($this->isWebMode()) {
             $builder->add('save', 'submit');
         }
@@ -104,10 +135,10 @@ class EnvironmentType extends WebApiType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class'      => 'Hyperion\ApiBundle\Entity\Environment',
                 'csrf_protection' => false
-            )
+            ]
         );
     }
 

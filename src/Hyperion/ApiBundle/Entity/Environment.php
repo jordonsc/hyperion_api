@@ -96,6 +96,12 @@ class Environment implements HyperionEntityInterface
     protected $firewalls;
 
     /**
+     * JSON array
+     * @ORM\Column(type="text")
+     */
+    protected $load_balancers;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Proxy")
      * @ORM\JoinColumn(name="proxy_id", referencedColumnName="id")
      *
@@ -144,6 +150,45 @@ class Environment implements HyperionEntityInterface
      */
     protected $dns_ttl;
 
+    // -- Production-specific
+
+    /**
+     * 0: ASG
+     * 1: Managed
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $strategy;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $min_instances;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $max_instances;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $desired_capacity;
+
+    /**
+     * Time in seconds between scaling actions
+     *
+     * @ORM\Column(type="integer")
+     */
+    protected $scale_cooldown;
+
+    /**
+     * Time in seconds between an instance being green and considered 'online'
+     *
+     * @ORM\Column(type="integer")
+     */
+    protected $health_check_grace_period;
+
     // --
 
 
@@ -162,15 +207,22 @@ class Environment implements HyperionEntityInterface
      */
     public function __construct()
     {
-        $this->distributions   = new ArrayCollection();
-        $this->actions         = new ArrayCollection();
-        $this->tags            = '[]';
-        $this->key_pairs       = '[]';
-        $this->firewalls       = '[]';
-        $this->zones           = '[]';
-        $this->ssh_port        = 22;
-        $this->private_network = 0;
-        $this->dns_ttl         = 60;
+        $this->distributions             = new ArrayCollection();
+        $this->actions                   = new ArrayCollection();
+        $this->tags                      = '[]';
+        $this->key_pairs                 = '[]';
+        $this->firewalls                 = '[]';
+        $this->zones                     = '[]';
+        $this->load_balancers            = '[]';
+        $this->ssh_port                  = 22;
+        $this->private_network           = 0;
+        $this->dns_ttl                   = 60;
+        $this->min_instances             = 1;
+        $this->max_instances             = 2;
+        $this->desired_capacity          = 1;
+        $this->strategy                  = 0;
+        $this->scale_cooldown            = 300;
+        $this->health_check_grace_period = 180;
     }
 
     /**
@@ -694,6 +746,159 @@ class Environment implements HyperionEntityInterface
         return $this->dns_zone;
     }
 
+    /**
+     * Get DesiredCapacity
+     *
+     * @return mixed
+     */
+    public function getDesiredCapacity()
+    {
+        return $this->desired_capacity;
+    }
+
+    /**
+     * Set DesiredCapacity
+     *
+     * @param mixed $desired_capacity
+     * @return $this
+     */
+    public function setDesiredCapacity($desired_capacity)
+    {
+        $this->desired_capacity = $desired_capacity;
+        return $this;
+    }
+
+    /**
+     * Get HealthCheckGracePeriod
+     *
+     * @return mixed
+     */
+    public function getHealthCheckGracePeriod()
+    {
+        return $this->health_check_grace_period;
+    }
+
+    /**
+     * Set HealthCheckGracePeriod
+     *
+     * @param mixed $health_check_grace_period
+     * @return $this
+     */
+    public function setHealthCheckGracePeriod($health_check_grace_period)
+    {
+        $this->health_check_grace_period = $health_check_grace_period;
+        return $this;
+    }
+
+    /**
+     * Get LoadBalancers
+     *
+     * @return mixed
+     */
+    public function getLoadBalancers()
+    {
+        return $this->load_balancers;
+    }
+
+    /**
+     * Set LoadBalancers
+     *
+     * @param mixed $load_balancers
+     * @return $this
+     */
+    public function setLoadBalancers($load_balancers)
+    {
+        $this->load_balancers = $load_balancers;
+        return $this;
+    }
+
+    /**
+     * Get MaxInstances
+     *
+     * @return mixed
+     */
+    public function getMaxInstances()
+    {
+        return $this->max_instances;
+    }
+
+    /**
+     * Set MaxInstances
+     *
+     * @param mixed $max_instances
+     * @return $this
+     */
+    public function setMaxInstances($max_instances)
+    {
+        $this->max_instances = $max_instances;
+        return $this;
+    }
+
+    /**
+     * Get MinInstances
+     *
+     * @return mixed
+     */
+    public function getMinInstances()
+    {
+        return $this->min_instances;
+    }
+
+    /**
+     * Set MinInstances
+     *
+     * @param mixed $min_instances
+     * @return $this
+     */
+    public function setMinInstances($min_instances)
+    {
+        $this->min_instances = $min_instances;
+        return $this;
+    }
+
+    /**
+     * Get ScaleCooldown
+     *
+     * @return mixed
+     */
+    public function getScaleCooldown()
+    {
+        return $this->scale_cooldown;
+    }
+
+    /**
+     * Set ScaleCooldown
+     *
+     * @param mixed $scale_cooldown
+     * @return $this
+     */
+    public function setScaleCooldown($scale_cooldown)
+    {
+        $this->scale_cooldown = $scale_cooldown;
+        return $this;
+    }
+
+    /**
+     * Get Strategy
+     *
+     * @return mixed
+     */
+    public function getStrategy()
+    {
+        return $this->strategy;
+    }
+
+    /**
+     * Set Strategy
+     *
+     * @param mixed $strategy
+     * @return $this
+     */
+    public function setStrategy($strategy)
+    {
+        $this->strategy = $strategy;
+        return $this;
+    }
 
     // Serialisers --
 

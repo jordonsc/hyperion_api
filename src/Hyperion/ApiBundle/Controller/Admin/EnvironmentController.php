@@ -48,6 +48,7 @@ class EnvironmentController extends AdminController
         $environment->setKeyPairs($this->jsonToList($environment->getKeyPairs()));
         $environment->setTags($this->jsonToListAssoc($environment->getTags()));
         $environment->setZones($this->jsonToList($environment->getZones()));
+        $environment->setLoadBalancers($this->jsonToList($environment->getLoadBalancers()));
 
 
         $form_type = new EnvironmentType();
@@ -70,7 +71,7 @@ class EnvironmentController extends AdminController
      */
     public function environmentSaveAction($id, Request $request)
     {
-        return $this->saveEntity('Environment', $id, $request, ['Firewalls', 'KeyPairs', '!Tags', 'Zones']);
+        return $this->saveEntity('Environment', $id, $request, ['Firewalls', 'KeyPairs', '!Tags', 'Zones', 'LoadBalancers']);
     }
 
     /**
