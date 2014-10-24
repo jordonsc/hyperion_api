@@ -4,6 +4,7 @@ namespace Hyperion\ApiBundle\Service;
 use Aws\Common\Aws;
 use Aws\Swf\SwfClient;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NonUniqueResultException;
 use Hyperion\ApiBundle\Entity\Action;
 use Hyperion\ApiBundle\Entity\Distribution;
 use Hyperion\ApiBundle\Entity\Environment;
@@ -11,14 +12,15 @@ use Hyperion\ApiBundle\Exception\NotFoundException;
 use Hyperion\ApiBundle\Exception\UnexpectedValueException;
 use Hyperion\Dbal\Enum\ActionState;
 use Hyperion\Dbal\Enum\ActionType;
+use Hyperion\Dbal\Enum\DeployStrategy;
 use Hyperion\Dbal\Enum\DistributionStatus;
 use Hyperion\Dbal\Enum\EnvironmentType;
 
 class WorkflowManager
 {
-    const WORKFLOW_NAME      = 'std_action';
-    const WORKFLOW_VERSION   = '1.0.0';
-    const TASKLIST           = 'action_worker';
+    const WORKFLOW_NAME = 'std_action';
+    const WORKFLOW_VERSION = '1.0.0';
+    const TASKLIST = 'action_worker';
     const ACTION_START_PHASE = 'PENDING';
 
     /**
@@ -79,44 +81,7 @@ class WorkflowManager
             throw new UnexpectedValueException("Cannot bake a non-bakery environment");
         }
 
-        $name = 'bakery:'.$env->getId();
-
-        // To bake a project we need to create a distribution for it - and that distro requires a version increment
-        // from previous builds
-        $distro = $this->em->createQuery(
-            'SELECT d FROM HyperionApiBundle:Distribution d WHERE d.name = :name AND d.environment = :env ORDER BY d.id DESC'
-        )->setMaxResults(1)->setParameter('env', $env)->setParameter('name', $name)->getOneOrNullResult();
-
-        /** @var Distribution $distro */
-        if ($distro) {
-            $version = $distro->getVersion() + 1;
-        } else {
-            $version = 1;
-        }
-
-        // Create a distribution for the bakery - this will allow us to track and nuke the bakery on failure
-        $new_distro = new Distribution();
-        $new_distro->setName($name);
-        $new_distro->setVersion($version);
-        $new_distro->setTagString(null);
-        $new_distro->setEnvironment($env);
-        $new_distro->setStatus(DistributionStatus::PENDING);
-        $this->em->persist($new_distro);
-
-        // Create action record
-        $action = new Action();
-        $action->setProject($env->getProject());
-        $action->setEnvironment($env);
-        $action->setActionType(ActionType::BAKE);
-        $action->setState(ActionState::ACTIVE);
-        $action->setOutput('');
-        $action->setErrorMessage(null);
-        $action->setPhase(self::ACTION_START_PHASE);
-        $action->setDistribution($new_distro);
-        $this->em->persist($action);
-        $this->em->flush();
-
-        // Create workflow
+        $action = $this->buildWorkflowComponents('bakery:'.$env->getId(), $env);
         $this->createWorkflow('bake-'.$action->getId(), $action->getId());
 
         return $action->getId();
@@ -163,47 +128,7 @@ class WorkflowManager
             throw new UnexpectedValueException("Build name must be between 2 and 200 chars long");
         }
 
-        // To build a project we need to create a distribution for it - and that distro requires a version increment
-        // from previous builds
-        $distro = $this->em->createQuery(
-            'SELECT d FROM HyperionApiBundle:Distribution d WHERE d.name = :name AND d.environment = :env ORDER BY d.id DESC'
-        )->setMaxResults(1)->setParameter('env', $env)->setParameter('name', $name)->getOneOrNullResult();
-
-        /** @var Distribution $distro */
-        if ($distro) {
-            $version = $distro->getVersion() + 1;
-        } else {
-            $version = 1;
-        }
-
-        // Freeze other distributions
-        $this->em->createQuery(
-            'UPDATE HyperionApiBundle:Distribution d SET d.status = 5 WHERE d.status = 2 AND d.name = :name AND d.environment = :env'
-        )->setParameter('env', $env)->setParameter('name', $name)->execute();
-
-        // Create the distribution for the new build
-        $new_distro = new Distribution();
-        $new_distro->setName($name);
-        $new_distro->setVersion($version);
-        $new_distro->setTagString($tag_sting);
-        $new_distro->setEnvironment($env);
-        $new_distro->setStatus(DistributionStatus::PENDING);
-        $this->em->persist($new_distro);
-
-        // Create action record
-        $action = new Action();
-        $action->setProject($env->getProject());
-        $action->setEnvironment($env);
-        $action->setActionType(ActionType::BUILD);
-        $action->setState(ActionState::ACTIVE);
-        $action->setOutput('');
-        $action->setErrorMessage(null);
-        $action->setPhase(self::ACTION_START_PHASE);
-        $action->setDistribution($new_distro);
-        $this->em->persist($action);
-        $this->em->flush();
-
-        // Create workflow
+        $action = $this->buildWorkflowComponents($name, $env);
         $this->createWorkflow('build-'.$action->getId(), $action->getId());
 
         return $action->getId();
@@ -240,8 +165,43 @@ class WorkflowManager
             throw new UnexpectedValueException("Cannot release a non-production environment");
         }
 
-        $name = 'deploy:'.$env->getId();
+        $action = $this->buildWorkflowComponents('deploy:'.$env->getId(), $env);
+        $this->createWorkflow('deploy-'.$action->getId(), $action->getId());
 
+        return $action->getId();
+    }
+
+    /**
+     * Builds all workflow components and commits them to the database
+     *
+     * @param string      $name
+     * @param Environment $env
+     * @param bool        $freeze_other
+     * @return Action
+     */
+    protected function buildWorkflowComponents($name, Environment $env, $freeze_other = true)
+    {
+        $distro = $this->createWorkflowDistro($name, $env);
+        $this->em->persist($distro);
+
+        $action = $this->createWorkflowAction($env, $distro, $freeze_other);
+        $this->em->persist($action);
+
+        $this->em->flush();
+
+        return $action;
+    }
+
+    /**
+     * Create a new distribution for a workflow
+     *
+     * @param string      $name
+     * @param Environment $env
+     * @return Distribution
+     * @throws NonUniqueResultException
+     */
+    protected function createWorkflowDistro($name, Environment $env, $freeze_other = true)
+    {
         // To deploy a project we need to create a distribution for it - and that distro requires a version increment
         // from previous builds
         $distro = $this->em->createQuery(
@@ -255,6 +215,13 @@ class WorkflowManager
             $version = 1;
         }
 
+        // Freeze other distributions
+        if ($freeze_other) {
+            $this->em->createQuery(
+                'UPDATE HyperionApiBundle:Distribution d SET d.status = 5 WHERE d.status = 2 AND d.name = :name AND d.environment = :env'
+            )->setParameter('env', $env)->setParameter('name', $name)->execute();
+        }
+
         // Create a distribution for the release
         $new_distro = new Distribution();
         $new_distro->setName($name);
@@ -262,25 +229,68 @@ class WorkflowManager
         $new_distro->setTagString(null);
         $new_distro->setEnvironment($env);
         $new_distro->setStatus(DistributionStatus::PENDING);
-        $this->em->persist($new_distro);
 
-        // Create action record
+        return $new_distro;
+    }
+
+    /**
+     * Create an action record for a workflow
+     *
+     * @param Environment  $env
+     * @param Distribution $distro
+     * @return Action
+     */
+    protected function createWorkflowAction(Environment $env, Distribution $distro)
+    {
         $action = new Action();
         $action->setProject($env->getProject());
         $action->setEnvironment($env);
-        $action->setActionType(ActionType::DEPLOY());
+        $action->setActionType($this->getActionTypeForEnvironment($env));
         $action->setState(ActionState::ACTIVE);
         $action->setOutput('');
         $action->setErrorMessage(null);
         $action->setPhase(self::ACTION_START_PHASE);
-        $action->setDistribution($new_distro);
-        $this->em->persist($action);
-        $this->em->flush();
+        $action->setDistribution($distro);
 
-        // Create workflow
-        $this->createWorkflow('deploy-'.$action->getId(), $action->getId());
+        return $action;
+    }
 
-        return $action->getId();
+    /**
+     * Get the workflow action type for any environment
+     *
+     * @param Environment $env
+     * @return ActionType
+     */
+    protected function getActionTypeForEnvironment(Environment $env)
+    {
+        switch ($env->getEnvironmentType()) {
+            case EnvironmentType::BAKERY:
+                return ActionType::BAKE();
+            case EnvironmentType::TEST:
+                return ActionType::BUILD();
+            case EnvironmentType::PRODUCTION:
+                return $this->getProductionActionType($env);
+            default:
+                throw new UnexpectedValueException("Unknown environment type: ".$env->getEnvironmentType());
+        }
+    }
+
+    /**
+     * Get the workflow action type for a production environment
+     *
+     * @param Environment $env
+     * @return ActionType
+     */
+    protected function getProductionActionType(Environment $env)
+    {
+        switch ($env->getStrategy()) {
+            case DeployStrategy::ASG:
+                return ActionType::DEPLOY_ASG();
+            case DeployStrategy::MANAGED:
+                return ActionType::DEPLOY_MANAGED();
+            default:
+                throw new UnexpectedValueException("Unknown deployment strategy: ".$env->getStrategy());
+        }
     }
 
     /**
