@@ -22,6 +22,7 @@ class DistributionType extends WebApiType
             ->add('tag_string')
             ->add('dns')
             ->add('asg')
+            ->add('image_id')
             ->add(
                 'environment',
                 'entity',

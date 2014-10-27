@@ -63,6 +63,11 @@ class Distribution implements HyperionEntityInterface
      */
     protected $asg;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $image_id;
+
     // --
 
     /**
@@ -254,7 +259,7 @@ class Distribution implements HyperionEntityInterface
     /**
      * Get Asg
      *
-     * @return mixed
+     * @return string
      */
     public function getAsg()
     {
@@ -264,12 +269,34 @@ class Distribution implements HyperionEntityInterface
     /**
      * Set Asg
      *
-     * @param mixed $asg
+     * @param string $asg
      * @return $this
      */
     public function setAsg($asg)
     {
         $this->asg = $asg;
+        return $this;
+    }
+
+    /**
+     * Get ImageId
+     *
+     * @return string
+     */
+    public function getImageId()
+    {
+        return $this->image_id;
+    }
+
+    /**
+     * Set ImageId
+     *
+     * @param string $image_id
+     * @return $this
+     */
+    public function setImageId($image_id)
+    {
+        $this->image_id = $image_id;
         return $this;
     }
 
@@ -283,6 +310,4 @@ class Distribution implements HyperionEntityInterface
     {
         return '['.$this->getId().'] '.$this->getName();
     }
-
-
 }
