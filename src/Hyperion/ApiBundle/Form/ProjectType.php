@@ -29,7 +29,7 @@ class ProjectType extends WebApiType
             )
             ->add('name', 'text', ['required' => true])
             ->add('source_image_id', 'text', ['label' => 'Source Image ID', 'required' => true])
-            ->add('baked_image_id', 'text', ['label' => 'Baked Image ID', 'read_only' => true, 'required' => false])
+            ->add('baked_image_id', 'text', ['label' => 'Baked Image ID', 'required' => false])
             ->add('packager', 'choice', ['choices' => [0 => 'YUM', 1 => 'APT'], 'required' => true])
             ->add(
                 'update_system_packages',
