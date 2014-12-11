@@ -64,6 +64,24 @@ class ActivityController extends Controller
     }
 
     /**
+     * @Route("/activity/{id}/fail", name="dashboard_activity_fail")
+     * @Template
+     */
+    public function activityFailAction($id)
+    {
+        $action = $this->getDoctrine()->getRepository('HyperionApiBundle:Action')->find($id);
+        if (!$action) {
+            throw new NotFoundHttpException("Unknown action ID");
+        }
+
+        $action->setState(3);
+        $this->getDoctrine()->getManager()->persist($action);
+        $this->getDoctrine()->getManager()->flush();
+
+        return [];
+    }
+
+    /**
      * Convert the Action object into a serialisable \stdClass object
      *
      * @param Action $action

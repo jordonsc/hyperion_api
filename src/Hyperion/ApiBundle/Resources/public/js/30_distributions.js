@@ -108,7 +108,7 @@ function Distributions(engine, el, loader) {
         if ((obj.environment_type == 1) && (obj.status == 2 || obj.status > 5)) {
             out += '<a href="javascript:engine.getDistributions().rebuildConf(' + obj.id + ')" class="btn btn-xs btn-default">Rebuild</a>';
         }
-        if (obj.status == 2 || obj.status == 5 || obj.status == 7) {
+        if (obj.status != 6) {
             out += '<a href="javascript:engine.getDistributions().tearDownConf(' + obj.id + ')" class="btn btn-xs btn-default">Tear down</a>';
         }
 
